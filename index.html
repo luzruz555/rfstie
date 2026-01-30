@@ -241,14 +241,15 @@
                 }}>
                     <Particles />
                     
-                    {/* 캐릭터 - 왼쪽 중앙 */}
+                    {/* 캐릭터 */}
                     <div style={{ 
                         position: 'absolute', 
                         left: 0, 
                         bottom: 0,
                         left: 0,// top, transform 제거
                         justifyContent: 'flex-start',  // 왼쪽
-                        alignItems: 'flex-end'          // 하단
+                        alignItems: 'flex-end'
+                        objectPosition: 'left bottom'// 하단
                     }}>
                         <CharArea />
                     </div>
