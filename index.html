@@ -208,10 +208,9 @@
             ], []);
 
             const afterDialogs = useMemo(() => [
-                [{ speaker: "selene", text: "후후... 역시 폐하는 절 가장 사랑하시는 거죠?", emotion: "happy" }, { speaker: "adeline", text: "...!", emotion: "surprise" }, { speaker: "lizette", text: "도련님... 아, 폐하...", emotion: "sad" },
-                [{ speaker: "luna", text: "에이~ 폐하 비겁해요! 확실히 말해주세요!", emotion: "angry" }, { speaker: "karen", text: "...현명한 판단이군.", emotion: "idle" }, { speaker: "elia", text: "뭐야, 재미없게. 그냥 아무나 찍어.", emotion: "angry" },
-                [{ speaker: "lizette", text: "폐, 폐하...! 저, 저는... 행복해요...", emotion: "happy" }, { speaker: "selene", text: "...폐하?", emotion: "angry" }, { speaker: "adeline", text: "저, 저 하녀한테...?!", emotion: "surprise" },
-            ], []);
+                [{ speaker: "selene", text: "후후... 역시 폐하는 절 가장 사랑하시는 거죠?", emotion: "happy" }, { speaker: "adeline", text: "...!", emotion: "surprise" }, { speaker: "lizette", text: "도련님... 아, 폐하...", emotion: "sad" }]
+                [{ speaker: "luna", text: "에이~ 폐하 비겁해요! 확실히 말해주세요!", emotion: "angry" }, { speaker: "karen", text: "...현명한 판단이군.", emotion: "idle" }, { speaker: "elia", text: "뭐야, 재미없게. 그냥 아무나 찍어.", emotion: "angry" }]
+                [{ speaker: "lizette", text: "폐, 폐하...! 저, 저는... 행복해요...", emotion: "happy" }, { speaker: "selene", text: "...폐하?", emotion: "angry" }, { speaker: "adeline", text: "저, 저 하녀한테...?!", emotion: "surprise" }], []);
 
             const getCurrent = useCallback(() => phase === 'afterChoice' && selectedChoice !== null ? afterDialogs[selectedChoice][afterChoiceIndex] : dialogs[dialogIndex], [phase, selectedChoice, afterChoiceIndex, dialogIndex, afterDialogs, dialogs]);
 
