@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>제국 최강이 되기까지</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;900&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            font-family: 'Nanum Myeongjo', serif;
+            background: #0a0a0a;
+            color: #f0e6d3;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        #root {
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); filter: hue-rotate(0deg); }
+            20% { transform: translate(-5px, 5px); filter: hue-rotate(90deg); }
+            40% { transform: translate(-5px, -5px); filter: hue-rotate(180deg); }
+            60% { transform: translate(5px, 5px); filter: hue-rotate(270deg); }
+            80% { transform: translate(5px, -5px); filter: hue-rotate(360deg); }
+            100% { transform: translate(0); filter: hue-rotate(0deg); }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .char-idle { animation: float 3s ease-in-out infinite; }
+        .char-happy { animation: bounce 0.6s ease-in-out; }
+        .char-angry { animation: shake 0.4s ease-in-out; }
+        .char-sad { animation: none; filter: brightness(0.7) saturate(0.8); }
+        .char-surprise { animation: pulse 0.5s ease-in-out; }
+
+        @media (max-width: 768px) {
+            .desktop-only { display: none !important; }
+        }
+        @media (min-width: 769px) {
+            .mobile-only { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, useMemo } = React;
+
+        // ========================================
+        // 🎵 효과음 설정 - 여기서 파일 경로 수정하세요!
+        // ========================================
+        const SOUNDS = {
+            click: null,      // 예: 'sounds/click.mp3'
+            select: null,     // 예: 'sounds/select.mp3'
+            type: null,       // 예: 'sounds/type.mp3'
+            transition: null, // 예: 'sounds/transition.mp3'
+            glitch: null,     // 예: 'sounds/glitch.mp3'
+            error: null,      // 예: 'sounds/error.mp3'
+        };
+
+        // 효과음 재생 함수
+        const playSound = (type) => {
+            if (SOUNDS[type]) {
+                const audio = new Audio(SOUNDS[type]);
+                audio.volume = 0.5;
+                audio.play().catch(() => {});
+            }
+        };
+
+        // ========================================
+        // 🖼️ 이미지 설정 - 여기서 파일 경로 수정하세요!
+        // ========================================
+        const IMAGES = {
+            // 타이틀 화면
+            titleLogo: null,        // 타이틀 로고 이미지 (예: 'images/title_logo.png')
+            titleBackground: null,  // 타이틀 배경 (예: 'images/title_bg.jpg')
+            titleCharacter: null,   // 타이틀 캐릭터 (예: 'images/title_char.png')
+            
+            // 게임 화면
+            gameBackground: null,   // 게임 배경 (예: 'images/game_bg.jpg')
+            
+            // 캐릭터 스탠딩 이미지
+            charKairen: null,
+            charLizette: null,
+            charAdeline: null,
+            charKaren: null,
+            charElia: null,
+            charSelene: null,
+            charLuna: null,
+            
+            // 캐릭터 소개 전신 이미지
+            fullKairen: null,
+            fullLizette: null,
+            fullAdeline: null,
+            fullKaren: null,
+            fullElia: null,
+            fullSelene: null,
+            fullLuna: null,
+        };
+
+        // ========================================
+        // 캐릭터 데이터
+        // ========================================
+        const characters = {
+            kairen: {
+                name: "카이른",
+                fullName: "카이른 폰 레이센",
+                color: "#d4af37",
+                description: "숨겨진 황자",
+                standingImage: IMAGES.charKairen,
+                fullImage: IMAGES.fullKairen
+            },
+            lizette: {
+                name: "리제트",
+                fullName: "리제트 밀러",
+                color: "#ffb6c1",
+                affection: 97,
+                personality: "소심 · 집착",
+                description: "남주 소꿉친구 하녀",
+                standingImage: IMAGES.charLizette,
+                fullImage: IMAGES.fullLizette
+            },
+            adeline: {
+                name: "아델린",
+                fullName: "아델린 폰 크로이츠",
+                color: "#ffd700",
+                affection: 89,
+                personality: "츤데레",
+                description: "공작가 영애",
+                standingImage: IMAGES.charAdeline,
+                fullImage: IMAGES.fullAdeline
+            },
+            karen: {
+                name: "카렌",
+                fullName: "카렌 폰 슈테른",
+                color: "#6495ed",
+                affection: 85,
+                personality: "무감정",
+                description: "황실 근위대장",
+                standingImage: IMAGES.charKaren,
+                fullImage: IMAGES.fullKaren
+            },
+            elia: {
+                name: "엘리아",
+                fullName: "엘리아 폰 베른트",
+                color: "#ff6b6b",
+                affection: 82,
+                personality: "욕데레",
+                description: "유저 소꿉친구 기사",
+                standingImage: IMAGES.charElia,
+                fullImage: IMAGES.fullElia
+            },
+            selene: {
+                name: "셀레네",
+                fullName: "셀레네 아르카디엔",
+                color: "#da70d6",
+                affection: 94,
+                personality: "소유욕",
+                description: "제3황녀",
+                standingImage: IMAGES.charSelene,
+                fullImage: IMAGES.fullSelene
+            },
+            luna: {
+                name: "루나",
+                fullName: "루나",
+                color: "#ff8fab",
+                affection: 78,
+                personality: "메스가키",
+                description: "유저 의붓동생",
+                standingImage: IMAGES.charLuna,
+                fullImage: IMAGES.fullLuna
+            }
+        };
+
+        // ========================================
+        // 타이틀 화면
+        // ========================================
+        function TitleScreen({ onStart }) {
+            const [sparkles, setSparkles] = useState([]);
+            const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+            useEffect(() => {
+                const handleResize = () => setIsMobile(window.innerWidth <= 768);
+                window.addEventListener('resize', handleResize);
+                return () => window.removeEventListener('resize', handleResize);
+            }, []);
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setSparkles(prev => {
+                        const newSparkle = {
+                            id: Date.now(),
+                            x: Math.random() * 100,
+                            y: Math.random() * 100,
+                            size: Math.random() * 8 + 4
+                        };
+                        return [...prev.slice(-12), newSparkle];
+                    });
+                }, 400);
+                return () => clearInterval(interval);
+            }, []);
+
+            const handleStart = () => {
+                playSound('select');
+                setTimeout(onStart, 150);
+            };
+
+            // 타이틀 로고 렌더링
+            const renderTitleLogo = () => {
+                if (IMAGES.titleLogo) {
+                    return (
+                        <img 
+                            src={IMAGES.titleLogo} 
+                            alt="제국 최강이 되기까지"
+                            style={{
+                                maxWidth: isMobile ? '250px' : '350px',
+                                height: 'auto'
+                            }}
+                        />
+                    );
+                }
+                // 이미지 없으면 플레이스홀더
+                return (
+                    <div style={{
+                        padding: '40px',
+                        border: '2px dashed #d4af3750',
+                        borderRadius: '10px',
+                        color: '#d4af37',
+                        textAlign: 'center'
+                    }}>
+                        <div style={{ fontSize: '0.8rem', marginBottom: '10px', opacity: 0.6 }}>
+                            [ 타이틀 로고 이미지 ]
+                        </div>
+                        <div style={{ 
+                            fontSize: isMobile ? '1.5rem' : '2rem',
+                            fontFamily: "'Noto Serif KR', serif",
+                            fontWeight: 900
+                        }}>
+                            제국 최강이 되기까지
+                        </div>
+                    </div>
+                );
+            };
+
+            // 모바일 레이아웃
+            if (isMobile) {
+                return (
+                    <div style={{
+                        minHeight: '100vh',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        background: '#1a1215',
+                        position: 'relative',
+                        overflow: 'hidden'
+                    }}>
+                        {/* 배경 */}
+                        <div style={{
+                            position: 'absolute',
+                            inset: 0,
+                            background: IMAGES.titleBackground 
+                                ? `url(${IMAGES.titleBackground}) center/cover`
+                                : `radial-gradient(ellipse at 50% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
+                                   linear-gradient(180deg, #1a1215 0%, #2a1f25 100%)`
+                        }} />
+
+                        {/* 반짝이 */}
+                        {sparkles.map(s => (
+                            <div key={s.id} style={{
+                                position: 'absolute',
+                                left: `${s.x}%`,
+                                top: `${s.y}%`,
+                                width: s.size,
+                                height: s.size,
+                                background: '#d4af37',
+                                borderRadius: '50%',
+                                animation: 'sparkle 1.2s ease-out forwards',
+                                pointerEvents: 'none',
+                                boxShadow: '0 0 8px #d4af37'
+                            }} />
+                        ))}
+
+                        {/* 캐릭터 이미지 영역 */}
+                        <div style={{
+                            flex: 1,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'flex-end',
+                            padding: '20px',
+                            position: 'relative',
+                            zIndex: 1
+                        }}>
+                            {IMAGES.titleCharacter ? (
+                                <img 
+                                    src={IMAGES.titleCharacter} 
+                                    alt=""
+                                    style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                                />
+                            ) : (
+                                <div style={{
+                                    color: '#2a2025',
+                                    fontSize: '0.75rem',
+                                    padding: '30px 40px',
+                                    border: '1px dashed #3a3035',
+                                    borderRadius: '8px'
+                                }}>[ 타이틀 캐릭터 이미지 ]</div>
+                            )}
+                        </div>
+
+                        {/* 하단 UI */}
+                        <div style={{
+                            background: 'linear-gradient(180deg, transparent, rgba(15, 12, 14, 0.98) 30%)',
+                            padding: '30px 20px 40px',
+                            position: 'relative',
+                            zIndex: 2
+                        }}>
+                            {/* 타이틀 로고 */}
+                            <div style={{ textAlign: 'center', marginBottom: '25px' }}>
+                                {renderTitleLogo()}
+                            </div>
+
+                            {/* 메뉴 */}
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '8px',
+                                maxWidth: '280px',
+                                margin: '0 auto'
+                            }}>
+                                {['GAME START', 'DATA LOAD', 'CONFIG', 'EXTRA', 'EXIT'].map((text, i) => (
+                                    <button
+                                        key={text}
+                                        onClick={text === 'GAME START' ? handleStart : () => playSound('click')}
+                                        style={{
+                                            padding: '12px 20px',
+                                            fontSize: '0.9rem',
+                                            fontFamily: "'Noto Serif KR', serif",
+                                            fontWeight: 600,
+                                            background: text === 'GAME START'
+                                                ? 'linear-gradient(135deg, #d4af37 0%, #f4e4bc 50%, #d4af37 100%)'
+                                                : 'linear-gradient(135deg, rgba(45, 38, 42, 0.95) 0%, rgba(30, 25, 28, 0.95) 100%)',
+                                            border: `2px solid ${text === 'GAME START' ? '#d4af37' : '#4a3a3a'}`,
+                                            color: text === 'GAME START' ? '#1a1210' : '#9a8a7a',
+                                            borderRadius: '4px',
+                                            letterSpacing: '0.1em',
+                                            opacity: text === 'GAME START' ? 1 : 0.5,
+                                            animation: `fadeIn 0.4s ease-out ${i * 0.06}s both`
+                                        }}
+                                    >{text}</button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            // 데스크톱 레이아웃
+            return (
+                <div style={{
+                    height: '100vh',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    background: '#1a1215'
+                }}>
+                    {/* 배경 */}
+                    <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: IMAGES.titleBackground 
+                            ? `url(${IMAGES.titleBackground}) center/cover`
+                            : `linear-gradient(135deg, rgba(139, 90, 43, 0.08) 0%, transparent 50%),
+                               linear-gradient(225deg, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+                               radial-gradient(ellipse at 25% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 60%),
+                               #1a1215`
+                    }}>
+                        {/* 캐릭터 이미지 영역 */}
+                        <div style={{
+                            position: 'absolute',
+                            left: '0',
+                            bottom: 0,
+                            width: '55%',
+                            height: '95%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'flex-end'
+                        }}>
+                            {IMAGES.titleCharacter ? (
+                                <img 
+                                    src={IMAGES.titleCharacter} 
+                                    alt=""
+                                    style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                                />
+                            ) : (
+                                <div style={{
+                                    color: '#2a2025',
+                                    fontSize: '0.85rem',
+                                    padding: '40px',
+                                    border: '1px dashed #3a3035',
+                                    borderRadius: '10px'
+                                }}>[ 타이틀 캐릭터 이미지 ]</div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* 반짝이 */}
+                    {sparkles.map(s => (
+                        <div key={s.id} style={{
+                            position: 'absolute',
+                            left: `${s.x}%`,
+                            top: `${s.y}%`,
+                            width: s.size,
+                            height: s.size,
+                            background: '#d4af37',
+                            borderRadius: '50%',
+                            animation: 'sparkle 1.2s ease-out forwards',
+                            pointerEvents: 'none',
+                            boxShadow: '0 0 8px #d4af37'
+                        }} />
+                    ))}
+
+                    {/* 오른쪽 UI */}
+                    <div style={{
+                        position: 'absolute',
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: '42%',
+                        background: 'linear-gradient(90deg, transparent, rgba(15, 12, 14, 0.97) 20%)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: '40px'
+                    }}>
+                        {/* 타이틀 로고 */}
+                        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+                            {renderTitleLogo()}
+                        </div>
+
+                        {/* 메뉴 */}
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '10px',
+                            width: '100%',
+                            maxWidth: '260px'
+                        }}>
+                            {['GAME START', 'DATA LOAD', 'CONFIG', 'EXTRA', 'EXIT'].map((text, i) => (
+                                <button
+                                    key={text}
+                                    onClick={text === 'GAME START' ? handleStart : () => playSound('click')}
+                                    style={{
+                                        padding: '13px 25px',
+                                        fontSize: '0.95rem',
+                                        fontFamily: "'Noto Serif KR', serif",
+                                        fontWeight: 600,
+                                        background: text === 'GAME START'
+                                            ? 'linear-gradient(135deg, #d4af37 0%, #f4e4bc 50%, #d4af37 100%)'
+                                            : 'linear-gradient(135deg, rgba(45, 38, 42, 0.95) 0%, rgba(30, 25, 28, 0.95) 100%)',
+                                        border: `2px solid ${text === 'GAME START' ? '#d4af37' : '#4a3a3a'}`,
+                                        color: text === 'GAME START' ? '#1a1210' : '#9a8a7a',
+                                        cursor: 'pointer',
+                                        borderRadius: '4px',
+                                        letterSpacing: '0.12em',
+                                        transition: 'all 0.3s ease',
+                                        boxShadow: text === 'GAME START' ? '0 4px 20px rgba(212, 175, 55, 0.25)' : 'none',
+                                        opacity: text === 'GAME START' ? 1 : 0.5,
+                                        animation: `fadeIn 0.5s ease-out ${i * 0.08}s both`
+                                    }}
+                                >{text}</button>
+                            ))}
+                        </div>
+
+                        <div style={{
+                            position: 'absolute',
+                            bottom: '15px',
+                            fontSize: '0.65rem',
+                            color: '#3a3035'
+                        }}>© 2024 Imperial Romance Studio</div>
+                    </div>
+                </div>
+            );
+        }
+
+        // ========================================
+        // 로딩 화면
+        // ========================================
+        function LoadingScreen({ onComplete }) {
+            const [progress, setProgress] = useState(0);
+            const [showCheckpoint, setShowCheckpoint] = useState(false);
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setProgress(prev => {
+                        if (prev >= 100) {
+                            clearInterval(interval);
+                            playSound('transition');
+                            setTimeout(() => setShowCheckpoint(true), 400);
+                            return 100;
+                        }
+                        return prev + Math.random() * 18 + 6;
+                    });
+                }, 180);
+                return () => clearInterval(interval);
+            }, []);
+
+            useEffect(() => {
+                if (showCheckpoint) {
+                    const timer = setTimeout(() => {
+                        playSound('select');
+                        onComplete();
+                    }, 2200);
+                    return () => clearTimeout(timer);
+                }
+            }, [showCheckpoint, onComplete]);
+
+            return (
+                <div style={{
+                    height: '100vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    background: '#1a1215',
+                    padding: '20px'
+                }}>
+                    {!showCheckpoint ? (
+                        <>
+                            <div style={{
+                                marginBottom: '1.5rem',
+                                color: '#6a5a4a',
+                                letterSpacing: '0.25em',
+                                fontSize: 'clamp(0.75rem, 2vw, 0.85rem)'
+                            }}>Now Loading...</div>
+                            <div style={{
+                                width: '100%',
+                                maxWidth: '280px',
+                                height: '6px',
+                                background: '#2a2025',
+                                borderRadius: '3px',
+                                overflow: 'hidden',
+                                border: '1px solid #3a3035'
+                            }}>
+                                <div style={{
+                                    width: `${Math.min(progress, 100)}%`,
+                                    height: '100%',
+                                    background: 'linear-gradient(90deg, #d4af37, #f4e4bc, #d4af37)',
+                                    transition: 'width 0.15s ease'
+                                }} />
+                            </div>
+                        </>
+                    ) : (
+                        <div style={{ textAlign: 'center', animation: 'fadeIn 0.4s ease-out' }}>
+                            <div style={{
+                                fontSize: 'clamp(1rem, 3vw, 1.1rem)',
+                                color: '#d4af37',
+                                marginBottom: '0.8rem'
+                            }}>💾 저장 데이터 발견</div>
+                            <div style={{
+                                fontSize: 'clamp(0.85rem, 2.5vw, 0.95rem)',
+                                color: '#a09080'
+                            }}>마지막 체크포인트에서 시작합니다</div>
+                            <div style={{
+                                marginTop: '1.5rem',
+                                fontSize: 'clamp(0.75rem, 2vw, 0.85rem)',
+                                color: '#5a5045',
+                                padding: '10px 25px',
+                                background: 'rgba(212, 175, 55, 0.08)',
+                                border: '1px solid rgba(212, 175, 55, 0.2)',
+                                borderRadius: '4px'
+                            }}>Chapter 12: 황제의 즉위식</div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // ========================================
+        // 호감도 UI
+        // ========================================
+        function AffectionUI({ affections, isMobile }) {
+            const charList = ['lizette', 'adeline', 'karen', 'elia', 'selene', 'luna'];
+
+            if (isMobile) {
+                return (
+                    <div style={{
+                        position: 'absolute',
+                        top: '8px',
+                        right: '8px',
+                        background: 'rgba(20, 16, 18, 0.95)',
+                        border: '1px solid #d4af37',
+                        borderRadius: '6px',
+                        padding: '8px 10px',
+                        minWidth: '120px',
+                        zIndex: 100
+                    }}>
+                        <div style={{
+                            textAlign: 'center',
+                            fontSize: '0.6rem',
+                            color: '#d4af37',
+                            marginBottom: '6px',
+                            paddingBottom: '5px',
+                            borderBottom: '1px solid #2a2025'
+                        }}>♥ AFFECTION ♥</div>
+                        {charList.map(key => (
+                            <div key={key} style={{ marginBottom: '4px' }}>
+                                <div style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    fontSize: '0.55rem',
+                                    marginBottom: '1px'
+                                }}>
+                                    <span style={{ color: characters[key].color }}>{characters[key].name}</span>
+                                    <span style={{ color: '#8a7a6a' }}>{affections[key]}</span>
+                                </div>
+                                <div style={{
+                                    height: '3px',
+                                    background: '#1a1518',
+                                    borderRadius: '2px',
+                                    overflow: 'hidden'
+                                }}>
+                                    <div style={{
+                                        width: `${affections[key]}%`,
+                                        height: '100%',
+                                        background: characters[key].color,
+                                        transition: 'width 0.5s ease'
+                                    }} />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                );
+            }
+
+            return (
+                <div style={{
+                    position: 'absolute',
+                    top: '12px',
+                    right: '12px',
+                    background: 'linear-gradient(135deg, rgba(25, 20, 23, 0.97) 0%, rgba(18, 15, 17, 0.97) 100%)',
+                    border: '2px solid #d4af37',
+                    borderRadius: '8px',
+                    padding: '12px 15px',
+                    minWidth: '150px',
+                    boxShadow: '0 5px 25px rgba(0,0,0,0.6)',
+                    zIndex: 100
+                }}>
+                    <div style={{
+                        textAlign: 'center',
+                        fontSize: '0.7rem',
+                        color: '#d4af37',
+                        marginBottom: '10px',
+                        paddingBottom: '8px',
+                        borderBottom: '1px solid #2a2025',
+                        letterSpacing: '0.15em'
+                    }}>♥ AFFECTION ♥</div>
+                    {charList.map(key => (
+                        <div key={key} style={{ marginBottom: '7px' }}>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                fontSize: '0.65rem',
+                                marginBottom: '2px'
+                            }}>
+                                <span style={{ color: characters[key].color }}>{characters[key].name}</span>
+                                <span style={{ color: '#8a7a6a' }}>{affections[key]}</span>
+                            </div>
+                            <div style={{
+                                height: '4px',
+                                background: '#1a1518',
+                                borderRadius: '2px',
+                                overflow: 'hidden'
+                            }}>
+                                <div style={{
+                                    width: `${affections[key]}%`,
+                                    height: '100%',
+                                    background: `linear-gradient(90deg, ${characters[key].color}88, ${characters[key].color})`,
+                                    transition: 'width 0.5s ease'
+                                }} />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        // ========================================
+        // 게임 화면
+        // ========================================
+        function GameScreen({ onGlitch }) {
+            const [dialogIndex, setDialogIndex] = useState(0);
+            const [showChoices, setShowChoices] = useState(false);
+            const [selectedChoice, setSelectedChoice] = useState(null);
+            const [charEmotion, setCharEmotion] = useState('idle');
+            const [displayedText, setDisplayedText] = useState('');
+            const [isTyping, setIsTyping] = useState(false);
+            const [phase, setPhase] = useState('dialog');
+            const [affections, setAffections] = useState({
+                lizette: 97, adeline: 89, karen: 85, elia: 82, selene: 94, luna: 78
+            });
+            const [afterChoiceIndex, setAfterChoiceIndex] = useState(0);
+            const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+            const [currentSpeaker, setCurrentSpeaker] = useState(null);
+
+            useEffect(() => {
+                const handleResize = () => setIsMobile(window.innerWidth <= 768);
+                window.addEventListener('resize', handleResize);
+                return () => window.removeEventListener('resize', handleResize);
+            }, []);
+
+            const dialogs = useMemo(() => [
+                { speaker: "selene", text: "폐하, 오늘 즉위식 정말 멋지셨어요.", emotion: "happy" },
+                { speaker: "selene", text: "역시 제 남편이시네요. 후후.", emotion: "happy" },
+                { speaker: "adeline", text: "...흥, 황후라고 너무 나서는 거 아니에요?", emotion: "angry" },
+                { speaker: "adeline", text: "폐하께서는 모두의 것이에요.", emotion: "angry" },
+                { speaker: "selene", text: "후후, 무슨 말씀이세요. 폐하는 제 것인걸요.", emotion: "happy" },
+                { speaker: "lizette", text: "저, 저기... 저도 폐하 곁에 있고 싶어요...", emotion: "sad" },
+                { speaker: "elia", text: "하... 진짜 꼴보기 싫다. 너네 둘 다 좀 조용히 해.", emotion: "angry" },
+                { speaker: "luna", text: "흥, 언니들 싸우는 거 재밌네요~ 폐하는 어떻게 생각하세요?", emotion: "happy" },
+                { speaker: "karen", text: "...시끄럽군.", emotion: "idle" },
+                { speaker: "narrator", text: "여섯 쌍의 눈이 당신을 바라본다.", emotion: "idle" }
+            ], []);
+
+            const choices = useMemo(() => [
+                { text: "셀레네의 손을 잡으며 웃는다", effects: { selene: +5, adeline: -8, lizette: -5, luna: -3 } },
+                { text: "조용히 미소만 짓는다", effects: { karen: +3 } },
+                { text: "리제트에게 다가가 머리를 쓰다듬는다", effects: { lizette: +10, selene: -10, adeline: -5, luna: -5 } }
+            ], []);
+
+            const afterDialogs = useMemo(() => [
+                [
+                    { speaker: "selene", text: "후후... 역시 폐하는 절 가장 사랑하시는 거죠?", emotion: "happy" },
+                    { speaker: "adeline", text: "...!", emotion: "surprise" },
+                    { speaker: "lizette", text: "도련님... 아, 폐하...", emotion: "sad" },
+                    { speaker: "kairen", text: "모두 내게 소중하지만, 오늘은—", emotion: "idle" }
+                ],
+                [
+                    { speaker: "luna", text: "에이~ 폐하 비겁해요! 확실히 말해주세요!", emotion: "angry" },
+                    { speaker: "karen", text: "...현명한 판단이군.", emotion: "idle" },
+                    { speaker: "elia", text: "뭐야, 재미없게. 그냥 아무나 찍어.", emotion: "angry" },
+                    { speaker: "kairen", text: "허허, 모두 진정하게. 나는—", emotion: "idle" }
+                ],
+                [
+                    { speaker: "lizette", text: "폐, 폐하...! 저, 저는... 행복해요...", emotion: "happy" },
+                    { speaker: "selene", text: "...폐하?", emotion: "angry" },
+                    { speaker: "adeline", text: "저, 저 하녀한테...?!", emotion: "surprise" },
+                    { speaker: "kairen", text: "리제트, 너는 처음부터 내 곁에—", emotion: "idle" }
+                ]
+            ], []);
+
+            const getCurrentDialog = useCallback(() => {
+                if (phase === 'afterChoice' && selectedChoice !== null) {
+                    return afterDialogs[selectedChoice][afterChoiceIndex];
+                }
+                return dialogs[dialogIndex];
+            }, [phase, selectedChoice, afterChoiceIndex, dialogIndex, afterDialogs, dialogs]);
+
+            // 타이핑 효과
+            useEffect(() => {
+                const current = getCurrentDialog();
+                if (!current) return;
+
+                setIsTyping(true);
+                setDisplayedText('');
+                setCharEmotion(current.emotion);
+                setCurrentSpeaker(current.speaker);
+                let i = 0;
+
+                const interval = setInterval(() => {
+                    if (i < current.text.length) {
+                        setDisplayedText(current.text.slice(0, i + 1));
+                        if (i % 3 === 0) playSound('type');
+                        i++;
+                    } else {
+                        clearInterval(interval);
+                        setIsTyping(false);
+                    }
+                }, 35);
+
+                return () => clearInterval(interval);
+            }, [dialogIndex, afterChoiceIndex, phase, selectedChoice, getCurrentDialog]);
+
+            // 자동 진행
+            useEffect(() => {
+                if (isTyping) return;
+
+                let timer;
+                if (phase === 'dialog') {
+                    if (dialogIndex < dialogs.length - 1) {
+                        timer = setTimeout(() => setDialogIndex(d => d + 1), 1800);
+                    } else {
+                        timer = setTimeout(() => {
+                            setPhase('choice');
+                            setShowChoices(true);
+                        }, 1200);
+                    }
+                } else if (phase === 'afterChoice' && selectedChoice !== null) {
+                    const arr = afterDialogs[selectedChoice];
+                    if (afterChoiceIndex < arr.length - 1) {
+                        timer = setTimeout(() => setAfterChoiceIndex(i => i + 1), 1800);
+                    } else {
+                        timer = setTimeout(() => {
+                            setPhase('glitch');
+                            onGlitch();
+                        }, 1500);
+                    }
+                }
+
+                return () => clearTimeout(timer);
+            }, [isTyping, phase, dialogIndex, afterChoiceIndex, selectedChoice, dialogs.length, afterDialogs, onGlitch]);
+
+            const handleChoice = (index) => {
+                playSound('select');
+                setShowChoices(false);
+                setSelectedChoice(index);
+
+                const fx = choices[index].effects;
+                setAffections(prev => {
+                    const n = { ...prev };
+                    Object.entries(fx).forEach(([k, v]) => {
+                        n[k] = Math.max(0, Math.min(100, n[k] + v));
+                    });
+                    return n;
+                });
+
+                setAfterChoiceIndex(0);
+                setPhase('afterChoice');
+            };
+
+            const current = getCurrentDialog();
+            if (!current) return null;
+
+            const speaker = current.speaker === 'narrator'
+                ? { name: '', color: '#888' }
+                : { name: characters[current.speaker]?.name || '', color: characters[current.speaker]?.color || '#fff' };
+
+            const emotionClass = {
+                happy: 'char-happy',
+                angry: 'char-angry',
+                sad: 'char-sad',
+                surprise: 'char-surprise',
+                idle: 'char-idle'
+            }[charEmotion] || 'char-idle';
+
+            // 현재 캐릭터 스탠딩 이미지
+            const currentStandingImage = currentSpeaker && currentSpeaker !== 'narrator' 
+                ? characters[currentSpeaker]?.standingImage 
+                : null;
+
+            return (
+                <div style={{
+                    height: '100vh',
+                    position: 'relative',
+                    background: '#1a1215',
+                    overflow: 'hidden'
+                }}>
+                    {/* 배경 */}
+                    <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: IMAGES.gameBackground
+                            ? `url(${IMAGES.gameBackground}) center/cover`
+                            : 'linear-gradient(180deg, rgba(26,18,21,0.4) 0%, rgba(26,18,21,0.6) 100%), linear-gradient(135deg, #2a2025, #1a1520)'
+                    }}>
+                        {!IMAGES.gameBackground && (
+                            <div style={{
+                                position: 'absolute',
+                                top: '40%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                color: '#2a2025',
+                                fontSize: isMobile ? '0.7rem' : '0.8rem'
+                            }}>[ 황궁 대전 배경 ]</div>
+                        )}
+                    </div>
+
+                    {/* 상단 바 (데스크톱) */}
+                    {!isMobile && (
+                        <div style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: '45px',
+                            background: 'linear-gradient(180deg, rgba(15,12,14,0.95) 0%, transparent 100%)',
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            padding: '0 180px 0 15px',
+                            gap: '10px'
+                        }}>
+                            {['저장', '불러오기', '타이틀로', '설정'].map(t => (
+                                <button key={t} onClick={() => playSound('click')} style={{
+                                    padding: '5px 12px',
+                                    fontSize: '0.7rem',
+                                    background: 'rgba(212,175,55,0.08)',
+                                    border: '1px solid rgba(212,175,55,0.25)',
+                                    color: '#8a7a6a',
+                                    borderRadius: '3px',
+                                    cursor: 'pointer'
+                                }}>✦ {t}</button>
+                            ))}
+                        </div>
+                    )}
+
+                    <AffectionUI affections={affections} isMobile={isMobile} />
+
+                    {/* 캐릭터 */}
+                    <div
+                        className={emotionClass}
+                        style={{
+                            position: 'absolute',
+                            bottom: isMobile ? '160px' : '190px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            width: isMobile ? '250px' : '350px',
+                            height: isMobile ? '300px' : '450px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'flex-end'
+                        }}
+                    >
+                        {currentStandingImage ? (
+                            <img 
+                                src={currentStandingImage} 
+                                alt={speaker.name}
+                                style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                            />
+                        ) : (
+                            <div style={{
+                                color: '#3a3035',
+                                fontSize: isMobile ? '0.7rem' : '0.8rem',
+                                textAlign: 'center',
+                                padding: isMobile ? '15px' : '25px',
+                                border: '1px dashed #3a3035',
+                                borderRadius: '8px'
+                            }}>[ {speaker.name || '캐릭터'} 스탠딩 ]</div>
+                        )}
+                    </div>
+
+                    {/* 대화창 */}
+                    <div style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        padding: isMobile ? '10px' : '15px'
+                    }}>
+                        <div style={{
+                            maxWidth: '950px',
+                            margin: '0 auto',
+                            background: 'linear-gradient(135deg, rgba(22,18,20,0.98) 0%, rgba(32,26,30,0.98) 100%)',
+                            border: isMobile ? '2px solid #d4af37' : '3px solid #d4af37',
+                            padding: isMobile ? '12px 15px' : '18px 22px',
+                            position: 'relative',
+                            boxShadow: '0 -8px 30px rgba(0,0,0,0.5)'
+                        }}>
+                            {speaker.name && (
+                                <div style={{
+                                    position: 'absolute',
+                                    top: isMobile ? '-12px' : '-16px',
+                                    left: isMobile ? '12px' : '20px',
+                                    background: 'linear-gradient(135deg, #d4af37, #f4e4bc)',
+                                    padding: isMobile ? '3px 15px' : '5px 22px',
+                                    color: '#1a1210',
+                                    fontSize: isMobile ? '0.75rem' : '0.85rem',
+                                    fontWeight: 'bold'
+                                }}>{speaker.name}</div>
+                            )}
+
+                            <div style={{
+                                fontSize: isMobile ? '0.9rem' : '1rem',
+                                lineHeight: 1.9,
+                                color: current.speaker === 'narrator' ? '#777' : '#f0e6d3',
+                                fontStyle: current.speaker === 'narrator' ? 'italic' : 'normal',
+                                minHeight: isMobile ? '45px' : '55px',
+                                paddingTop: speaker.name ? '8px' : 0
+                            }}>
+                                {displayedText}
+                                {isTyping && <span style={{ borderRight: '2px solid #d4af37', marginLeft: '2px', animation: 'blink 0.6s infinite' }} />}
+                            </div>
+
+                            <div style={{
+                                position: 'absolute',
+                                bottom: isMobile ? '8px' : '12px',
+                                right: isMobile ? '10px' : '15px',
+                                display: 'flex',
+                                gap: isMobile ? '5px' : '8px'
+                            }}>
+                                {['스킵', '자동', '로그'].map(t => (
+                                    <button key={t} onClick={() => playSound('click')} style={{
+                                        padding: isMobile ? '3px 8px' : '4px 10px',
+                                        fontSize: isMobile ? '0.55rem' : '0.65rem',
+                                        background: 'rgba(212,175,55,0.08)',
+                                        border: '1px solid rgba(212,175,55,0.25)',
+                                        color: '#7a6a5a',
+                                        borderRadius: '2px',
+                                        cursor: 'pointer'
+                                    }}>✦ {t}</button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 선택지 */}
+                    {showChoices && (
+                        <div style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: isMobile ? '8px' : '10px',
+                            animation: 'fadeIn 0.4s ease-out',
+                            zIndex: 200,
+                            width: isMobile ? '90%' : 'auto',
+                            maxWidth: '400px'
+                        }}>
+                            {choices.map((c, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => handleChoice(i)}
+                                    style={{
+                                        padding: isMobile ? '14px 20px' : '16px 45px',
+                                        fontSize: isMobile ? '0.85rem' : '0.95rem',
+                                        fontFamily: "'Nanum Myeongjo', serif",
+                                        background: 'linear-gradient(135deg, rgba(22,18,20,0.98) 0%, rgba(38,30,35,0.98) 100%)',
+                                        border: '2px solid #d4af37',
+                                        color: '#f0e6d3',
+                                        cursor: 'pointer',
+                                        textAlign: 'left',
+                                        width: '100%'
+                                    }}
+                                >
+                                    <span style={{ color: '#d4af37', marginRight: '10px' }}>▸</span>
+                                    {c.text}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // ========================================
+        // 글리치 화면
+        // ========================================
+        function GlitchScreen({ onComplete }) {
+            const [phase, setPhase] = useState(0);
+            const msgs = [
+                "ERROR: UNEXPECTED_ENTITY_DETECTED",
+                "WARNING: NARRATIVE_BREACH",
+                "FATAL: OBSERVER_OVERFLOW",
+                "SYSTEM FAILURE...",
+                "TRANSFERRING...",
+                "WELCOME TO YOUR NEW LIFE."
+            ];
+
+            useEffect(() => {
+                const timers = [
+                    setTimeout(() => { setPhase(1); playSound('error'); }, 400),
+                    setTimeout(() => { setPhase(2); playSound('glitch'); }, 1200),
+                    setTimeout(() => { setPhase(3); playSound('glitch'); }, 2000),
+                    setTimeout(() => { setPhase(4); playSound('error'); }, 2800),
+                    setTimeout(() => { setPhase(5); playSound('transition'); }, 3600),
+                    setTimeout(() => { setPhase(6); }, 4400),
+                    setTimeout(onComplete, 5500)
+                ];
+                return () => timers.forEach(clearTimeout);
+            }, [onComplete]);
+
+            return (
+                <div style={{
+                    height: '100vh',
+                    background: '#000',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: 'relative',
+                    overflow: 'hidden'
+                }}>
+                    <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px)',
+                        pointerEvents: 'none',
+                        zIndex: 10
+                    }} />
+
+                    {phase >= 1 && phase < 5 && (
+                        <div style={{ position: 'absolute', inset: 0, animation: 'glitch 0.1s infinite' }}>
+                            {[...Array(15)].map((_, i) => (
+                                <div key={i} style={{
+                                    position: 'absolute',
+                                    top: `${Math.random() * 100}%`,
+                                    left: 0,
+                                    right: 0,
+                                    height: `${Math.random() * 4 + 1}px`,
+                                    background: `rgba(255, ${Math.random() * 80}, ${Math.random() * 80}, ${Math.random() * 0.4 + 0.1})`,
+                                    transform: `translateX(${Math.random() * 15 - 7}px)`
+                                }} />
+                            ))}
+                        </div>
+                    )}
+
+                    <div style={{
+                        fontFamily: 'monospace',
+                        fontSize: phase >= 4 ? 'clamp(1.2rem, 4vw, 1.6rem)' : 'clamp(0.8rem, 2.5vw, 1rem)',
+                        color: phase >= 4 ? '#fff' : '#ff3333',
+                        textShadow: phase >= 4 ? '0 0 30px #fff' : '0 0 10px rgba(255,0,0,0.8)',
+                        animation: phase < 4 ? 'glitch 0.25s infinite' : 'none',
+                        textAlign: 'center',
+                        zIndex: 20,
+                        padding: '20px'
+                    }}>
+                        {phase > 0 && msgs[phase - 1]}
+                    </div>
+                </div>
+            );
+        }
+
+        // ========================================
+        // 캐릭터 사이트
+        // ========================================
+        function CharacterSite() {
+            const [selected, setSelected] = useState(null);
+            const [showIntro, setShowIntro] = useState(true);
+            const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+            useEffect(() => {
+                const handleResize = () => setIsMobile(window.innerWidth <= 768);
+                window.addEventListener('resize', handleResize);
+                return () => window.removeEventListener('resize', handleResize);
+            }, []);
+
+            useEffect(() => {
+                const t = setTimeout(() => {
+                    playSound('transition');
+                    setShowIntro(false);
+                }, 3200);
+                return () => clearTimeout(t);
+            }, []);
+
+            if (showIntro) {
+                return (
+                    <div style={{
+                        height: '100vh',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        background: '#0a0808',
+                        animation: 'fadeIn 0.8s ease-out',
+                        padding: '20px',
+                        textAlign: 'center'
+                    }}>
+                        <div style={{
+                            fontSize: 'clamp(1rem, 3vw, 1.2rem)',
+                            color: '#d4af37',
+                            marginBottom: '0.8rem',
+                            lineHeight: 1.8
+                        }}>
+                            당신은 『제국 최강이 되기까지』의 세계에
+                        </div>
+                        <div style={{
+                            fontSize: 'clamp(1.8rem, 5vw, 2.2rem)',
+                            color: '#f0e6d3',
+                            fontWeight: 'bold',
+                            fontFamily: "'Noto Serif KR', serif",
+                            textShadow: '0 0 25px rgba(212,175,55,0.4)'
+                        }}>
+                            빙의했습니다.
+                        </div>
+                        <div style={{
+                            marginTop: '2.5rem',
+                            padding: '15px 35px',
+                            background: 'rgba(212,175,55,0.08)',
+                            border: '1px solid rgba(212,175,55,0.25)',
+                            borderRadius: '4px'
+                        }}>
+                            <div style={{ color: '#6a5a4a', fontSize: '0.75rem', marginBottom: '4px' }}>YOUR ROLE</div>
+                            <div style={{ color: '#f0e6d3', fontSize: 'clamp(0.9rem, 2.5vw, 1rem)' }}>이름 없는 엑스트라 기사</div>
+                        </div>
+                    </div>
+                );
+            }
+
+            const list = Object.entries(characters);
+
+            const handleCardClick = (key) => {
+                playSound('select');
+                setSelected(key);
+            };
+
+            return (
+                <div style={{
+                    minHeight: '100vh',
+                    background: 'linear-gradient(180deg, #0a0808 0%, #1a1215 100%)',
+                    padding: isMobile ? '25px 12px' : '35px 15px'
+                }}>
+                    <header style={{ textAlign: 'center', marginBottom: isMobile ? '25px' : '40px', animation: 'fadeIn 0.8s ease-out' }}>
+                        <div style={{ fontSize: '0.7rem', color: '#4a3a3a', letterSpacing: '0.35em', marginBottom: '12px' }}>
+                            ✦ CHARACTER ✦
+                        </div>
+                        <h1 style={{
+                            fontFamily: "'Noto Serif KR', serif",
+                            fontSize: 'clamp(1.3rem, 4vw, 2rem)',
+                            color: '#d4af37',
+                            textShadow: '0 0 15px rgba(212,175,55,0.25)'
+                        }}>등장인물</h1>
+                        <div style={{
+                            width: '120px',
+                            height: '2px',
+                            background: 'linear-gradient(90deg, transparent, #d4af37, transparent)',
+                            margin: '12px auto 0'
+                        }} />
+                    </header>
+
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(180px, 1fr))',
+                        gap: isMobile ? '10px' : '15px',
+                        maxWidth: '1000px',
+                        margin: '0 auto'
+                    }}>
+                        {list.map(([key, char], i) => (
+                            <div
+                                key={key}
+                                onClick={() => handleCardClick(key)}
+                                style={{
+                                    background: 'linear-gradient(135deg, rgba(28,23,26,0.95) 0%, rgba(18,15,17,0.95) 100%)',
+                                    border: `2px solid ${char.color}25`,
+                                    borderRadius: '6px',
+                                    overflow: 'hidden',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    animation: `slideUp 0.4s ease-out ${i * 0.06}s both`
+                                }}
+                            >
+                                <div style={{
+                                    width: '100%',
+                                    height: isMobile ? '150px' : '220px',
+                                    background: `linear-gradient(180deg, ${char.color}08, transparent)`,
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    borderBottom: `1px solid ${char.color}15`
+                                }}>
+                                    {char.fullImage ? (
+                                        <img 
+                                            src={char.fullImage} 
+                                            alt={char.name}
+                                            style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'cover' }}
+                                        />
+                                    ) : (
+                                        <span style={{ color: '#2a2025', fontSize: '0.65rem' }}>[ 이미지 ]</span>
+                                    )}
+                                </div>
+                                <div style={{ padding: isMobile ? '10px' : '12px' }}>
+                                    <div style={{
+                                        color: char.color,
+                                        fontSize: isMobile ? '0.55rem' : '0.65rem',
+                                        marginBottom: '3px',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap'
+                                    }}>
+                                        {char.description}
+                                    </div>
+                                    <h3 style={{
+                                        color: '#f0e6d3',
+                                        fontSize: isMobile ? '0.85rem' : '1rem',
+                                        marginBottom: '4px',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap'
+                                    }}>{char.fullName}</h3>
+                                    {char.personality && (
+                                        <div style={{ color: '#5a4a40', fontSize: isMobile ? '0.65rem' : '0.75rem' }}>{char.personality}</div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* 모달 */}
+                    {selected && (
+                        <div
+                            onClick={() => { playSound('click'); setSelected(null); }}
+                            style={{
+                                position: 'fixed',
+                                inset: 0,
+                                background: 'rgba(0,0,0,0.92)',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                zIndex: 1000,
+                                padding: '15px',
+                                animation: 'fadeIn 0.25s ease-out'
+                            }}
+                        >
+                            <div
+                                onClick={e => e.stopPropagation()}
+                                style={{
+                                    width: '100%',
+                                    maxWidth: isMobile ? '100%' : '850px',
+                                    height: isMobile ? '85vh' : '75vh',
+                                    maxHeight: isMobile ? 'none' : '550px',
+                                    background: 'linear-gradient(135deg, #1a1520 0%, #0a0808 100%)',
+                                    border: `3px solid ${characters[selected].color}`,
+                                    display: 'flex',
+                                    flexDirection: isMobile ? 'column' : 'row',
+                                    position: 'relative',
+                                    overflow: 'hidden'
+                                }}
+                            >
+                                <div style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    height: '3px',
+                                    background: `linear-gradient(90deg, transparent, ${characters[selected].color}, transparent)`
+                                }} />
+
+                                <div style={{
+                                    flex: isMobile ? '0 0 40%' : 1,
+                                    background: `linear-gradient(180deg, ${characters[selected].color}10, transparent)`,
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    borderRight: isMobile ? 'none' : `1px solid ${characters[selected].color}20`,
+                                    borderBottom: isMobile ? `1px solid ${characters[selected].color}20` : 'none'
+                                }}>
+                                    {characters[selected].fullImage ? (
+                                        <img 
+                                            src={characters[selected].fullImage} 
+                                            alt={characters[selected].name}
+                                            style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                                        />
+                                    ) : (
+                                        <div style={{ color: '#2a2025', fontSize: '0.75rem' }}>[ 전신 이미지 ]</div>
+                                    )}
+                                </div>
+
+                                <div style={{
+                                    flex: 1,
+                                    padding: isMobile ? '20px' : '25px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    position: 'relative',
+                                    overflow: 'auto'
+                                }}>
+                                    <button
+                                        onClick={() => { playSound('click'); setSelected(null); }}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '10px',
+                                            right: '10px',
+                                            background: 'none',
+                                            border: `1px solid ${characters[selected].color}40`,
+                                            color: characters[selected].color,
+                                            width: '30px',
+                                            height: '30px',
+                                            cursor: 'pointer',
+                                            fontSize: '1rem',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                    >✕</button>
+
+                                    <div style={{ marginBottom: '15px' }}>
+                                        <div style={{
+                                            color: characters[selected].color,
+                                            fontSize: '0.7rem',
+                                            letterSpacing: '0.15em',
+                                            marginBottom: '5px'
+                                        }}>{characters[selected].description}</div>
+                                        <h2 style={{
+                                            color: '#f0e6d3',
+                                            fontSize: isMobile ? '1.3rem' : '1.6rem',
+                                            fontFamily: "'Noto Serif KR', serif"
+                                        }}>{characters[selected].fullName}</h2>
+                                    </div>
+
+                                    <div style={{
+                                        width: '100%',
+                                        height: '2px',
+                                        background: `linear-gradient(90deg, ${characters[selected].color}, transparent)`,
+                                        marginBottom: '15px'
+                                    }} />
+
+                                    {characters[selected].personality && (
+                                        <div style={{ marginBottom: '12px' }}>
+                                            <div style={{ color: '#4a4040', fontSize: '0.65rem', marginBottom: '2px' }}>PERSONALITY</div>
+                                            <div style={{ color: '#b0a090', fontSize: '0.85rem' }}>{characters[selected].personality}</div>
+                                        </div>
+                                    )}
+
+                                    {characters[selected].affection && (
+                                        <div>
+                                            <div style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                marginBottom: '5px'
+                                            }}>
+                                                <span style={{ color: '#4a4040', fontSize: '0.65rem' }}>AFFECTION</span>
+                                                <span style={{ color: characters[selected].color, fontSize: '0.75rem' }}>
+                                                    ♥ {characters[selected].affection}%
+                                                </span>
+                                            </div>
+                                            <div style={{
+                                                height: '5px',
+                                                background: '#1a1215',
+                                                borderRadius: '3px',
+                                                overflow: 'hidden',
+                                                border: '1px solid #2a2025'
+                                            }}>
+                                                <div style={{
+                                                    width: `${characters[selected].affection}%`,
+                                                    height: '100%',
+                                                    background: `linear-gradient(90deg, ${characters[selected].color}88, ${characters[selected].color})`,
+                                                    borderRadius: '3px'
+                                                }} />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div style={{
+                                        position: 'absolute',
+                                        bottom: '10px',
+                                        right: '10px',
+                                        fontSize: '2rem',
+                                        color: characters[selected].color,
+                                        opacity: 0.08
+                                    }}>♦</div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <footer style={{
+                        textAlign: 'center',
+                        marginTop: isMobile ? '35px' : '50px',
+                        padding: '20px',
+                        borderTop: '1px solid #1a1520'
+                    }}>
+                        <p style={{ color: '#2a2025', fontSize: '0.65rem' }}>© 2024 『제국 최강이 되기까지』</p>
+                    </footer>
+                </div>
+            );
+        }
+
+        // ========================================
+        // App
+        // ========================================
+        function App() {
+            const [screen, setScreen] = useState('title');
+
+            return (
+                <>
+                    {screen === 'title' && <TitleScreen onStart={() => setScreen('loading')} />}
+                    {screen === 'loading' && <LoadingScreen onComplete={() => setScreen('game')} />}
+                    {screen === 'game' && <GameScreen onGlitch={() => setScreen('glitch')} />}
+                    {screen === 'glitch' && <GlitchScreen onComplete={() => setScreen('site')} />}
+                    {screen === 'site' && <CharacterSite />}
+                </>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
