@@ -38,6 +38,32 @@
         .char-sad { filter: brightness(0.9); }
         .char-surprise { animation: pulse 0.4s ease-in-out; }
 
+        /* 모바일 세로 화면 회전 안내 */
+        .rotate-notice {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #0a0810;
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #9d8ec2;
+        }
+        .rotate-notice .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: rotateIcon 1.5s ease-in-out infinite;
+        }
+        @keyframes rotateIcon {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(90deg); }
+        }
+        @media (max-width: 768px) and (orientation: portrait) {
+            .rotate-notice { display: flex; }
+            #game-container { display: none !important; }
+        }
+
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #16141c; }
         ::-webkit-scrollbar-thumb { background: #6b6480; border-radius: 2px; }
@@ -45,6 +71,13 @@
 </head>
 <body>
     <div id="root"></div>
+    
+    <!-- 모바일 세로 화면 회전 안내 -->
+    <div class="rotate-notice">
+        <div class="icon">📱</div>
+        <div style="font-size: 1.1rem; margin-bottom: 0.5rem;">화면을 가로로 돌려주세요</div>
+        <div style="font-size: 0.8rem; color: #6b6480;">Please rotate your device</div>
+    </div>
     
     <script type="text/babel">
         const { useState, useEffect, useCallback, useMemo } = React;
@@ -64,13 +97,13 @@
 
         // 캐릭터 데이터
         const characters = {
-            kairen: { name: "카이른", fullName: "카이른 폰 레이센", color: "#9d8ec2", description: "숨겨진 황자", tags: ["#숨겨진_황자", "#계산적", "#온화한_미소", "#먼치킨"], quote: "모두가 내게 소중한 존재야." },
-            lizette: { name: "리제트", fullName: "리제트 밀러", color: "#d4a0a8", personality: "소심 · 집착", description: "남주 소꿉친구 하녀", tags: ["#소꿉친구", "#소심", "#조용한_집착", "#하녀"], quote: "저, 저는 항상 도련님 편이에요.." },
-            adeline: { name: "아델린", fullName: "아델린 폰 크로이츠", color: "#c4b090", personality: "츤데레", description: "공작가 영애", tags: ["#공작영애", "#츤데레", "#도도함", "#순정"], quote: "착각하지 마. 넌 그냥 명령을 따르면 돼." },
-            karen: { name: "카렌", fullName: "카렌 폰 슈테른", color: "#8aadc0", personality: "무감정", description: "황실 근위대장", tags: ["#근위대장", "#무표정", "#실력주의", "#쿨뷰티"], quote: "...명령이다, 그냥 이행해." },
-            elia: { name: "엘리아", fullName: "엘리아 폰 베른트", color: "#c49898", personality: "욕데레", description: "유저 소꿉친구 기사", tags: ["#소꿉친구", "#욕쟁이", "#츤츤", "#여린_속마음"], quote: "하... 진짜, 너 같은 멍청이는 나 없으면 안돼." },
+            kairen: { name: "카이른", fullName: "카이른 폰 레이센", color: "#9d8ec2", description: "숨겨진 황자", tags: ["#숨겨진_황자", "#계산적", "#온화한_미소", "#먼치킨"], quote: "모두 내게 소중하지만... 가장 소중한 건 따로 있지." },
+            lizette: { name: "리제트", fullName: "리제트 밀러", color: "#d4a0a8", personality: "소심 · 집착", description: "남주 소꿉친구 하녀", tags: ["#소꿉친구", "#소심", "#조용한_집착", "#하녀"], quote: "도, 도련님... 저는 언제까지나 곁에 있을게요..." },
+            adeline: { name: "아델린", fullName: "아델린 폰 크로이츠", color: "#c4b090", personality: "츤데레", description: "공작가 영애", tags: ["#공작영애", "#츤데레", "#도도함", "#순정"], quote: "착각하지 마세요. 전 그저 의무를 다할 뿐이에요." },
+            karen: { name: "카렌", fullName: "카렌 폰 슈테른", color: "#8aadc0", personality: "무감정", description: "황실 근위대장", tags: ["#근위대장", "#무표정", "#실력주의", "#쿨뷰티"], quote: "...명령이라면 따르겠습니다." },
+            elia: { name: "엘리아", fullName: "엘리아 폰 베른트", color: "#c49898", personality: "욕데레", description: "유저 소꿉친구 기사", tags: ["#소꿉친구", "#욕쟁이", "#츤츤", "#여린_속마음"], quote: "하... 진짜, 너 같은 멍청이는 내가 없으면 안 돼." },
             selene: { name: "셀레네", fullName: "셀레네 아르카디엔", color: "#a890b8", personality: "소유욕", description: "제3황녀", tags: ["#황녀", "#소유욕", "#우아함", "#집착"], quote: "후후, 폐하는 제 것이에요. 누구도 가져갈 수 없죠." },
-            luna: { name: "루나", fullName: "루나", color: "#c8909c", personality: "메스가키", description: "유저 의붓동생", tags: ["#의붓동생", "#메스가키", "#츤데레", "#경멸"], quote: "흥, 뭐야 그 눈. 쳐다보지 마." }
+            luna: { name: "루나", fullName: "루나", color: "#c8909c", personality: "메스가키", description: "유저 의붓동생", tags: ["#의붓동생", "#메스가키", "#츤데레", "#경멸"], quote: "흥, 뭐야 그 눈. 오빠라고? 웃기지 마세요~" }
         };
 
         // 파티클 컴포넌트
@@ -114,16 +147,16 @@
             }, []);
 
             const TitleLogo = () => IMAGES.titleLogo 
-                ? <img src={IMAGES.titleLogo} alt="제국 최강이 되기까지" style={{ maxWidth: isMobile ? '180px' : '320px', height: 'auto' }} />
-                : <div style={{ padding: '18px 25px', border: '1px dashed #3d3850', borderRadius: '6px' }}>
-                    <div style={{ fontSize: '0.6rem', color: '#6b6480', marginBottom: '5px' }}>[ 타이틀 로고 ]</div>
-                    <div style={{ fontSize: isMobile ? '1.2rem' : '1.7rem', fontFamily: "'Noto Serif KR', serif", fontWeight: 700, color: '#d8d4e2' }}>제국 최강이 되기까지</div>
+                ? <img src={IMAGES.titleLogo} alt="제국 최강이 되기까지" style={{ maxWidth: isMobile ? '160px' : '320px', height: 'auto' }} />
+                : <div style={{ padding: isMobile ? '12px 18px' : '18px 25px', border: '1px dashed #3d3850', borderRadius: '6px' }}>
+                    <div style={{ fontSize: '0.55rem', color: '#6b6480', marginBottom: '4px' }}>[ 타이틀 로고 ]</div>
+                    <div style={{ fontSize: isMobile ? '1rem' : '1.7rem', fontFamily: "'Noto Serif KR', serif", fontWeight: 700, color: '#d8d4e2' }}>제국 최강이 되기까지</div>
                   </div>;
 
             const MenuBtn = ({ text, main }) => (
                 <button onClick={main ? () => { playSound('select'); onStart(); } : () => playSound('click')} style={{
-                    padding: isMobile ? '9px 18px' : '12px 28px', 
-                    fontSize: isMobile ? '0.78rem' : '0.88rem', 
+                    padding: isMobile ? '7px 14px' : '12px 28px', 
+                    fontSize: isMobile ? '0.7rem' : '0.88rem', 
                     fontWeight: main ? 600 : 400,
                     background: main ? 'rgba(157, 142, 194, 0.9)' : 'rgba(30, 28, 38, 0.6)',
                     border: main ? 'none' : '1px solid rgba(100, 90, 120, 0.3)',
@@ -132,20 +165,20 @@
                     cursor: main ? 'pointer' : 'default',
                     opacity: main ? 1 : 0.6,
                     width: '100%',
-                    maxWidth: isMobile ? '140px' : '180px'
-                }}>{main && <span style={{ marginRight: '5px' }}>▶</span>}{text}</button>
+                    maxWidth: isMobile ? '120px' : '180px'
+                }}>{main && <span style={{ marginRight: '4px' }}>▶</span>}{text}</button>
             );
 
             const CharArea = () => IMAGES.titleCharacter 
                 ? <img src={IMAGES.titleCharacter} style={{ 
-                    width: '100%', 
-                    height: '100%', 
+                    maxWidth: '100%', 
+                    maxHeight: '100%', 
                     objectFit: 'contain',
-                    objectPosition: 'bottom center'
+                    objectPosition: 'center'
                   }} />
-                : <div style={{ color: '#2a2836', fontSize: '0.65rem', padding: '30px', border: '1px dashed #2a2836', borderRadius: '6px' }}>[ 캐릭터 이미지 ]</div>;
+                : <div style={{ color: '#2a2836', fontSize: '0.6rem', padding: '25px', border: '1px dashed #2a2836', borderRadius: '6px' }}>[ 캐릭터 이미지 ]</div>;
 
-            // 모바일 레이아웃
+            // 모바일 레이아웃 (가로 기준)
             if (isMobile) {
                 return (
                     <div style={{ 
@@ -156,40 +189,44 @@
                     }}>
                         <Particles />
                         
-                        {/* 캐릭터 - 왼쪽 하단, 화면의 65% 너비 차지 */}
+                        {/* 캐릭터 - 왼쪽 중앙 */}
                         <div style={{ 
                             position: 'absolute', 
                             left: 0, 
-                            bottom: 0, 
-                            width: '70%', 
-                            height: '60%',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '50%', 
+                            height: '85%',
                             display: 'flex',
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-end'
+                            justifyContent: 'center',
+                            alignItems: 'center'
                         }}>
                             <CharArea />
                         </div>
                         
-                        {/* 메뉴 영역 - 오른쪽 중앙 */}
+                        {/* 메뉴 영역 - 오른쪽 */}
                         <div style={{ 
                             position: 'absolute', 
-                            right: '5%', 
-                            top: '50%',
-                            transform: 'translateY(-50%)',
+                            right: 0, 
+                            top: 0,
+                            bottom: 0,
+                            width: '50%',
+                            background: 'linear-gradient(90deg, transparent, rgba(10,8,16,0.85) 15%)',
                             display: 'flex', 
                             flexDirection: 'column', 
+                            justifyContent: 'center',
                             alignItems: 'center',
                             zIndex: 10
                         }}>
-                            <div style={{ marginBottom: '16px' }}><TitleLogo /></div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center' }}>
+                            <div style={{ marginBottom: '14px' }}><TitleLogo /></div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center' }}>
                                 {['GAME START', 'DATA LOAD', 'CONFIG', 'GALLERY', 'EXIT'].map(t => 
                                     <MenuBtn key={t} text={t} main={t === 'GAME START'} />
                                 )}
                             </div>
                         </div>
                         
-                        <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', fontSize: '0.55rem', color: '#3d3850' }}>© 2024 Imperial Romance Studio</div>
+                        <div style={{ position: 'absolute', bottom: '8px', right: '12px', fontSize: '0.5rem', color: '#3d3850', zIndex: 10 }}>made by CowardMole</div>
                     </div>
                 );
             }
@@ -204,16 +241,17 @@
                 }}>
                     <Particles />
                     
-                    {/* 캐릭터 - 왼쪽 */}
+                    {/* 캐릭터 - 왼쪽 중앙 */}
                     <div style={{ 
                         position: 'absolute', 
                         left: 0, 
-                        bottom: 0, 
+                        top: '50%',
+                        transform: 'translateY(-50%)',
                         width: '55%', 
                         height: '95%',
                         display: 'flex',
                         justifyContent: 'center',
-                        alignItems: 'flex-end'
+                        alignItems: 'center'
                     }}>
                         <CharArea />
                     </div>
@@ -238,7 +276,7 @@
                                 <MenuBtn key={t} text={t} main={t === 'GAME START'} />
                             )}
                         </div>
-                        <div style={{ position: 'absolute', bottom: '16px', fontSize: '0.6rem', color: '#3d3850' }}>made by CowardMole</div>
+                        <div style={{ position: 'absolute', bottom: '16px', fontSize: '0.6rem', color: '#3d3850' }}>© 2024 Imperial Romance Studio</div>
                     </div>
                 </div>
             );
@@ -280,15 +318,15 @@
         function AffectionUI({ affections, isMobile }) {
             const list = ['lizette', 'adeline', 'karen', 'elia', 'selene', 'luna'];
             return (
-                <div style={{ position: 'absolute', top: isMobile ? '10px' : '14px', right: isMobile ? '10px' : '14px', background: 'rgba(10, 8, 16, 0.95)', border: '1px solid #252230', borderRadius: isMobile ? '8px' : '10px', padding: isMobile ? '10px' : '16px 18px', minWidth: isMobile ? '120px' : '220px', zIndex: 100 }}>
-                    <div style={{ textAlign: 'center', fontSize: isMobile ? '0.58rem' : '0.8rem', color: '#9d8ec2', marginBottom: isMobile ? '7px' : '14px', paddingBottom: isMobile ? '5px' : '10px', borderBottom: '1px solid #252230' }}>♥ AFFECTION</div>
+                <div style={{ position: 'absolute', top: isMobile ? '6px' : '14px', right: isMobile ? '6px' : '14px', background: 'rgba(10, 8, 16, 0.95)', border: '1px solid #252230', borderRadius: isMobile ? '6px' : '10px', padding: isMobile ? '6px 8px' : '16px 18px', minWidth: isMobile ? '90px' : '220px', zIndex: 100 }}>
+                    <div style={{ textAlign: 'center', fontSize: isMobile ? '0.48rem' : '0.8rem', color: '#9d8ec2', marginBottom: isMobile ? '4px' : '14px', paddingBottom: isMobile ? '3px' : '10px', borderBottom: '1px solid #252230' }}>♥ AFFECTION</div>
                     {list.map(k => (
-                        <div key={k} style={{ marginBottom: isMobile ? '5px' : '10px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: isMobile ? '0.54rem' : '0.78rem', marginBottom: isMobile ? '2px' : '4px' }}>
+                        <div key={k} style={{ marginBottom: isMobile ? '3px' : '10px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: isMobile ? '0.44rem' : '0.78rem', marginBottom: isMobile ? '1px' : '4px' }}>
                                 <span style={{ color: characters[k].color }}>{characters[k].name}</span>
                                 <span style={{ color: '#c8c4d4' }}>{affections[k]}</span>
                             </div>
-                            <div style={{ height: isMobile ? '3px' : '6px', background: '#1a1820', borderRadius: '3px', overflow: 'hidden' }}>
+                            <div style={{ height: isMobile ? '2px' : '6px', background: '#1a1820', borderRadius: '3px', overflow: 'hidden' }}>
                                 <div style={{ width: `${affections[k]}%`, height: '100%', background: characters[k].color, transition: 'width 0.3s' }} />
                             </div>
                         </div>
@@ -325,7 +363,7 @@
                 { speaker: "elia", text: "하... 진짜 꼴보기 싫다. 너네 둘 다 좀 조용히 해.", emotion: "angry" },
                 { speaker: "luna", text: "흥, 언니들 싸우는 거 재밌네요~ 폐하는 어떻게 생각하세요?", emotion: "happy" },
                 { speaker: "karen", text: "...시끄럽군.", emotion: "idle" },
-                { speaker: "narrator", text: "여섯 여자들이 당신을 바라본다.", emotion: "idle" }
+                { speaker: "narrator", text: "여섯 쌍의 눈이 당신을 바라본다.", emotion: "idle" }
             ], []);
 
             const choices = useMemo(() => [
@@ -406,8 +444,8 @@
                     </div>
 
                     {showChoices && (
-                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', gap: isMobile ? '7px' : '9px', animation: 'fadeIn 0.2s', zIndex: 200, width: isMobile ? '86%' : 'auto', maxWidth: '400px' }}>
-                            {choices.map((c, i) => <button key={i} onClick={() => handleChoice(i)} style={{ padding: isMobile ? '13px 18px' : '15px 26px', fontSize: isMobile ? '0.84rem' : '0.92rem', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #3d3850', color: '#e8e6ed', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', width: '100%' }}><span style={{ color: '#9d8ec2', marginRight: '8px' }}>▸</span>{c.text}</button>)}
+                        <div style={{ position: 'absolute', top: isMobile ? '35%' : '45%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', gap: isMobile ? '5px' : '9px', animation: 'fadeIn 0.2s', zIndex: 200, width: isMobile ? '75%' : 'auto', maxWidth: '380px' }}>
+                            {choices.map((c, i) => <button key={i} onClick={() => handleChoice(i)} style={{ padding: isMobile ? '8px 12px' : '15px 26px', fontSize: isMobile ? '0.72rem' : '0.92rem', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #3d3850', color: '#e8e6ed', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', width: '100%' }}><span style={{ color: '#9d8ec2', marginRight: '6px' }}>▸</span>{c.text}</button>)}
                         </div>
                     )}
                 </div>
@@ -444,11 +482,11 @@
 
             if (showIntro) return (
                 <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#0a0810', animation: 'fadeIn 0.5s', padding: '20px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '1rem', color: '#9d8ec2', marginBottom: '0.6rem' }}>당신은 미연시 『제국 최강이 되기까지』속 캐릭터로</div>
+                    <div style={{ fontSize: '1rem', color: '#9d8ec2', marginBottom: '0.6rem' }}>당신은 미연시 『제국 최강이 되기까지』속으로</div>
                     <div style={{ fontSize: '2rem', color: '#e8e6ed', fontWeight: 700, fontFamily: "'Noto Serif KR', serif" }}>빙의했습니다.</div>
                     <div style={{ marginTop: '2rem', padding: '12px 28px', background: '#14121a', borderRadius: '16px' }}>
                         <div style={{ color: '#9d8ec2', fontSize: '0.7rem', marginBottom: '3px' }}>YOUR ROLE</div>
-                        <div style={{ color: '#d8d4e2', fontSize: '0.95rem' }}>이름 없는 폐급 엑스트라 기사</div>
+                        <div style={{ color: '#d8d4e2', fontSize: '0.95rem' }}>이름 없는 엑스트라 기사</div>
                     </div>
                 </div>
             );
@@ -515,7 +553,7 @@
                     )}
 
                     <footer style={{ textAlign: 'center', marginTop: isMobile ? '30px' : '45px', padding: '18px', borderTop: '1px solid #1a1820' }}>
-                        <p style={{ color: '#1a1820', fontSize: '0.6rem' }}>made by Cowardmole</p>
+                        <p style={{ color: '#1a1820', fontSize: '0.6rem' }}>made by CowardMole</p>
                     </footer>
                 </div>
             );
@@ -523,13 +561,13 @@
 
         function App() {
             const [screen, setScreen] = useState('title');
-            return <>
+            return <div id="game-container" style={{ minHeight: '100vh' }}>
                 {screen === 'title' && <TitleScreen onStart={() => setScreen('loading')} />}
                 {screen === 'loading' && <LoadingScreen onComplete={() => setScreen('game')} />}
                 {screen === 'game' && <GameScreen onGlitch={() => setScreen('glitch')} />}
                 {screen === 'glitch' && <GlitchScreen onComplete={() => setScreen('site')} />}
                 {screen === 'site' && <CharacterSite />}
-            </>;
+            </div>;
         }
 
         ReactDOM.render(<App />, document.getElementById('root'));
