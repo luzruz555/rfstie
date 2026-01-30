@@ -12,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { font-family: 'Noto Sans KR', sans-serif; background: #16141c; color: #e8e6ed; min-height: 100vh; overflow-x: hidden; }
+        html, body { font-family: 'Noto Sans KR', sans-serif; background: #0a0810; color: #e8e6ed; min-height: 100vh; overflow-x: hidden; }
         #root { min-height: 100vh; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -24,6 +24,13 @@
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         @keyframes arrowBounce { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(3px); opacity: 0.4; } }
         @keyframes glitchText { 0%, 100% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(2px, -2px); } 60% { transform: translate(-2px, -2px); } 80% { transform: translate(2px, 2px); } }
+        
+        @keyframes particleDrift {
+            0% { transform: translate(0, 0); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translate(20px, -80px); opacity: 0; }
+        }
 
         .char-idle { animation: float 3s ease-in-out infinite; }
         .char-happy { animation: bounce 0.5s ease-in-out; }
@@ -47,21 +54,53 @@
         const playSound = (type) => { if (SOUNDS[type]) new Audio(SOUNDS[type]).play().catch(() => {}); };
 
         const IMAGES = {
-            titleLogo: 'img/tlogo.png', titleBackground: 'img/tbackground.png', titleCharacter: 'img/tchar.png', gameBackground: 'img/gbackground.png',
+            titleScreen: 'img/timg.png',  // 타이틀 전체 이미지
+            gameBackground: 'img/gbackground.png',
             charKairen: null, charLizette: null, charAdeline: null, charKaren: null, charElia: null, charSelene: null, charLuna: null,
             fullKairen: null, fullLizette: null, fullAdeline: null, fullKaren: null, fullElia: null, fullSelene: null, fullLuna: null,
         };
 
         // 캐릭터 데이터
         const characters = {
-            kairen: { name: "카이른", fullName: "카이른 폰 레이센", color: "#9d8ec2", description: "숨겨진 황자", tags: ["#숨겨진_황자", "#계산적", "#온화한_미소", "#먼치킨"], quote: "모두 내게 소중해." },
-            lizette: { name: "리제트", fullName: "리제트 밀러", color: "#d4a0a8", personality: "소심 · 집착", description: "남주 소꿉친구 하녀", tags: ["#소꿉친구", "#소심", "#조용한_집착", "#하녀"], quote: "저.. 저는 도련님 곁에 남을거에요.." },
-            adeline: { name: "아델린", fullName: "아델린 폰 크로이츠", color: "#c4b090", personality: "츤데레", description: "공작가 영애", tags: ["#공작영애", "#츤데레", "#도도함", "#순정"], quote: "착각하지 마세요. 전 그저 의무를 다할 뿐이에요." },
-            karen: { name: "카렌", fullName: "카렌 폰 슈테른", color: "#8aadc0", personality: "무감정", description: "황실 근위대장", tags: ["#근위대장", "#무표정", "#실력주의", "#쿨뷰티"], quote: "...명령은 따르라고 있는거야." },
-            elia: { name: "엘리아", fullName: "엘리아 폰 베른트", color: "#c49898", personality: "욕데레", description: "유저 소꿉친구 기사", tags: ["#소꿉친구", "#욕쟁이", "#츤츤", "#여린_속마음"], quote: "하... 진짜, 너 같은 멍청이는 내가 없으면 안 돼." },
-            selene: { name: "셀레네", fullName: "셀레네 아르카디엔", color: "#a890b8", personality: "소유욕", description: "제3황녀", tags: ["#황녀", "#소유욕", "#우아함", "#집착"], quote: "후후, 폐하는 제 것이에요. 누구도 가져갈 수 없죠." },
-            luna: { name: "루나", fullName: "루나", color: "#c8909c", personality: "메스가키", description: "유저 의붓동생", tags: ["#의붓동생", "#메스가키", "#츤데레", "#경멸"], quote: "흥, 뭐야 쳐다보지 말라고!" }
+            kairen: { name: "카이른", fullName: "카이른 폰 레이센", color: "#9d8ec2", description: "숨겨진 황자", tags: ["#숨겨진_황자", "#계산적", "#온화한_미소", "#먼치킨"], quote: "모두 내게 소중하지만... 가장 소중한 건 따로 있지." },
+            lizette: { name: "리제트", fullName: "리제트 밀러", color: "#d4a0a8", affection: 97, personality: "소심 · 집착", description: "남주 소꿉친구 하녀", tags: ["#소꿉친구", "#소심", "#조용한_집착", "#하녀"], quote: "도, 도련님... 저는 언제까지나 곁에 있을게요..." },
+            adeline: { name: "아델린", fullName: "아델린 폰 크로이츠", color: "#c4b090", affection: 89, personality: "츤데레", description: "공작가 영애", tags: ["#공작영애", "#츤데레", "#도도함", "#순정"], quote: "착각하지 마세요. 전 그저 의무를 다할 뿐이에요." },
+            karen: { name: "카렌", fullName: "카렌 폰 슈테른", color: "#8aadc0", affection: 85, personality: "무감정", description: "황실 근위대장", tags: ["#근위대장", "#무표정", "#실력주의", "#쿨뷰티"], quote: "...명령이라면 따르겠습니다." },
+            elia: { name: "엘리아", fullName: "엘리아 폰 베른트", color: "#c49898", affection: 82, personality: "욕데레", description: "유저 소꿉친구 기사", tags: ["#소꿉친구", "#욕쟁이", "#츤츤", "#여린_속마음"], quote: "하... 진짜, 너 같은 멍청이는 내가 없으면 안 돼." },
+            selene: { name: "셀레네", fullName: "셀레네 아르카디엔", color: "#a890b8", affection: 94, personality: "소유욕", description: "제3황녀", tags: ["#황녀", "#소유욕", "#우아함", "#집착"], quote: "후후, 폐하는 제 것이에요. 누구도 가져갈 수 없죠." },
+            luna: { name: "루나", fullName: "루나", color: "#c8909c", affection: 78, personality: "메스가키", description: "유저 의붓동생", tags: ["#의붓동생", "#메스가키", "#츤데레", "#경멸"], quote: "흥, 뭐야 그 눈. 오빠라고? 웃기지 마세요~" }
         };
+
+        // 파티클 컴포넌트
+        function Particles() {
+            const particles = useMemo(() => Array.from({ length: 20 }, (_, i) => ({
+                id: i,
+                left: Math.random() * 100,
+                top: 20 + Math.random() * 70,
+                size: 2 + Math.random() * 3,
+                duration: 8 + Math.random() * 6,
+                delay: Math.random() * 8,
+                opacity: 0.3 + Math.random() * 0.4
+            })), []);
+
+            return (
+                <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 5 }}>
+                    {particles.map(p => (
+                        <div key={p.id} style={{
+                            position: 'absolute',
+                            left: `${p.left}%`,
+                            top: `${p.top}%`,
+                            width: `${p.size}px`,
+                            height: `${p.size}px`,
+                            background: `rgba(255, 255, 255, ${p.opacity})`,
+                            borderRadius: '50%',
+                            boxShadow: `0 0 ${p.size * 2}px rgba(255, 255, 255, 0.3)`,
+                            animation: `particleDrift ${p.duration}s ease-in-out ${p.delay}s infinite`
+                        }} />
+                    ))}
+                </div>
+            );
+        }
 
         // 타이틀 화면
         function TitleScreen({ onStart }) {
@@ -72,47 +111,79 @@
                 return () => window.removeEventListener('resize', h);
             }, []);
 
-            const TitleLogo = () => IMAGES.titleLogo 
-                ? <img src={IMAGES.titleLogo} alt="제국 최강이 되기까지" style={{ maxWidth: isMobile ? '240px' : '340px', height: 'auto' }} />
-                : <div style={{ padding: '20px 30px', border: '1px dashed #3d3850', borderRadius: '6px' }}>
-                    <div style={{ fontSize: '0.65rem', color: '#6b6480', marginBottom: '6px' }}>[ 타이틀 로고 ]</div>
-                    <div style={{ fontSize: isMobile ? '1.4rem' : '1.8rem', fontFamily: "'Noto Serif KR', serif", fontWeight: 700, color: '#d8d4e2' }}>제국 최강이 되기까지</div>
-                  </div>;
+            // 타이틀 이미지가 있을 때
+            if (IMAGES.titleScreen) {
+                return (
+                    <div style={{ 
+                        height: '100vh', 
+                        width: '100vw',
+                        position: 'relative',
+                        background: '#0a0810',
+                        overflow: 'hidden'
+                    }}>
+                        {/* 배경 이미지 */}
+                        <img 
+                            src={IMAGES.titleScreen} 
+                            alt="Title"
+                            style={{
+                                position: 'absolute',
+                                width: '100%',
+                                height: '100%',
+                                objectFit: isMobile ? 'contain' : 'cover',
+                                objectPosition: isMobile ? 'bottom center' : 'center'
+                            }}
+                        />
+                        
+                        {/* 파티클 */}
+                        <Particles />
+                        
+                        {/* 클릭 영역 */}
+                        <button 
+                            onClick={() => { playSound('select'); onStart(); }}
+                            style={{
+                                position: 'absolute',
+                                right: isMobile ? '15%' : '8%',
+                                top: isMobile ? '33%' : '40%',
+                                width: isMobile ? '140px' : '180px',
+                                height: '42px',
+                                background: 'transparent',
+                                border: 'none',
+                                cursor: 'pointer',
+                                zIndex: 20
+                            }}
+                        />
+                    </div>
+                );
+            }
 
+            // 타이틀 이미지 없을 때
             const MenuBtn = ({ text, main }) => (
                 <button onClick={main ? () => { playSound('select'); onStart(); } : () => playSound('click')} style={{
-                    padding: isMobile ? '12px 24px' : '13px 32px', fontSize: isMobile ? '0.88rem' : '0.92rem', fontWeight: main ? 600 : 400,
-                    background: main ? '#9d8ec2' : 'transparent', border: main ? 'none' : '1px solid #3d3850', color: main ? '#16141c' : '#8880a0',
-                    borderRadius: '20px', cursor: main ? 'pointer' : 'default', opacity: main ? 1 : 0.6, width: '100%', maxWidth: '200px'
+                    padding: isMobile ? '11px 22px' : '13px 32px', 
+                    fontSize: isMobile ? '0.85rem' : '0.92rem', 
+                    fontWeight: main ? 600 : 400,
+                    background: main ? 'rgba(157, 142, 194, 0.9)' : 'rgba(30, 28, 38, 0.6)',
+                    border: main ? 'none' : '1px solid rgba(100, 90, 120, 0.3)',
+                    color: main ? '#0a0810' : 'rgba(180, 170, 200, 0.7)',
+                    borderRadius: '4px',
+                    cursor: main ? 'pointer' : 'default',
+                    opacity: main ? 1 : 0.6,
+                    width: '100%',
+                    maxWidth: isMobile ? '170px' : '200px'
                 }}>{main && <span style={{ marginRight: '6px' }}>▶</span>}{text}</button>
             );
 
-            const CharArea = () => IMAGES.titleCharacter 
-                ? <img src={IMAGES.titleCharacter} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
-                : <div style={{ color: '#2a2836', fontSize: '0.7rem', padding: '35px', border: '1px dashed #2a2836', borderRadius: '6px' }}>[ 캐릭터 이미지 ]</div>;
-
-            if (isMobile) return (
-                <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: IMAGES.titleBackground ? `url(${IMAGES.titleBackground}) center/cover` : '#16141c' }}>
-                    <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'flex-end', padding: '20px' }}><CharArea /></div>
-                    <div style={{ background: 'linear-gradient(transparent, #16141c 20%)', padding: '24px 20px 32px' }}>
-                        <div style={{ textAlign: 'center', marginBottom: '20px' }}><TitleLogo /></div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
-                            {['GAME START', 'DATA LOAD', 'CONFIG', 'GALLERY', 'EXIT'].map(t => <MenuBtn key={t} text={t} main={t === 'GAME START'} />)}
-                        </div>
-                    </div>
-                </div>
-            );
-
             return (
-                <div style={{ height: '100vh', position: 'relative', background: IMAGES.titleBackground ? `url(${IMAGES.titleBackground}) center/cover` : '#16141c' }}>
-                    <div style={{ position: 'absolute', left: 0, bottom: 0, width: '54%', height: '94%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}><CharArea /></div>
-                    <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '46%', background: 'linear-gradient(90deg, transparent, #16141c 15%)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '40px' }}>
-                        <div style={{ marginBottom: '40px' }}><TitleLogo /></div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', alignItems: 'center', width: '100%' }}>
-                            {['GAME START', 'DATA LOAD', 'CONFIG', 'GALLERY', 'EXIT'].map(t => <MenuBtn key={t} text={t} main={t === 'GAME START'} />)}
-                        </div>
-                        <div style={{ position: 'absolute', bottom: '16px', fontSize: '0.6rem', color: '#3d3850' }}>made by CowardMole</div>
+                <div style={{ height: '100vh', position: 'relative', background: '#0a0810', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                    <Particles />
+                    <div style={{ padding: '20px 30px', border: '1px dashed #3d3850', borderRadius: '6px', marginBottom: '30px', zIndex: 10 }}>
+                        <div style={{ fontSize: '0.65rem', color: '#6b6480', marginBottom: '6px' }}>[ 타이틀 이미지 ]</div>
+                        <div style={{ fontSize: isMobile ? '1.3rem' : '1.8rem', fontFamily: "'Noto Serif KR', serif", fontWeight: 700, color: '#d8d4e2' }}>제국 최강이 되기까지</div>
                     </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center', zIndex: 10 }}>
+                        {['GAME START', 'DATA LOAD', 'CONFIG', 'GALLERY', 'EXIT'].map(t => <MenuBtn key={t} text={t} main={t === 'GAME START'} />)}
+                    </div>
+                    <div style={{ position: 'absolute', bottom: '16px', fontSize: '0.6rem', color: '#3d3850' }}>© 2024 Imperial Romance Studio</div>
                 </div>
             );
         }
@@ -130,11 +201,11 @@
             useEffect(() => { if (done) { const t = setTimeout(onComplete, 1600); return () => clearTimeout(t); } }, [done, onComplete]);
 
             return (
-                <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#16141c' }}>
+                <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#0a0810' }}>
                     {!done ? (
                         <>
                             <div style={{ marginBottom: '1rem', color: '#6b6480', letterSpacing: '0.12em', fontSize: '0.8rem' }}>Now Loading...</div>
-                            <div style={{ width: '240px', height: '3px', background: '#2a2836', borderRadius: '2px', overflow: 'hidden' }}>
+                            <div style={{ width: '240px', height: '3px', background: '#1a1820', borderRadius: '2px', overflow: 'hidden' }}>
                                 <div style={{ width: `${Math.min(progress, 100)}%`, height: '100%', background: '#9d8ec2', transition: 'width 0.12s' }} />
                             </div>
                         </>
@@ -142,7 +213,7 @@
                         <div style={{ textAlign: 'center', animation: 'fadeIn 0.3s' }}>
                             <div style={{ fontSize: '1rem', color: '#b8b0c8', marginBottom: '0.6rem' }}>저장 데이터 발견</div>
                             <div style={{ fontSize: '0.85rem', color: '#8880a0' }}>마지막 체크포인트에서 시작합니다</div>
-                            <div style={{ marginTop: '1rem', fontSize: '0.75rem', color: '#6b6480', padding: '8px 20px', background: '#1e1c26', borderRadius: '14px' }}>Chapter 12: 황제의 즉위식</div>
+                            <div style={{ marginTop: '1rem', fontSize: '0.75rem', color: '#6b6480', padding: '8px 20px', background: '#14121a', borderRadius: '14px' }}>Chapter 12: 황제의 즉위식</div>
                         </div>
                     )}
                 </div>
@@ -153,15 +224,15 @@
         function AffectionUI({ affections, isMobile }) {
             const list = ['lizette', 'adeline', 'karen', 'elia', 'selene', 'luna'];
             return (
-                <div style={{ position: 'absolute', top: isMobile ? '10px' : '14px', right: isMobile ? '10px' : '14px', background: 'rgba(22, 20, 28, 0.95)', border: '1px solid #2e2c38', borderRadius: isMobile ? '8px' : '10px', padding: isMobile ? '10px' : '16px 18px', minWidth: isMobile ? '120px' : '220px', zIndex: 100 }}>
-                    <div style={{ textAlign: 'center', fontSize: isMobile ? '0.58rem' : '0.8rem', color: '#9d8ec2', marginBottom: isMobile ? '7px' : '14px', paddingBottom: isMobile ? '5px' : '10px', borderBottom: '1px solid #2e2c38' }}>♥ AFFECTION</div>
+                <div style={{ position: 'absolute', top: isMobile ? '10px' : '14px', right: isMobile ? '10px' : '14px', background: 'rgba(10, 8, 16, 0.95)', border: '1px solid #252230', borderRadius: isMobile ? '8px' : '10px', padding: isMobile ? '10px' : '16px 18px', minWidth: isMobile ? '120px' : '220px', zIndex: 100 }}>
+                    <div style={{ textAlign: 'center', fontSize: isMobile ? '0.58rem' : '0.8rem', color: '#9d8ec2', marginBottom: isMobile ? '7px' : '14px', paddingBottom: isMobile ? '5px' : '10px', borderBottom: '1px solid #252230' }}>♥ AFFECTION</div>
                     {list.map(k => (
                         <div key={k} style={{ marginBottom: isMobile ? '5px' : '10px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: isMobile ? '0.54rem' : '0.78rem', marginBottom: isMobile ? '2px' : '4px' }}>
                                 <span style={{ color: characters[k].color }}>{characters[k].name}</span>
                                 <span style={{ color: '#c8c4d4' }}>{affections[k]}</span>
                             </div>
-                            <div style={{ height: isMobile ? '3px' : '6px', background: '#2a2836', borderRadius: '3px', overflow: 'hidden' }}>
+                            <div style={{ height: isMobile ? '3px' : '6px', background: '#1a1820', borderRadius: '3px', overflow: 'hidden' }}>
                                 <div style={{ width: `${affections[k]}%`, height: '100%', background: characters[k].color, transition: 'width 0.3s' }} />
                             </div>
                         </div>
@@ -208,9 +279,9 @@
             ], []);
 
             const afterDialogs = useMemo(() => [
-                [{ speaker: "selene", text: "후후... 역시 폐하는 절 가장 사랑하시는 거죠?", emotion: "happy" }, { speaker: "adeline", text: "...!", emotion: "surprise" }, { speaker: "lizette", text: "도련님... 아, 폐하...", emotion: "sad" }],
-                [{ speaker: "luna", text: "에이~ 폐하 비겁해요! 확실히 말해주세요!", emotion: "angry" }, { speaker: "karen", text: "...현명한 판단이군.", emotion: "idle" }, { speaker: "elia", text: "뭐야, 재미없게. 그냥 아무나 찍어.", emotion: "angry" }],
-                [{ speaker: "lizette", text: "폐, 폐하...! 저, 저는... 행복해요...", emotion: "happy" }, { speaker: "selene", text: "...폐하?", emotion: "angry" }, { speaker: "adeline", text: "저, 저 하녀한테...?!", emotion: "surprise" }]
+                [{ speaker: "selene", text: "후후... 역시 폐하는 절 가장 사랑하시는 거죠?", emotion: "happy" }, { speaker: "adeline", text: "...!", emotion: "surprise" }, { speaker: "lizette", text: "도련님... 아, 폐하...", emotion: "sad" }, { speaker: "kairen", text: "모두 내게 소중하지만, 오늘은—", emotion: "idle" }],
+                [{ speaker: "luna", text: "에이~ 폐하 비겁해요! 확실히 말해주세요!", emotion: "angry" }, { speaker: "karen", text: "...현명한 판단이군.", emotion: "idle" }, { speaker: "elia", text: "뭐야, 재미없게. 그냥 아무나 찍어.", emotion: "angry" }, { speaker: "kairen", text: "허허, 모두 진정하게. 나는—", emotion: "idle" }],
+                [{ speaker: "lizette", text: "폐, 폐하...! 저, 저는... 행복해요...", emotion: "happy" }, { speaker: "selene", text: "...폐하?", emotion: "angry" }, { speaker: "adeline", text: "저, 저 하녀한테...?!", emotion: "surprise" }, { speaker: "kairen", text: "리제트, 너는 처음부터 내 곁에—", emotion: "idle" }]
             ], []);
 
             const getCurrent = useCallback(() => phase === 'afterChoice' && selectedChoice !== null ? afterDialogs[selectedChoice][afterChoiceIndex] : dialogs[dialogIndex], [phase, selectedChoice, afterChoiceIndex, dialogIndex, afterDialogs, dialogs]);
@@ -245,14 +316,14 @@
             const emoClass = { happy: 'char-happy', angry: 'char-angry', sad: 'char-sad', surprise: 'char-surprise', idle: 'char-idle' }[charEmotion] || 'char-idle';
 
             return (
-                <div onClick={handleClick} style={{ height: '100vh', position: 'relative', background: '#16141c', overflow: 'hidden', cursor: showChoices ? 'default' : 'pointer' }}>
-                    <div style={{ position: 'absolute', inset: 0, background: IMAGES.gameBackground ? `url(${IMAGES.gameBackground}) center/cover` : '#1a1822' }}>
-                        {!IMAGES.gameBackground && <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', color: '#2a2836', fontSize: '0.7rem' }}>[ 배경 이미지 ]</div>}
+                <div onClick={handleClick} style={{ height: '100vh', position: 'relative', background: '#0a0810', overflow: 'hidden', cursor: showChoices ? 'default' : 'pointer' }}>
+                    <div style={{ position: 'absolute', inset: 0, background: IMAGES.gameBackground ? `url(${IMAGES.gameBackground}) center/cover` : '#100e16' }}>
+                        {!IMAGES.gameBackground && <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', color: '#1a1820', fontSize: '0.7rem' }}>[ 배경 이미지 ]</div>}
                     </div>
 
                     {!isMobile && (
-                        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '42px', background: 'linear-gradient(#16141c, transparent)', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '6px' }}>
-                            {['SAVE', 'LOAD', 'TITLE', 'CONFIG'].map(t => <button key={t} onClick={e => { e.stopPropagation(); playSound('click'); }} style={{ padding: '4px 12px', fontSize: '0.68rem', background: 'transparent', border: '1px solid #2e2c38', color: '#6b6480', borderRadius: '10px', cursor: 'pointer' }}>{t}</button>)}
+                        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '42px', background: 'linear-gradient(#0a0810, transparent)', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '6px' }}>
+                            {['SAVE', 'LOAD', 'TITLE', 'CONFIG'].map(t => <button key={t} onClick={e => { e.stopPropagation(); playSound('click'); }} style={{ padding: '4px 12px', fontSize: '0.68rem', background: 'transparent', border: '1px solid #252230', color: '#6b6480', borderRadius: '10px', cursor: 'pointer' }}>{t}</button>)}
                         </div>
                     )}
 
@@ -261,26 +332,26 @@
                     <div className={emoClass} style={{ position: 'absolute', bottom: isMobile ? '160px' : '190px', left: '50%', transform: 'translateX(-50%)', width: isMobile ? '240px' : '360px', height: isMobile ? '280px' : '440px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}>
                         {IMAGES[`char${currentSpeaker?.charAt(0).toUpperCase()}${currentSpeaker?.slice(1)}`]
                             ? <img src={IMAGES[`char${currentSpeaker?.charAt(0).toUpperCase()}${currentSpeaker?.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
-                            : <div style={{ color: '#2a2836', fontSize: '0.65rem', padding: '22px', border: '1px dashed #2a2836', borderRadius: '6px' }}>[ {spk.name || '캐릭터'} ]</div>}
+                            : <div style={{ color: '#1a1820', fontSize: '0.65rem', padding: '22px', border: '1px dashed #1a1820', borderRadius: '6px' }}>[ {spk.name || '캐릭터'} ]</div>}
                     </div>
 
                     <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: isMobile ? '10px' : '16px' }}>
-                        <div style={{ maxWidth: '880px', margin: '0 auto', background: 'rgba(22, 20, 28, 0.96)', border: '1px solid #2e2c38', borderRadius: isMobile ? '8px' : '10px', padding: isMobile ? '12px 14px' : '18px 24px', position: 'relative' }}>
-                            {spk.name && <div style={{ position: 'absolute', top: isMobile ? '-11px' : '-13px', left: isMobile ? '12px' : '20px', background: spk.color, padding: isMobile ? '2px 12px' : '3px 16px', borderRadius: '12px', color: '#16141c', fontSize: isMobile ? '0.72rem' : '0.78rem', fontWeight: 600 }}>{spk.name}</div>}
+                        <div style={{ maxWidth: '880px', margin: '0 auto', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #252230', borderRadius: isMobile ? '8px' : '10px', padding: isMobile ? '12px 14px' : '18px 24px', position: 'relative' }}>
+                            {spk.name && <div style={{ position: 'absolute', top: isMobile ? '-11px' : '-13px', left: isMobile ? '12px' : '20px', background: spk.color, padding: isMobile ? '2px 12px' : '3px 16px', borderRadius: '12px', color: '#0a0810', fontSize: isMobile ? '0.72rem' : '0.78rem', fontWeight: 600 }}>{spk.name}</div>}
                             <div style={{ fontSize: isMobile ? '0.88rem' : '0.98rem', lineHeight: 1.8, color: cur.speaker === 'narrator' ? '#7a7888' : '#e8e6ed', fontStyle: cur.speaker === 'narrator' ? 'italic' : 'normal', minHeight: isMobile ? '42px' : '52px', paddingTop: spk.name ? '6px' : 0, display: 'flex', alignItems: 'center' }}>
                                 <span>{displayedText}</span>
                                 {isTyping && <span style={{ borderRight: '2px solid #9d8ec2', marginLeft: '1px', animation: 'blink 0.5s infinite' }}>&nbsp;</span>}
                                 {!isTyping && canProceed && <span style={{ marginLeft: '8px', color: '#9d8ec2', fontSize: '0.75rem', animation: 'arrowBounce 0.7s infinite' }}>▼</span>}
                             </div>
                             <div style={{ position: 'absolute', bottom: isMobile ? '7px' : '10px', right: isMobile ? '8px' : '14px', display: 'flex', gap: isMobile ? '4px' : '6px' }}>
-                                {['SKIP', 'AUTO', 'LOG'].map(t => <button key={t} onClick={e => { e.stopPropagation(); if (t === 'AUTO') setIsAuto(!isAuto); }} style={{ padding: isMobile ? '2px 8px' : '4px 10px', fontSize: isMobile ? '0.56rem' : '0.66rem', background: t === 'AUTO' && isAuto ? 'rgba(157, 142, 194, 0.2)' : 'transparent', border: `1px solid ${t === 'AUTO' && isAuto ? '#9d8ec2' : '#2e2c38'}`, color: t === 'AUTO' && isAuto ? '#b8aed0' : '#6b6480', borderRadius: '8px', cursor: 'pointer' }}>{t}</button>)}
+                                {['SKIP', 'AUTO', 'LOG'].map(t => <button key={t} onClick={e => { e.stopPropagation(); if (t === 'AUTO') setIsAuto(!isAuto); }} style={{ padding: isMobile ? '2px 8px' : '4px 10px', fontSize: isMobile ? '0.56rem' : '0.66rem', background: t === 'AUTO' && isAuto ? 'rgba(157, 142, 194, 0.2)' : 'transparent', border: `1px solid ${t === 'AUTO' && isAuto ? '#9d8ec2' : '#252230'}`, color: t === 'AUTO' && isAuto ? '#b8aed0' : '#6b6480', borderRadius: '8px', cursor: 'pointer' }}>{t}</button>)}
                             </div>
                         </div>
                     </div>
 
                     {showChoices && (
                         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', gap: isMobile ? '7px' : '9px', animation: 'fadeIn 0.2s', zIndex: 200, width: isMobile ? '86%' : 'auto', maxWidth: '400px' }}>
-                            {choices.map((c, i) => <button key={i} onClick={() => handleChoice(i)} style={{ padding: isMobile ? '13px 18px' : '15px 26px', fontSize: isMobile ? '0.84rem' : '0.92rem', background: 'rgba(22, 20, 28, 0.96)', border: '1px solid #3d3850', color: '#e8e6ed', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', width: '100%' }}><span style={{ color: '#9d8ec2', marginRight: '8px' }}>▸</span>{c.text}</button>)}
+                            {choices.map((c, i) => <button key={i} onClick={() => handleChoice(i)} style={{ padding: isMobile ? '13px 18px' : '15px 26px', fontSize: isMobile ? '0.84rem' : '0.92rem', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #3d3850', color: '#e8e6ed', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', width: '100%' }}><span style={{ color: '#9d8ec2', marginRight: '8px' }}>▸</span>{c.text}</button>)}
                         </div>
                     )}
                 </div>
@@ -298,7 +369,7 @@
             }, [onComplete]);
 
             return (
-                <div style={{ height: '100vh', background: '#080810', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ height: '100vh', background: '#050508', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
                     <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.08), rgba(0,0,0,0.08) 1px, transparent 1px, transparent 2px)' }} />
                     {phase >= 1 && [...Array(8)].map((_, i) => <div key={i} style={{ position: 'absolute', top: `${Math.random() * 100}%`, left: 0, right: 0, height: `${Math.random() * 2 + 1}px`, background: `rgba(160, 100, 130, ${Math.random() * 0.25 + 0.05})`, transform: `translateX(${Math.random() * 8 - 4}px)` }} />)}
                     <div style={{ fontFamily: 'monospace', fontSize: '0.85rem', color: '#a06880', textShadow: '0 0 6px rgba(160, 100, 130, 0.5)', animation: 'glitchText 0.15s infinite', textAlign: 'center', zIndex: 10 }}>{phase > 0 && msgs[phase - 1]}</div>
@@ -316,10 +387,10 @@
             useEffect(() => { const t = setTimeout(() => setShowIntro(false), 2200); return () => clearTimeout(t); }, []);
 
             if (showIntro) return (
-                <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#16141c', animation: 'fadeIn 0.5s', padding: '20px', textAlign: 'center' }}>
+                <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#0a0810', animation: 'fadeIn 0.5s', padding: '20px', textAlign: 'center' }}>
                     <div style={{ fontSize: '1rem', color: '#9d8ec2', marginBottom: '0.6rem' }}>당신은 『제국 최강이 되기까지』의 세계에</div>
                     <div style={{ fontSize: '2rem', color: '#e8e6ed', fontWeight: 700, fontFamily: "'Noto Serif KR', serif" }}>빙의했습니다.</div>
-                    <div style={{ marginTop: '2rem', padding: '12px 28px', background: '#1e1c26', borderRadius: '16px' }}>
+                    <div style={{ marginTop: '2rem', padding: '12px 28px', background: '#14121a', borderRadius: '16px' }}>
                         <div style={{ color: '#9d8ec2', fontSize: '0.7rem', marginBottom: '3px' }}>YOUR ROLE</div>
                         <div style={{ color: '#d8d4e2', fontSize: '0.95rem' }}>이름 없는 엑스트라 기사</div>
                     </div>
@@ -329,7 +400,7 @@
             const list = Object.entries(characters);
 
             return (
-                <div style={{ minHeight: '100vh', background: '#16141c', padding: isMobile ? '20px 12px' : '32px 18px' }}>
+                <div style={{ minHeight: '100vh', background: '#0a0810', padding: isMobile ? '20px 12px' : '32px 18px' }}>
                     <header style={{ textAlign: 'center', marginBottom: isMobile ? '22px' : '36px' }}>
                         <div style={{ fontSize: '0.65rem', color: '#6b6480', letterSpacing: '0.2em', marginBottom: '6px' }}>CHARACTER</div>
                         <h1 style={{ fontFamily: "'Noto Serif KR', serif", fontSize: isMobile ? '1.3rem' : '1.7rem', color: '#e8e6ed' }}>등장인물</h1>
@@ -338,9 +409,9 @@
 
                     <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(170px, 1fr))', gap: isMobile ? '8px' : '14px', maxWidth: '980px', margin: '0 auto' }}>
                         {list.map(([k, c], i) => (
-                            <div key={k} onClick={() => setSelected(k)} style={{ background: '#1e1c26', border: '1px solid #2a2836', borderRadius: '10px', overflow: 'hidden', cursor: 'pointer', animation: `slideUp 0.3s ease ${i * 0.03}s both` }}>
-                                <div style={{ width: '100%', height: isMobile ? '140px' : '195px', background: '#1a1822', display: 'flex', justifyContent: 'center', alignItems: 'center', borderBottom: '1px solid #2a2836' }}>
-                                    {IMAGES[`full${k.charAt(0).toUpperCase()}${k.slice(1)}`] ? <img src={IMAGES[`full${k.charAt(0).toUpperCase()}${k.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'cover' }} /> : <span style={{ color: '#2a2836', fontSize: '0.55rem' }}>[ 이미지 ]</span>}
+                            <div key={k} onClick={() => setSelected(k)} style={{ background: '#14121a', border: '1px solid #1a1820', borderRadius: '10px', overflow: 'hidden', cursor: 'pointer', animation: `slideUp 0.3s ease ${i * 0.03}s both` }}>
+                                <div style={{ width: '100%', height: isMobile ? '140px' : '195px', background: '#100e16', display: 'flex', justifyContent: 'center', alignItems: 'center', borderBottom: '1px solid #1a1820' }}>
+                                    {IMAGES[`full${k.charAt(0).toUpperCase()}${k.slice(1)}`] ? <img src={IMAGES[`full${k.charAt(0).toUpperCase()}${k.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'cover' }} /> : <span style={{ color: '#1a1820', fontSize: '0.55rem' }}>[ 이미지 ]</span>}
                                 </div>
                                 <div style={{ padding: isMobile ? '9px' : '12px' }}>
                                     <div style={{ color: c.color, fontSize: isMobile ? '0.52rem' : '0.6rem', marginBottom: '2px' }}>{c.description}</div>
@@ -352,13 +423,13 @@
                     </div>
 
                     {selected && (
-                        <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(10, 9, 14, 0.95)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '12px', animation: 'fadeIn 0.15s' }}>
-                            <div onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: isMobile ? '100%' : '800px', height: isMobile ? '86vh' : '76vh', maxHeight: isMobile ? 'none' : '540px', background: '#1a1822', border: `1px solid ${characters[selected].color}40`, borderRadius: '14px', display: 'flex', flexDirection: isMobile ? 'column' : 'row', position: 'relative', overflow: 'hidden' }}>
-                                <div style={{ flex: isMobile ? '0 0 40%' : 1, background: '#16141c', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRight: isMobile ? 'none' : '1px solid #2a2836', borderBottom: isMobile ? '1px solid #2a2836' : 'none' }}>
-                                    {IMAGES[`full${selected.charAt(0).toUpperCase()}${selected.slice(1)}`] ? <img src={IMAGES[`full${selected.charAt(0).toUpperCase()}${selected.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} /> : <div style={{ color: '#2a2836', fontSize: '0.7rem' }}>[ 전신 이미지 ]</div>}
+                        <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(5, 4, 10, 0.95)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '12px', animation: 'fadeIn 0.15s' }}>
+                            <div onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: isMobile ? '100%' : '800px', height: isMobile ? '86vh' : '76vh', maxHeight: isMobile ? 'none' : '540px', background: '#100e16', border: `1px solid ${characters[selected].color}40`, borderRadius: '14px', display: 'flex', flexDirection: isMobile ? 'column' : 'row', position: 'relative', overflow: 'hidden' }}>
+                                <div style={{ flex: isMobile ? '0 0 40%' : 1, background: '#0a0810', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRight: isMobile ? 'none' : '1px solid #1a1820', borderBottom: isMobile ? '1px solid #1a1820' : 'none' }}>
+                                    {IMAGES[`full${selected.charAt(0).toUpperCase()}${selected.slice(1)}`] ? <img src={IMAGES[`full${selected.charAt(0).toUpperCase()}${selected.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} /> : <div style={{ color: '#1a1820', fontSize: '0.7rem' }}>[ 전신 이미지 ]</div>}
                                 </div>
                                 <div style={{ flex: 1, padding: isMobile ? '16px' : '24px', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
-                                    <button onClick={() => setSelected(null)} style={{ position: 'absolute', top: '10px', right: '10px', background: 'transparent', border: `1px solid #3d3850`, color: '#6b6480', width: '28px', height: '28px', cursor: 'pointer', fontSize: '0.9rem', borderRadius: '50%' }}>✕</button>
+                                    <button onClick={() => setSelected(null)} style={{ position: 'absolute', top: '10px', right: '10px', background: 'transparent', border: '1px solid #3d3850', color: '#6b6480', width: '28px', height: '28px', cursor: 'pointer', fontSize: '0.9rem', borderRadius: '50%' }}>✕</button>
                                     <div style={{ marginBottom: '14px' }}>
                                         <div style={{ color: characters[selected].color, fontSize: '0.65rem', marginBottom: '4px' }}>{characters[selected].description}</div>
                                         <h2 style={{ color: '#e8e6ed', fontSize: isMobile ? '1.3rem' : '1.5rem', fontFamily: "'Noto Serif KR', serif" }}>{characters[selected].fullName}</h2>
@@ -366,8 +437,8 @@
                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '14px' }}>
                                         {characters[selected].tags.map((t, i) => <span key={i} style={{ padding: '3px 9px', background: `${characters[selected].color}18`, border: `1px solid ${characters[selected].color}30`, borderRadius: '10px', fontSize: '0.65rem', color: characters[selected].color }}>{t}</span>)}
                                     </div>
-                                    <div style={{ width: '100%', height: '1px', background: '#2a2836', marginBottom: '14px' }} />
-                                    <div style={{ padding: '10px 14px', background: '#16141c', borderRadius: '8px', borderLeft: `2px solid ${characters[selected].color}`, marginBottom: '14px' }}>
+                                    <div style={{ width: '100%', height: '1px', background: '#1a1820', marginBottom: '14px' }} />
+                                    <div style={{ padding: '10px 14px', background: '#0a0810', borderRadius: '8px', borderLeft: `2px solid ${characters[selected].color}`, marginBottom: '14px' }}>
                                         <div style={{ color: '#6b6480', fontSize: '0.6rem', marginBottom: '3px' }}>QUOTE</div>
                                         <div style={{ color: '#c8c4d4', fontSize: isMobile ? '0.82rem' : '0.9rem', fontStyle: 'italic', lineHeight: 1.5 }}>"{characters[selected].quote}"</div>
                                     </div>
@@ -377,7 +448,7 @@
                                                 <span style={{ color: '#6b6480', fontSize: '0.65rem' }}>AFFECTION</span>
                                                 <span style={{ color: characters[selected].color, fontSize: '0.8rem', fontWeight: 600 }}>♥ {characters[selected].affection}%</span>
                                             </div>
-                                            <div style={{ height: '6px', background: '#2a2836', borderRadius: '3px', overflow: 'hidden' }}>
+                                            <div style={{ height: '6px', background: '#1a1820', borderRadius: '3px', overflow: 'hidden' }}>
                                                 <div style={{ width: `${characters[selected].affection}%`, height: '100%', background: characters[selected].color }} />
                                             </div>
                                         </div>
@@ -387,8 +458,8 @@
                         </div>
                     )}
 
-                    <footer style={{ textAlign: 'center', marginTop: isMobile ? '30px' : '45px', padding: '18px', borderTop: '1px solid #2a2836' }}>
-                        <p style={{ color: '#2a2836', fontSize: '0.6rem' }}>made by CowardMole</p>
+                    <footer style={{ textAlign: 'center', marginTop: isMobile ? '30px' : '45px', padding: '18px', borderTop: '1px solid #1a1820' }}>
+                        <p style={{ color: '#1a1820', fontSize: '0.6rem' }}>© 2024 『제국 최강이 되기까지』</p>
                     </footer>
                 </div>
             );
