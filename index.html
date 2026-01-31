@@ -15,77 +15,58 @@
     html, body { font-family: 'Noto Sans KR', sans-serif; background: #0a0810; color: #e8e6ed; min-height: 100vh; overflow-x: hidden; }
     #root { min-height: 100vh; }
 
-    @keyframes fadeIn { 
-        0% { opacity: 0; } 
-        100% { opacity: 1; } 
-    }
-    @keyframes slideUp { 
-        0% { opacity: 0; transform: translateY(20px); } 
-        100% { opacity: 1; transform: translateY(0); } 
-    }
-    @keyframes float { 
-        0%, 100% { transform: translateY(0); } 
-        50% { transform: translateY(-6px); } 
-    }
-    @keyframes shake { 
-        0%, 100% { transform: translateX(0); } 
-        20% { transform: translateX(-3px); } 
-        40% { transform: translateX(3px); } 
-        60% { transform: translateX(-2px); } 
-        80% { transform: translateX(2px); } 
-    }
-    @keyframes bounce { 
-        0% { transform: translateY(0); } 
-        30% { transform: translateY(-12px); } 
-        50% { transform: translateY(-4px); } 
-        70% { transform: translateY(-8px); } 
-        100% { transform: translateY(0); } 
-    }
-    @keyframes pulse { 
-        0% { transform: scale(1); } 
-        40% { transform: scale(1.05); } 
-        100% { transform: scale(1); } 
-    }
-    @keyframes blink { 
-        0%, 100% { opacity: 1; } 
-        50% { opacity: 0; } 
-    }
-    @keyframes arrowBounce { 
-        0%, 100% { transform: translateY(0); opacity: 1; } 
-        50% { transform: translateY(3px); opacity: 0.4; } 
-    }
-    @keyframes glitchText { 
-        0%, 100% { transform: translate(0); } 
-        20% { transform: translate(-2px, 2px); } 
-        40% { transform: translate(2px, -2px); } 
-        60% { transform: translate(-2px, -2px); } 
-        80% { transform: translate(2px, 2px); } 
-    }
-    @keyframes particleDrift {
-        0% { transform: translate(0, 0); opacity: 0; }
-        10% { opacity: 0.7; }
-        90% { opacity: 0.7; }
-        100% { transform: translate(20px, -80px); opacity: 0; }
+    @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+    @keyframes slideUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    @keyframes arrowBounce { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(3px); opacity: 0.4; } }
+    @keyframes glitchText { 0%, 100% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(2px, -2px); } 60% { transform: translate(-2px, -2px); } 80% { transform: translate(2px, 2px); } }
+    @keyframes particleDrift { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: 0.7; } 90% { opacity: 0.7; } 100% { transform: translate(20px, -80px); opacity: 0; } }
+    
+    /* ===== 미연시 스타일 캐릭터 모션 ===== */
+    
+    /* 대기 중 - 미세한 숨쉬기 */
+    @keyframes idleBreathing {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-2px); }
     }
     
-    /* 캐릭터 말할 때 애니메이션 */
+    /* 말할 때 기본 - 부드러운 둥실둥실 */
     @keyframes speaking {
-        0%, 100% { transform: scale(1.05) translateY(0); }
-        50% { transform: scale(1.05) translateY(-4px); }
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
     }
     
-    /* 싸울 때 애니메이션 */
-    @keyframes arguing {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-6px); }
-        75% { transform: translateX(6px); }
+    /* 기쁨 - 살짝 통통 */
+    @keyframes happyBounce {
+        0%, 100% { transform: translateY(0); }
+        20% { transform: translateY(-10px); }
+        40% { transform: translateY(-3px); }
+        60% { transform: translateY(-7px); }
+        80% { transform: translateY(-2px); }
     }
-
-    .char-idle { animation: float 4s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
-    .char-happy { animation: bounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
-    .char-angry { animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
-    .char-sad { filter: brightness(0.85); transition: filter 0.5s ease; }
-    .char-surprise { animation: pulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    
+    /* 화남 - 아주 미세한 떨림 */
+    @keyframes angryTremble {
+        0%, 100% { transform: translateX(0) translateY(-2px); }
+        25% { transform: translateX(-2px) translateY(-2px); }
+        50% { transform: translateX(2px) translateY(-3px); }
+        75% { transform: translateX(-1px) translateY(-2px); }
+    }
+    
+    /* 슬픔 - 천천히 처진 느낌 */
+    @keyframes sadDroop {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(3px) rotate(-0.3deg); }
+    }
+    
+    /* 놀람 - 살짝 튀어오름 */
+    @keyframes surpriseJolt {
+        0% { transform: translateY(0) scale(1); }
+        15% { transform: translateY(-15px) scale(1.03); }
+        30% { transform: translateY(-5px) scale(1.01); }
+        50% { transform: translateY(-8px) scale(1.02); }
+        100% { transform: translateY(0) scale(1); }
+    }
 
     /* 모바일 세로 화면 회전 안내 */
     .rotate-notice {
@@ -104,10 +85,7 @@
         margin-bottom: 1rem;
         animation: rotateIcon 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     }
-    @keyframes rotateIcon {
-        0%, 100% { transform: rotate(0deg); }
-        50% { transform: rotate(90deg); }
-    }
+    @keyframes rotateIcon { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(90deg); } }
     @media (max-width: 768px) and (orientation: portrait) {
         .rotate-notice { display: flex; }
         #game-container { display: none !important; }
@@ -120,8 +98,6 @@
 </head>
 <body>
     <div id="root"></div>
-    
-    <!-- 모바일 세로 화면 회전 안내 -->
     <div class="rotate-notice">
         <div class="icon">📱</div>
         <div style="font-size: 1.1rem; margin-bottom: 0.5rem;">화면을 가로로 돌려주세요</div>
@@ -131,20 +107,18 @@
     <script type="text/babel">
         const { useState, useEffect, useCallback, useMemo } = React;
 
-        // 효과음 / 이미지 설정
         const SOUNDS = { click: null, select: null, type: null, transition: null, glitch: null, error: null };
         const playSound = (type) => { if (SOUNDS[type]) new Audio(SOUNDS[type]).play().catch(() => {}); };
 
         const IMAGES = {
-            titleLogo: 'img/tlogo.png',        // 타이틀 로고
-            titleBackground: 'img/tbackground.png',  // 타이틀 배경
-            titleCharacter: 'img/tchar.png',   // 타이틀 캐릭터
+            titleLogo: 'img/tlogo.png',
+            titleBackground: 'img/tbackground.png',
+            titleCharacter: 'img/tchar.png',
             gameBackground: 'img/gbackground.png',
             charKairen: null, charLizette: 'img/l.png', charAdeline: 'img/a.png', charKaren: 'img/c.png', charElia: 'img/e.png', charSelene: 'img/s.png', charLuna: 'img/lu.png',
             fullKairen: null, fullLizette: 'img/fulll.png', fullAdeline: 'img/fulla.png', fullKaren: 'img/fullc.png', fullElia: 'img/fulle.png', fullSelene: 'img/fulls.png', fullLuna: 'img/fulllu.png',
         };
 
-        // 캐릭터 데이터
         const characters = {
             kairen: { name: "카이른", fullName: "카이른 폰 레이센", color: "#9d8ec2", description: "숨겨진 황자", tags: ["#숨겨진_황자", "#계산적", "#온화한_미소", "#먼치킨"], quote: "모두가 내게 소중한 존재야." },
             lizette: { name: "리제트", fullName: "리제트 밀러", color: "#d4a0a8", personality: "소심 · 집착", description: "카이른의 소꿉친구 하녀", tags: ["#소꿉친구", "#소심", "#조용한_집착", "#하녀"], quote: "저, 저는 항상 도련님 편이에요.." },
@@ -155,29 +129,19 @@
             luna: { name: "루나", fullName: "루나", color: "#c8909c", personality: "메스가키", description: "당신의 의붓동생", tags: ["#의붓동생", "#메스가키", "#츤데레", "#경멸"], quote: "흥, 뭐야 그 눈. 쳐다보지 마." }
         };
 
-        // 파티클 컴포넌트
         function Particles() {
             const particles = useMemo(() => Array.from({ length: 20 }, (_, i) => ({
-                id: i,
-                left: Math.random() * 100,
-                top: 20 + Math.random() * 70,
-                size: 2 + Math.random() * 3,
-                duration: 8 + Math.random() * 6,
-                delay: Math.random() * 8,
-                opacity: 0.3 + Math.random() * 0.4
+                id: i, left: Math.random() * 100, top: 20 + Math.random() * 70,
+                size: 2 + Math.random() * 3, duration: 8 + Math.random() * 6,
+                delay: Math.random() * 8, opacity: 0.3 + Math.random() * 0.4
             })), []);
-
             return (
                 <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 5 }}>
                     {particles.map(p => (
                         <div key={p.id} style={{
-                            position: 'absolute',
-                            left: `${p.left}%`,
-                            top: `${p.top}%`,
-                            width: `${p.size}px`,
-                            height: `${p.size}px`,
-                            background: `rgba(255, 255, 255, ${p.opacity})`,
-                            borderRadius: '50%',
+                            position: 'absolute', left: `${p.left}%`, top: `${p.top}%`,
+                            width: `${p.size}px`, height: `${p.size}px`,
+                            background: `rgba(255, 255, 255, ${p.opacity})`, borderRadius: '50%',
                             boxShadow: `0 0 ${p.size * 2}px rgba(255, 255, 255, 0.3)`,
                             animation: `particleDrift ${p.duration}s ease-in-out ${p.delay}s infinite`
                         }} />
@@ -186,14 +150,9 @@
             );
         }
 
-        // 타이틀 화면
         function TitleScreen({ onStart }) {
             const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-            useEffect(() => {
-                const h = () => setIsMobile(window.innerWidth <= 768);
-                window.addEventListener('resize', h);
-                return () => window.removeEventListener('resize', h);
-            }, []);
+            useEffect(() => { const h = () => setIsMobile(window.innerWidth <= 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
 
             const TitleLogo = () => IMAGES.titleLogo 
                 ? <img src={IMAGES.titleLogo} alt="제국 최강이 되기까지" style={{ maxWidth: isMobile ? '160px' : '320px', height: 'auto' }} />
@@ -204,122 +163,40 @@
 
             const MenuBtn = ({ text, main }) => (
                 <button onClick={main ? () => { playSound('select'); onStart(); } : () => playSound('click')} style={{
-                    padding: isMobile ? '7px 14px' : '12px 28px', 
-                    fontSize: isMobile ? '0.7rem' : '0.88rem', 
-                    fontWeight: main ? 600 : 400,
+                    padding: isMobile ? '7px 14px' : '12px 28px', fontSize: isMobile ? '0.7rem' : '0.88rem', fontWeight: main ? 600 : 400,
                     background: main ? 'rgba(157, 142, 194, 0.9)' : 'rgba(30, 28, 38, 0.6)',
                     border: main ? 'none' : '1px solid rgba(100, 90, 120, 0.3)',
-                    color: main ? '#0a0810' : 'rgba(180, 170, 200, 0.7)',
-                    borderRadius: '4px',
-                    cursor: main ? 'pointer' : 'default',
-                    opacity: main ? 1 : 0.6,
-                    width: '100%',
-                    maxWidth: isMobile ? '120px' : '180px'
+                    color: main ? '#0a0810' : 'rgba(180, 170, 200, 0.7)', borderRadius: '4px',
+                    cursor: main ? 'pointer' : 'default', opacity: main ? 1 : 0.6, width: '100%', maxWidth: isMobile ? '120px' : '180px'
                 }}>{main && <span style={{ marginRight: '4px' }}>▶</span>}{text}</button>
             );
 
             const CharArea = () => IMAGES.titleCharacter 
-                ? <img src={IMAGES.titleCharacter} style={{ 
-                    maxWidth: '62%', 
-                    maxHeight: '62%', 
-                    objectFit: 'contain',
-                    objectPosition: 'left bottom'
-                  }} />
+                ? <img src={IMAGES.titleCharacter} style={{ maxWidth: '62%', maxHeight: '62%', objectFit: 'contain', objectPosition: 'left bottom' }} />
                 : <div style={{ color: '#2a2836', fontSize: '0.6rem', padding: '25px', border: '1px dashed #2a2836', borderRadius: '6px' }}>[ 캐릭터 이미지 ]</div>;
 
-            // 모바일 레이아웃 (가로 기준)
-            if (isMobile) {
-                return (
-                    <div style={{ 
-                        height: '100vh', 
-                        position: 'relative', 
-                        overflow: 'hidden',
-                        background: IMAGES.titleBackground ? `url(${IMAGES.titleBackground}) center/cover no-repeat` : '#0a0810'
-                    }}>
-                        <Particles />
-                        
-                        {/* 캐릭터 - 왼쪽 중앙 */}
-                        <div style={{ 
-                            position: 'absolute', 
-                            left: 0, 
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            width: '50%', 
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <CharArea />
-                        </div>
-                        
-                        {/* 메뉴 영역 - 오른쪽 */}
-                        <div style={{ 
-                            position: 'absolute', 
-                            right: 0, 
-                            top: 0,
-                            bottom: 0,
-                            width: '50%',
-                            background: 'linear-gradient(90deg, transparent, rgba(10,8,16,0.85) 15%)',
-                            display: 'flex', 
-                            flexDirection: 'column', 
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            zIndex: 10
-                        }}>
-                            <div style={{ marginBottom: '14px' }}><TitleLogo /></div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center' }}>
-                                {['GAME START', 'DATA LOAD', 'CONFIG', 'GALLERY', 'EXIT'].map(t => 
-                                    <MenuBtn key={t} text={t} main={t === 'GAME START'} />
-                                )}
-                            </div>
-                        </div>
-                        
-                        <div style={{ position: 'absolute', bottom: '8px', right: '12px', fontSize: '0.5rem', color: '#3d3850', zIndex: 10 }}>made by CowardMole</div>
-                    </div>
-                );
-            }
-
-            // PC 레이아웃
-            return (
-                <div style={{ 
-                    height: '100vh', 
-                    position: 'relative', 
-                    overflow: 'hidden',
-                    background: IMAGES.titleBackground ? `url(${IMAGES.titleBackground}) center/cover no-repeat` : '#0a0810'
-                }}>
+            if (isMobile) return (
+                <div style={{ height: '100vh', position: 'relative', overflow: 'hidden', background: IMAGES.titleBackground ? `url(${IMAGES.titleBackground}) center/cover no-repeat` : '#0a0810' }}>
                     <Particles />
-                    
-                    {/* 캐릭터 */}
-                    <div style={{ 
-                        position: 'absolute', 
-                        left: '-3%', 
-                        top: '50%',
-                        transform: 'translateY(-45%)',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
-                        <CharArea />
+                    <div style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><CharArea /></div>
+                    <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '50%', background: 'linear-gradient(90deg, transparent, rgba(10,8,16,0.85) 15%)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', zIndex: 10 }}>
+                        <div style={{ marginBottom: '14px' }}><TitleLogo /></div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center' }}>
+                            {['GAME START', 'DATA LOAD', 'CONFIG', 'GALLERY', 'EXIT'].map(t => <MenuBtn key={t} text={t} main={t === 'GAME START'} />)}
+                        </div>
                     </div>
-                    
-                    {/* 오른쪽 그라데이션 + 메뉴 */}
-                    <div style={{ 
-                        position: 'absolute', 
-                        right: 0, 
-                        top: 0, 
-                        bottom: 0, 
-                        width: '45%', 
-                        background: 'linear-gradient(90deg, transparent, rgba(10,8,16,0.85) 20%)',
-                        display: 'flex', 
-                        flexDirection: 'column', 
-                        justifyContent: 'center', 
-                        alignItems: 'center',
-                        zIndex: 10
-                    }}>
+                    <div style={{ position: 'absolute', bottom: '8px', right: '12px', fontSize: '0.5rem', color: '#3d3850', zIndex: 10 }}>made by CowardMole</div>
+                </div>
+            );
+
+            return (
+                <div style={{ height: '100vh', position: 'relative', overflow: 'hidden', background: IMAGES.titleBackground ? `url(${IMAGES.titleBackground}) center/cover no-repeat` : '#0a0810' }}>
+                    <Particles />
+                    <div style={{ position: 'absolute', left: '-3%', top: '50%', transform: 'translateY(-45%)', justifyContent: 'center', alignItems: 'center' }}><CharArea /></div>
+                    <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '45%', background: 'linear-gradient(90deg, transparent, rgba(10,8,16,0.85) 20%)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', zIndex: 10 }}>
                         <div style={{ marginBottom: '35px' }}><TitleLogo /></div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
-                            {['GAME START', 'DATA LOAD', 'CONFIG', 'GALLERY', 'EXIT'].map(t => 
-                                <MenuBtn key={t} text={t} main={t === 'GAME START'} />
-                            )}
+                            {['GAME START', 'DATA LOAD', 'CONFIG', 'GALLERY', 'EXIT'].map(t => <MenuBtn key={t} text={t} main={t === 'GAME START'} />)}
                         </div>
                         <div style={{ position: 'absolute', bottom: '16px', fontSize: '0.6rem', color: '#3d3850' }}>made by CowardMole</div>
                     </div>
@@ -327,16 +204,10 @@
             );
         }
 
-        // 로딩 화면
         function LoadingScreen({ onComplete }) {
             const [progress, setProgress] = useState(0);
             const [done, setDone] = useState(false);
-
-            useEffect(() => {
-                const i = setInterval(() => setProgress(p => { if (p >= 100) { clearInterval(i); setTimeout(() => setDone(true), 250); return 100; } return p + Math.random() * 20 + 10; }), 120);
-                return () => clearInterval(i);
-            }, []);
-
+            useEffect(() => { const i = setInterval(() => setProgress(p => { if (p >= 100) { clearInterval(i); setTimeout(() => setDone(true), 250); return 100; } return p + Math.random() * 20 + 10; }), 120); return () => clearInterval(i); }, []);
             useEffect(() => { if (done) { const t = setTimeout(onComplete, 1600); return () => clearTimeout(t); } }, [done, onComplete]);
 
             return (
@@ -359,7 +230,6 @@
             );
         }
 
-        // 호감도 UI
         function AffectionUI({ affections, isMobile }) {
             const list = ['lizette', 'adeline', 'karen', 'elia', 'selene', 'luna'];
             return (
@@ -380,7 +250,6 @@
             );
         }
 
-        // 게임 화면
         function GameScreen({ onGlitch }) {
             const [dialogIndex, setDialogIndex] = useState(0);
             const [showChoices, setShowChoices] = useState(false);
@@ -398,22 +267,34 @@
 
             useEffect(() => { const h = () => setIsMobile(window.innerWidth <= 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
 
-            // 캐릭터 위치 설정
+            // 캐릭터 위치 - 간격 좁힘
             const charPositions = {
-                lizette: { left: '2%', bottom: '12%' },
-                adeline: { left: '15%', bottom: '10%' },
-                karen: { left: '28%', bottom: '14%' },
-                elia: { right: '28%', bottom: '12%' },
-                selene: { right: '15%', bottom: '10%' },
-                luna: { right: '2%', bottom: '14%' }
+                lizette: { left: '5%' },
+                adeline: { left: '16%' },
+                karen: { left: '27%' },
+                elia: { right: '27%' },
+                selene: { right: '16%' },
+                luna: { right: '5%' }
+            };
+
+            // 감정별 애니메이션
+            const getEmotionAnimation = (emotion) => {
+                const anims = {
+                    happy: 'happyBounce 1.5s ease-in-out infinite',
+                    angry: 'angryTremble 1s ease-in-out infinite',
+                    sad: 'sadDroop 4s ease-in-out infinite',
+                    surprise: 'surpriseJolt 0.8s ease-out forwards',
+                    idle: 'speaking 3s ease-in-out infinite'
+                };
+                return anims[emotion] || anims.idle;
             };
 
             const dialogs = useMemo(() => [
                 { speaker: "selene", text: "폐하, 오늘 즉위식 정말 멋지셨어요.", emotion: "happy" },
                 { speaker: "selene", text: "역시 제 남편이시네요. 후후.", emotion: "happy" },
-                { speaker: "adeline", text: "...흥, 황후라고 너무 나서는 거 아니에요?", emotion: "angry", arguing: ["adeline", "selene"] },
-                { speaker: "adeline", text: "폐하께서는 모두의 것이에요.", emotion: "angry", arguing: ["adeline", "selene"] },
-                { speaker: "selene", text: "후후, 무슨 말씀이세요. 폐하는 제 것인걸요.", emotion: "happy", arguing: ["adeline", "selene"] },
+                { speaker: "adeline", text: "...흥, 황후라고 너무 나서는 거 아니에요?", emotion: "angry" },
+                { speaker: "adeline", text: "폐하께서는 모두의 것이에요.", emotion: "angry" },
+                { speaker: "selene", text: "후후, 무슨 말씀이세요. 폐하는 제 것인걸요.", emotion: "happy" },
                 { speaker: "lizette", text: "저, 저기... 저도 폐하 곁에 있고 싶어요...", emotion: "sad" },
                 { speaker: "elia", text: "하... 진짜 꼴보기 싫다. 너네 둘 다 좀 조용히 해.", emotion: "angry" },
                 { speaker: "luna", text: "흥, 언니들 싸우는 거 재밌네요~ 폐하는 어떻게 생각하세요?", emotion: "happy" },
@@ -477,51 +358,53 @@
 
                     <AffectionUI affections={affections} isMobile={isMobile} />
 
-                    {/* 6명 캐릭터 고정 위치 표시 */}
+                    {/* 6명 캐릭터 - 미연시 스타일 */}
                     {Object.keys(charPositions).map(charKey => {
                         const isSpeaking = currentSpeaker === charKey;
-                        const isArguing = cur.arguing?.includes(charKey);
                         const pos = charPositions[charKey];
                         
                         return (
                             <div key={charKey} style={{
                                 position: 'absolute',
                                 ...pos,
-                                width: isMobile ? '100px' : '180px',
-                                height: isMobile ? '180px' : '320px',
-                                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                                filter: isSpeaking ? 'brightness(1)' : 'brightness(0.5)',
-                                transform: isSpeaking ? 'scale(1.08)' : 'scale(1)',
-                                animation: isArguing ? 'arguing 0.4s ease-in-out infinite' : 
-                                          isSpeaking ? 'speaking 2.5s ease-in-out infinite' : 'none',
-                                zIndex: isSpeaking ? 10 : 1
+                                bottom: isMobile ? '90px' : '100px',
+                                width: isMobile ? '150px' : '280px',
+                                height: isMobile ? '240px' : '450px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'flex-end',
+                                transition: 'filter 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                                filter: isSpeaking ? 'brightness(1) drop-shadow(0 0 12px rgba(255,255,255,0.12))' : 'brightness(0.5)',
+                                transform: isSpeaking ? 'scale(1.06)' : 'scale(0.95)',
+                                animation: isSpeaking ? getEmotionAnimation(charEmotion) : 'idleBreathing 5s ease-in-out infinite',
+                                zIndex: isSpeaking ? 50 : 1
                             }}>
                                 {IMAGES[`char${charKey.charAt(0).toUpperCase()}${charKey.slice(1)}`] 
-                                    ? <img src={IMAGES[`char${charKey.charAt(0).toUpperCase()}${charKey.slice(1)}`]} 
-                                        style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', objectPosition: 'bottom' }} />
-                                    : <div style={{ color: '#2a2836', fontSize: '0.5rem', textAlign: 'center' }}>[{characters[charKey].name}]</div>
+                                    ? <img src={IMAGES[`char${charKey.charAt(0).toUpperCase()}${charKey.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', objectPosition: 'bottom' }} />
+                                    : <div style={{ color: '#2a2836', fontSize: '0.55rem', padding: '15px', border: '1px dashed #2a2836', borderRadius: '4px' }}>[{characters[charKey].name}]</div>
                                 }
                             </div>
                         );
                     })}
 
-                {phase !== 'choice' && (
-                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: isMobile ? '10px' : '16px' }}>
-                        <div style={{ maxWidth: '880px', margin: '0 auto', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #252230', borderRadius: isMobile ? '8px' : '10px', padding: isMobile ? '12px 14px' : '18px 24px', position: 'relative' }}>
-                            {spk.name && <div style={{ position: 'absolute', top: isMobile ? '-11px' : '-13px', left: isMobile ? '12px' : '20px', background: spk.color, padding: isMobile ? '2px 12px' : '3px 16px', borderRadius: '12px', color: '#0a0810', fontSize: isMobile ? '0.72rem' : '0.78rem', fontWeight: 600 }}>{spk.name}</div>}
-                            <div style={{ fontSize: isMobile ? '0.88rem' : '0.98rem', lineHeight: 1.8, color: cur.speaker === 'narrator' ? '#7a7888' : '#e8e6ed', fontStyle: cur.speaker === 'narrator' ? 'italic' : 'normal', minHeight: isMobile ? '42px' : '52px', paddingTop: spk.name ? '6px' : 0, display: 'flex', alignItems: 'center' }}>
-                                <span>{displayedText}</span>
-                                {isTyping && <span style={{ borderRight: '2px solid #9d8ec2', marginLeft: '1px', animation: 'blink 0.5s infinite' }}>&nbsp;</span>}
-                                {!isTyping && canProceed && <span style={{ marginLeft: '8px', color: '#9d8ec2', fontSize: '0.75rem', animation: 'arrowBounce 0.7s infinite' }}>▼</span>}
-                            </div>
-                            <div style={{ position: 'absolute', bottom: isMobile ? '7px' : '10px', right: isMobile ? '8px' : '14px', display: 'flex', gap: isMobile ? '4px' : '6px' }}>
-                                {['SKIP', 'AUTO', 'LOG'].map(t => <button key={t} onClick={e => { e.stopPropagation(); if (t === 'AUTO') setIsAuto(!isAuto); }} style={{ padding: isMobile ? '2px 8px' : '4px 10px', fontSize: isMobile ? '0.56rem' : '0.66rem', background: t === 'AUTO' && isAuto ? 'rgba(157, 142, 194, 0.2)' : 'transparent', border: `1px solid ${t === 'AUTO' && isAuto ? '#9d8ec2' : '#252230'}`, color: t === 'AUTO' && isAuto ? '#b8aed0' : '#6b6480', borderRadius: '8px', cursor: 'pointer' }}>{t}</button>)}
+                    {phase !== 'choice' && (
+                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: isMobile ? '10px' : '16px' }}>
+                            <div style={{ maxWidth: '880px', margin: '0 auto', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #252230', borderRadius: isMobile ? '8px' : '10px', padding: isMobile ? '12px 14px' : '18px 24px', position: 'relative' }}>
+                                {spk.name && <div style={{ position: 'absolute', top: isMobile ? '-11px' : '-13px', left: isMobile ? '12px' : '20px', background: spk.color, padding: isMobile ? '2px 12px' : '3px 16px', borderRadius: '12px', color: '#0a0810', fontSize: isMobile ? '0.72rem' : '0.78rem', fontWeight: 600 }}>{spk.name}</div>}
+                                <div style={{ fontSize: isMobile ? '0.88rem' : '0.98rem', lineHeight: 1.8, color: cur.speaker === 'narrator' ? '#7a7888' : '#e8e6ed', fontStyle: cur.speaker === 'narrator' ? 'italic' : 'normal', minHeight: isMobile ? '42px' : '52px', paddingTop: spk.name ? '6px' : 0, display: 'flex', alignItems: 'center' }}>
+                                    <span>{displayedText}</span>
+                                    {isTyping && <span style={{ borderRight: '2px solid #9d8ec2', marginLeft: '1px', animation: 'blink 0.5s infinite' }}>&nbsp;</span>}
+                                    {!isTyping && canProceed && <span style={{ marginLeft: '8px', color: '#9d8ec2', fontSize: '0.75rem', animation: 'arrowBounce 0.7s infinite' }}>▼</span>}
+                                </div>
+                                <div style={{ position: 'absolute', bottom: isMobile ? '7px' : '10px', right: isMobile ? '8px' : '14px', display: 'flex', gap: isMobile ? '4px' : '6px' }}>
+                                    {['SKIP', 'AUTO', 'LOG'].map(t => <button key={t} onClick={e => { e.stopPropagation(); if (t === 'AUTO') setIsAuto(!isAuto); }} style={{ padding: isMobile ? '2px 8px' : '4px 10px', fontSize: isMobile ? '0.56rem' : '0.66rem', background: t === 'AUTO' && isAuto ? 'rgba(157, 142, 194, 0.2)' : 'transparent', border: `1px solid ${t === 'AUTO' && isAuto ? '#9d8ec2' : '#252230'}`, color: t === 'AUTO' && isAuto ? '#b8aed0' : '#6b6480', borderRadius: '8px', cursor: 'pointer' }}>{t}</button>)}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
+
                     {showChoices && (
-                        <div style={{ position: 'absolute', top: isMobile ? '35%' : '45%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', gap: isMobile ? '5px' : '9px', animation: 'fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1)', zIndex: 200, width: isMobile ? '75%' : 'auto', maxWidth: '380px' }}>
+                        <div style={{ position: 'absolute', top: isMobile ? '35%' : '40%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', gap: isMobile ? '5px' : '9px', animation: 'fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1)', zIndex: 200, width: isMobile ? '75%' : 'auto', maxWidth: '380px' }}>
                             {choices.map((c, i) => <button key={i} onClick={() => handleChoice(i)} style={{ padding: isMobile ? '8px 12px' : '15px 26px', fontSize: isMobile ? '0.72rem' : '0.92rem', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #3d3850', color: '#e8e6ed', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', width: '100%' }}><span style={{ color: '#9d8ec2', marginRight: '6px' }}>▸</span>{c.text}</button>)}
                         </div>
                     )}
@@ -529,15 +412,10 @@
             );
         }
 
-        // 글리치 화면
         function GlitchScreen({ onComplete }) {
             const [phase, setPhase] = useState(0);
             const msgs = ["ERROR: UNEXPECTED_ENTITY_DETECTED", "WARNING: NARRATIVE_BREACH", "FATAL: OBSERVER_OVERFLOW", "SYSTEM FAILURE..."];
-
-            useEffect(() => {
-                const timers = [setTimeout(() => setPhase(1), 200), setTimeout(() => setPhase(2), 700), setTimeout(() => setPhase(3), 1200), setTimeout(() => setPhase(4), 1700), setTimeout(onComplete, 2800)];
-                return () => timers.forEach(clearTimeout);
-            }, [onComplete]);
+            useEffect(() => { const timers = [setTimeout(() => setPhase(1), 200), setTimeout(() => setPhase(2), 700), setTimeout(() => setPhase(3), 1200), setTimeout(() => setPhase(4), 1700), setTimeout(onComplete, 2800)]; return () => timers.forEach(clearTimeout); }, [onComplete]);
 
             return (
                 <div style={{ height: '100vh', background: '#050508', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
@@ -548,7 +426,6 @@
             );
         }
 
-        // 캐릭터 사이트
         function CharacterSite() {
             const [selected, setSelected] = useState(null);
             const [showIntro, setShowIntro] = useState(true);
@@ -613,17 +490,6 @@
                                         <div style={{ color: '#6b6480', fontSize: '0.6rem', marginBottom: '3px' }}>QUOTE</div>
                                         <div style={{ color: '#c8c4d4', fontSize: isMobile ? '0.82rem' : '0.9rem', fontStyle: 'italic', lineHeight: 1.5 }}>"{characters[selected].quote}"</div>
                                     </div>
-                                    {characters[selected].affection && (
-                                        <div>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                                                <span style={{ color: '#6b6480', fontSize: '0.65rem' }}>AFFECTION</span>
-                                                <span style={{ color: characters[selected].color, fontSize: '0.8rem', fontWeight: 600 }}>♥ {characters[selected].affection}%</span>
-                                            </div>
-                                            <div style={{ height: '6px', background: '#1a1820', borderRadius: '3px', overflow: 'hidden' }}>
-                                                <div style={{ width: `${characters[selected].affection}%`, height: '100%', background: characters[selected].color }} />
-                                            </div>
-                                        </div>
-                                    )}
                                 </div>
                             </div>
                         </div>
