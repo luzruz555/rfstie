@@ -67,6 +67,19 @@
         90% { opacity: 0.7; }
         100% { transform: translate(20px, -80px); opacity: 0; }
     }
+    
+    /* 캐릭터 말할 때 애니메이션 */
+    @keyframes speaking {
+        0%, 100% { transform: scale(1.05) translateY(0); }
+        50% { transform: scale(1.05) translateY(-4px); }
+    }
+    
+    /* 싸울 때 애니메이션 */
+    @keyframes arguing {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-6px); }
+        75% { transform: translateX(6px); }
+    }
 
     .char-idle { animation: float 4s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
     .char-happy { animation: bounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -385,12 +398,22 @@
 
             useEffect(() => { const h = () => setIsMobile(window.innerWidth <= 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
 
+            // 캐릭터 위치 설정
+            const charPositions = {
+                lizette: { left: '2%', bottom: '12%' },
+                adeline: { left: '15%', bottom: '10%' },
+                karen: { left: '28%', bottom: '14%' },
+                elia: { right: '28%', bottom: '12%' },
+                selene: { right: '15%', bottom: '10%' },
+                luna: { right: '2%', bottom: '14%' }
+            };
+
             const dialogs = useMemo(() => [
                 { speaker: "selene", text: "폐하, 오늘 즉위식 정말 멋지셨어요.", emotion: "happy" },
                 { speaker: "selene", text: "역시 제 남편이시네요. 후후.", emotion: "happy" },
-                { speaker: "adeline", text: "...흥, 황후라고 너무 나서는 거 아니에요?", emotion: "angry" },
-                { speaker: "adeline", text: "폐하께서는 모두의 것이에요.", emotion: "angry" },
-                { speaker: "selene", text: "후후, 무슨 말씀이세요. 폐하는 제 것인걸요.", emotion: "happy" },
+                { speaker: "adeline", text: "...흥, 황후라고 너무 나서는 거 아니에요?", emotion: "angry", arguing: ["adeline", "selene"] },
+                { speaker: "adeline", text: "폐하께서는 모두의 것이에요.", emotion: "angry", arguing: ["adeline", "selene"] },
+                { speaker: "selene", text: "후후, 무슨 말씀이세요. 폐하는 제 것인걸요.", emotion: "happy", arguing: ["adeline", "selene"] },
                 { speaker: "lizette", text: "저, 저기... 저도 폐하 곁에 있고 싶어요...", emotion: "sad" },
                 { speaker: "elia", text: "하... 진짜 꼴보기 싫다. 너네 둘 다 좀 조용히 해.", emotion: "angry" },
                 { speaker: "luna", text: "흥, 언니들 싸우는 거 재밌네요~ 폐하는 어떻게 생각하세요?", emotion: "happy" },
@@ -439,7 +462,6 @@
 
             const cur = getCurrent(); if (!cur) return null;
             const spk = cur.speaker === 'narrator' ? { name: '', color: '#7a7888' } : { name: characters[cur.speaker]?.name || '', color: characters[cur.speaker]?.color || '#fff' };
-            const emoClass = { happy: 'char-happy', angry: 'char-angry', sad: 'char-sad', surprise: 'char-surprise', idle: 'char-idle' }[charEmotion] || 'char-idle';
 
             return (
                 <div onClick={handleClick} style={{ height: '100vh', position: 'relative', background: '#0a0810', overflow: 'hidden', cursor: showChoices ? 'default' : 'pointer' }}>
@@ -455,11 +477,34 @@
 
                     <AffectionUI affections={affections} isMobile={isMobile} />
 
-                    <div className={emoClass} style={{ position: 'absolute', bottom: isMobile ? '160px' : '0px', left: '50%', transform: 'translateX(-50%)', width: isMobile ? '240px' : '640px', height: isMobile ? '280px' : '800px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}>
-                        {IMAGES[`char${currentSpeaker?.charAt(0).toUpperCase()}${currentSpeaker?.slice(1)}`]
-                            ? <img src={IMAGES[`char${currentSpeaker?.charAt(0).toUpperCase()}${currentSpeaker?.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
-                            : <div style={{ color: '#1a1820', fontSize: '0.65rem', padding: '22px', border: '1px dashed #1a1820', borderRadius: '6px' }}>[ {spk.name || '캐릭터'} ]</div>}
-                    </div>
+                    {/* 6명 캐릭터 고정 위치 표시 */}
+                    {Object.keys(charPositions).map(charKey => {
+                        const isSpeaking = currentSpeaker === charKey;
+                        const isArguing = cur.arguing?.includes(charKey);
+                        const pos = charPositions[charKey];
+                        
+                        return (
+                            <div key={charKey} style={{
+                                position: 'absolute',
+                                ...pos,
+                                width: isMobile ? '100px' : '180px',
+                                height: isMobile ? '180px' : '320px',
+                                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                                filter: isSpeaking ? 'brightness(1)' : 'brightness(0.5)',
+                                transform: isSpeaking ? 'scale(1.08)' : 'scale(1)',
+                                animation: isArguing ? 'arguing 0.4s ease-in-out infinite' : 
+                                          isSpeaking ? 'speaking 2.5s ease-in-out infinite' : 'none',
+                                zIndex: isSpeaking ? 10 : 1
+                            }}>
+                                {IMAGES[`char${charKey.charAt(0).toUpperCase()}${charKey.slice(1)}`] 
+                                    ? <img src={IMAGES[`char${charKey.charAt(0).toUpperCase()}${charKey.slice(1)}`]} 
+                                        style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', objectPosition: 'bottom' }} />
+                                    : <div style={{ color: '#2a2836', fontSize: '0.5rem', textAlign: 'center' }}>[{characters[charKey].name}]</div>
+                                }
+                            </div>
+                        );
+                    })}
+
                 {phase !== 'choice' && (
                     <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: isMobile ? '10px' : '16px' }}>
                         <div style={{ maxWidth: '880px', margin: '0 auto', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #252230', borderRadius: isMobile ? '8px' : '10px', padding: isMobile ? '12px 14px' : '18px 24px', position: 'relative' }}>
