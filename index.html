@@ -11,81 +11,98 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { font-family: 'Noto Sans KR', sans-serif; background: #0a0810; color: #e8e6ed; min-height: 100vh; overflow-x: hidden; }
-        #root { min-height: 100vh; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { font-family: 'Noto Sans KR', sans-serif; background: #0a0810; color: #e8e6ed; min-height: 100vh; overflow-x: hidden; }
+    #root { min-height: 100vh; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes float { 
-            0%, 100% { transform: translateY(0); } 
-            50% { transform: translateY(-6px); } 
-        }
-        @keyframes shake { 
-            0%, 100% { transform: translateX(0); } 
-            20% { transform: translateX(-3px); } 
-            40% { transform: translateX(3px); } 
-            60% { transform: translateX(-2px); } 
-            80% { transform: translateX(2px); } 
-        }
-        @keyframes bounce { 
-            0% { transform: translateY(0); } 
-            30% { transform: translateY(-12px); } 
-            50% { transform: translateY(-4px); } 
-            70% { transform: translateY(-8px); } 
-            100% { transform: translateY(0); } 
-        }
-        @keyframes pulse { 
-            0% { transform: scale(1); } 
-            40% { transform: scale(1.05); } 
-            100% { transform: scale(1); } 
-        }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        @keyframes arrowBounce { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(3px); opacity: 0.4; } }
-        @keyframes glitchText { 0%, 100% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(2px, -2px); } 60% { transform: translate(-2px, -2px); } 80% { transform: translate(2px, 2px); } }
-        
-        @keyframes particleDrift {
-            0% { transform: translate(0, 0); opacity: 0; }
-            10% { opacity: 0.7; }
-            90% { opacity: 0.7; }
-            100% { transform: translate(20px, -80px); opacity: 0; }
-        }
+    @keyframes fadeIn { 
+        0% { opacity: 0; } 
+        100% { opacity: 1; } 
+    }
+    @keyframes slideUp { 
+        0% { opacity: 0; transform: translateY(20px); } 
+        100% { opacity: 1; transform: translateY(0); } 
+    }
+    @keyframes float { 
+        0%, 100% { transform: translateY(0); } 
+        50% { transform: translateY(-6px); } 
+    }
+    @keyframes shake { 
+        0%, 100% { transform: translateX(0); } 
+        20% { transform: translateX(-3px); } 
+        40% { transform: translateX(3px); } 
+        60% { transform: translateX(-2px); } 
+        80% { transform: translateX(2px); } 
+    }
+    @keyframes bounce { 
+        0% { transform: translateY(0); } 
+        30% { transform: translateY(-12px); } 
+        50% { transform: translateY(-4px); } 
+        70% { transform: translateY(-8px); } 
+        100% { transform: translateY(0); } 
+    }
+    @keyframes pulse { 
+        0% { transform: scale(1); } 
+        40% { transform: scale(1.05); } 
+        100% { transform: scale(1); } 
+    }
+    @keyframes blink { 
+        0%, 100% { opacity: 1; } 
+        50% { opacity: 0; } 
+    }
+    @keyframes arrowBounce { 
+        0%, 100% { transform: translateY(0); opacity: 1; } 
+        50% { transform: translateY(3px); opacity: 0.4; } 
+    }
+    @keyframes glitchText { 
+        0%, 100% { transform: translate(0); } 
+        20% { transform: translate(-2px, 2px); } 
+        40% { transform: translate(2px, -2px); } 
+        60% { transform: translate(-2px, -2px); } 
+        80% { transform: translate(2px, 2px); } 
+    }
+    @keyframes particleDrift {
+        0% { transform: translate(0, 0); opacity: 0; }
+        10% { opacity: 0.7; }
+        90% { opacity: 0.7; }
+        100% { transform: translate(20px, -80px); opacity: 0; }
+    }
 
-        .char-idle { animation: float 4s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
-        .char-happy { animation: bounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .char-angry { animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
-        .char-sad { filter: brightness(0.85); transition: filter 0.5s ease; }
-        .char-surprise { animation: pulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .char-idle { animation: float 4s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+    .char-happy { animation: bounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .char-angry { animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+    .char-sad { filter: brightness(0.85); transition: filter 0.5s ease; }
+    .char-surprise { animation: pulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
 
-        /* 모바일 세로 화면 회전 안내 */
-        .rotate-notice {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: #0a0810;
-            z-index: 9999;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #9d8ec2;
-        }
-        .rotate-notice .icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            animation: rotateIcon 1.5s ease-in-out infinite;
-        }
-        @keyframes rotateIcon {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(90deg); }
-        }
-        @media (max-width: 768px) and (orientation: portrait) {
-            .rotate-notice { display: flex; }
-            #game-container { display: none !important; }
-        }
+    /* 모바일 세로 화면 회전 안내 */
+    .rotate-notice {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: #0a0810;
+        z-index: 9999;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #9d8ec2;
+    }
+    .rotate-notice .icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        animation: rotateIcon 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    @keyframes rotateIcon {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(90deg); }
+    }
+    @media (max-width: 768px) and (orientation: portrait) {
+        .rotate-notice { display: flex; }
+        #game-container { display: none !important; }
+    }
 
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #16141c; }
-        ::-webkit-scrollbar-thumb { background: #6b6480; border-radius: 2px; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #16141c; }
+    ::-webkit-scrollbar-thumb { background: #6b6480; border-radius: 2px; }
     </style>
 </head>
 <body>
@@ -319,7 +336,7 @@
                             </div>
                         </>
                     ) : (
-                        <div style={{ textAlign: 'center', animation: 'fadeIn 0.3s' }}>
+                        <div style={{ textAlign: 'center', animation: 'fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }}>
                             <div style={{ fontSize: '1rem', color: '#b8b0c8', marginBottom: '0.6rem' }}>저장 데이터 발견</div>
                             <div style={{ fontSize: '0.85rem', color: '#8880a0' }}>마지막 체크포인트에서 시작합니다</div>
                             <div style={{ marginTop: '1rem', fontSize: '0.75rem', color: '#6b6480', padding: '8px 20px', background: '#14121a', borderRadius: '14px' }}>Chapter 12: 황제의 즉위식</div>
@@ -378,7 +395,7 @@
                 { speaker: "elia", text: "하... 진짜 꼴보기 싫다. 너네 둘 다 좀 조용히 해.", emotion: "angry" },
                 { speaker: "luna", text: "흥, 언니들 싸우는 거 재밌네요~ 폐하는 어떻게 생각하세요?", emotion: "happy" },
                 { speaker: "karen", text: "...시끄럽군.", emotion: "idle" },
-                { speaker: "narrator", text: "여섯 쌍의 눈이 당신을 바라본다.", emotion: "idle" }
+                { speaker: "narrator", text: "여섯 여자들이 당신을 바라본다.", emotion: "idle" }
             ], []);
 
             const choices = useMemo(() => [
@@ -459,7 +476,7 @@
                     </div>
                 )}
                     {showChoices && (
-                        <div style={{ position: 'absolute', top: isMobile ? '35%' : '45%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', gap: isMobile ? '5px' : '9px', animation: 'fadeIn 0.2s', zIndex: 200, width: isMobile ? '75%' : 'auto', maxWidth: '380px' }}>
+                        <div style={{ position: 'absolute', top: isMobile ? '35%' : '45%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', gap: isMobile ? '5px' : '9px', animation: 'fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1)', zIndex: 200, width: isMobile ? '75%' : 'auto', maxWidth: '380px' }}>
                             {choices.map((c, i) => <button key={i} onClick={() => handleChoice(i)} style={{ padding: isMobile ? '8px 12px' : '15px 26px', fontSize: isMobile ? '0.72rem' : '0.92rem', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #3d3850', color: '#e8e6ed', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', width: '100%' }}><span style={{ color: '#9d8ec2', marginRight: '6px' }}>▸</span>{c.text}</button>)}
                         </div>
                     )}
@@ -496,7 +513,7 @@
             useEffect(() => { const t = setTimeout(() => setShowIntro(false), 2200); return () => clearTimeout(t); }, []);
 
             if (showIntro) return (
-                <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#0a0810', animation: 'fadeIn 0.5s', padding: '20px', textAlign: 'center' }}>
+                <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#0a0810', animation: 'fadeIn 0.7s cubic-bezier(0.4, 0, 0.2, 1)', padding: '20px', textAlign: 'center' }}>
                     <div style={{ fontSize: '1rem', color: '#9d8ec2', marginBottom: '0.6rem' }}>당신은 미연시 『제국 최강이 되기까지』속으로</div>
                     <div style={{ fontSize: '2rem', color: '#e8e6ed', fontWeight: 700, fontFamily: "'Noto Serif KR', serif" }}>빙의했습니다.</div>
                     <div style={{ marginTop: '2rem', padding: '12px 28px', background: '#14121a', borderRadius: '16px' }}>
@@ -518,7 +535,7 @@
 
                     <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(170px, 1fr))', gap: isMobile ? '8px' : '14px', maxWidth: '980px', margin: '0 auto' }}>
                         {list.map(([k, c], i) => (
-                            <div key={k} onClick={() => setSelected(k)} style={{ background: '#14121a', border: '1px solid #1a1820', borderRadius: '10px', overflow: 'hidden', cursor: 'pointer', animation: `slideUp 0.3s ease ${i * 0.03}s both` }}>
+                            <div key={k} onClick={() => setSelected(k)} style={{ background: '#14121a', border: '1px solid #1a1820', borderRadius: '10px', overflow: 'hidden', cursor: 'pointer', animation: `slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.05}s both` }}>
                                 <div style={{ width: '100%', height: isMobile ? '140px' : '195px', background: '#100e16', display: 'flex', justifyContent: 'center', alignItems: 'center', borderBottom: '1px solid #1a1820' }}>
                                     {IMAGES[`full${k.charAt(0).toUpperCase()}${k.slice(1)}`] ? <img src={IMAGES[`full${k.charAt(0).toUpperCase()}${k.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'cover' }} /> : <span style={{ color: '#1a1820', fontSize: '0.55rem' }}>[ 이미지 ]</span>}
                                 </div>
@@ -532,7 +549,7 @@
                     </div>
 
                     {selected && (
-                        <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(5, 4, 10, 0.95)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '12px', animation: 'fadeIn 0.15s' }}>
+                        <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(5, 4, 10, 0.95)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '12px', animation: 'fadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1)' }}>
                             <div onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: isMobile ? '100%' : '800px', height: isMobile ? '86vh' : '76vh', maxHeight: isMobile ? 'none' : '540px', background: '#100e16', border: `1px solid ${characters[selected].color}40`, borderRadius: '14px', display: 'flex', flexDirection: isMobile ? 'column' : 'row', position: 'relative', overflow: 'hidden' }}>
                                 <div style={{ flex: isMobile ? '0 0 40%' : 1, background: '#0a0810', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRight: isMobile ? 'none' : '1px solid #1a1820', borderBottom: isMobile ? '1px solid #1a1820' : 'none' }}>
                                     {IMAGES[`full${selected.charAt(0).toUpperCase()}${selected.slice(1)}`] ? <img src={IMAGES[`full${selected.charAt(0).toUpperCase()}${selected.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} /> : <div style={{ color: '#1a1820', fontSize: '0.7rem' }}>[ 전신 이미지 ]</div>}
