@@ -14,83 +14,21 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { font-family: 'Noto Sans KR', sans-serif; background: #0a0810; color: #e8e6ed; min-height: 100vh; overflow-x: hidden; }
     #root { min-height: 100vh; }
-
     @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
     @keyframes slideUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     @keyframes arrowBounce { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(3px); opacity: 0.4; } }
     @keyframes glitchText { 0%, 100% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(2px, -2px); } 60% { transform: translate(-2px, -2px); } 80% { transform: translate(2px, 2px); } }
     @keyframes particleDrift { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: 0.7; } 90% { opacity: 0.7; } 100% { transform: translate(20px, -80px); opacity: 0; } }
-    
-    /* ===== 미연시 스타일 캐릭터 모션 ===== */
-    
-    /* 대기 중 - 미세한 숨쉬기 */
-    @keyframes idleBreathing {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-2px); }
-    }
-    
-    /* 말할 때 기본 - 부드러운 둥실둥실 */
-    @keyframes speaking {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-6px); }
-    }
-    
-    /* 기쁨 - 살짝 통통 */
-    @keyframes happyBounce {
-        0%, 100% { transform: translateY(0); }
-        20% { transform: translateY(-10px); }
-        40% { transform: translateY(-3px); }
-        60% { transform: translateY(-7px); }
-        80% { transform: translateY(-2px); }
-    }
-    
-    /* 화남 - 아주 미세한 떨림 */
-    @keyframes angryTremble {
-        0%, 100% { transform: translateX(0) translateY(-2px); }
-        25% { transform: translateX(-2px) translateY(-2px); }
-        50% { transform: translateX(2px) translateY(-3px); }
-        75% { transform: translateX(-1px) translateY(-2px); }
-    }
-    
-    /* 슬픔 - 천천히 처진 느낌 */
-    @keyframes sadDroop {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(3px) rotate(-0.3deg); }
-    }
-    
-    /* 놀람 - 살짝 튀어오름 */
-    @keyframes surpriseJolt {
-        0% { transform: translateY(0) scale(1); }
-        15% { transform: translateY(-15px) scale(1.03); }
-        30% { transform: translateY(-5px) scale(1.01); }
-        50% { transform: translateY(-8px) scale(1.02); }
-        100% { transform: translateY(0) scale(1); }
-    }
-
-    /* 모바일 세로 화면 회전 안내 */
-    .rotate-notice {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: #0a0810;
-        z-index: 9999;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        color: #9d8ec2;
-    }
-    .rotate-notice .icon {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        animation: rotateIcon 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    }
+    @keyframes idleBreathing { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+    @keyframes speaking { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    @keyframes happyBounce { 0%, 100% { transform: translateY(0); } 20% { transform: translateY(-10px); } 40% { transform: translateY(-3px); } 60% { transform: translateY(-7px); } 80% { transform: translateY(-2px); } }
+    @keyframes angryTremble { 0%, 100% { transform: translateX(0) translateY(-2px); } 25% { transform: translateX(-2px) translateY(-2px); } 50% { transform: translateX(2px) translateY(-3px); } 75% { transform: translateX(-1px) translateY(-2px); } }
+    @keyframes sadDroop { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(3px) rotate(-0.3deg); } }
+    .rotate-notice { display: none; position: fixed; inset: 0; background: #0a0810; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; color: #9d8ec2; }
+    .rotate-notice .icon { font-size: 3rem; margin-bottom: 1rem; animation: rotateIcon 2s ease-in-out infinite; }
     @keyframes rotateIcon { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(90deg); } }
-    @media (max-width: 768px) and (orientation: portrait) {
-        .rotate-notice { display: flex; }
-        #game-container { display: none !important; }
-    }
-
+    @media (max-width: 768px) and (orientation: portrait) { .rotate-notice { display: flex; } #game-container { display: none !important; } }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: #16141c; }
     ::-webkit-scrollbar-thumb { background: #6b6480; border-radius: 2px; }
@@ -98,419 +36,538 @@
 </head>
 <body>
     <div id="root"></div>
-    <div class="rotate-notice">
-        <div class="icon">📱</div>
-        <div style="font-size: 1.1rem; margin-bottom: 0.5rem;">화면을 가로로 돌려주세요</div>
-        <div style="font-size: 0.8rem; color: #6b6480;">Please rotate your device</div>
-    </div>
+    <div class="rotate-notice"><div class="icon">📱</div><div style="font-size: 1.1rem; margin-bottom: 0.5rem;">화면을 가로로 돌려주세요</div><div style="font-size: 0.8rem; color: #6b6480;">Please rotate your device</div></div>
     
     <script type="text/babel">
         const { useState, useEffect, useCallback, useMemo } = React;
 
-        const SOUNDS = { click: null, select: null, type: null, transition: null, glitch: null, error: null };
-        const playSound = (type) => { if (SOUNDS[type]) new Audio(SOUNDS[type]).play().catch(() => {}); };
+        // ========== 사운드 설정 (교체 쉽게 분리) ==========
+        const SOUNDS = {
+            bgmDefault: null,      // 'audio/bgm_default.mp3' - 평화로운
+            bgmTense: null,        // 'audio/bgm_tense.mp3' - 긴박
+            bgmRomantic: null,     // 'audio/bgm_romantic.mp3' - 로맨틱
+            sfxClick: null,        // 'audio/sfx_click.mp3'
+            sfxDecision: null,     // 'audio/sfx_decision.mp3' - 선택
+            sfxSurprise: null,     // 'audio/sfx_surprise.mp3'
+            sfxHeartbeat: null,    // 'audio/sfx_heartbeat.mp3'
+            sfxSword: null,        // 'audio/sfx_sword.mp3'
+            sfxGlitch: null,       // 'audio/sfx_glitch.mp3'
+        };
+        let currentBgm = null;
+        const playBgm = (type) => { if (currentBgm) { currentBgm.pause(); } const src = SOUNDS[`bgm${type.charAt(0).toUpperCase() + type.slice(1)}`]; if (src) { currentBgm = new Audio(src); currentBgm.loop = true; currentBgm.volume = 0.3; currentBgm.play().catch(() => {}); } };
+        const stopBgm = () => { if (currentBgm) { currentBgm.pause(); currentBgm = null; } };
+        const playSfx = (type) => { const src = SOUNDS[`sfx${type.charAt(0).toUpperCase() + type.slice(1)}`]; if (src) new Audio(src).play().catch(() => {}); };
 
+        // ========== 이미지 설정 (감정별 4개) ==========
         const IMAGES = {
-            titleLogo: 'img/tlogo.png',
-            titleBackground: 'img/tbackground.png',
-            titleCharacter: 'img/tchar.png',
-            gameBackground: 'img/gbackground.png',
-            charKairen: null, charLizette: 'img/l.png', charAdeline: 'img/a.png', charKaren: 'img/c.png', charElia: 'img/e.png', charSelene: 'img/s.png', charLuna: 'img/lu.png',
-            fullKairen: null, fullLizette: 'img/fulll.png', fullAdeline: 'img/fulla.png', fullKaren: 'img/fullc.png', fullElia: 'img/fulle.png', fullSelene: 'img/fulls.png', fullLuna: 'img/fulllu.png',
+            titleLogo: 'img/tlogo.png', titleBackground: 'img/tbackground.png', titleCharacter: 'img/tchar.png',
+            bgPalace: 'img/bg_palace.png', bgGarden: 'img/bg_garden.png', bgHall: 'img/bg_hall.png',
+            bgRoom: 'img/bg_room.png', bgTraining: 'img/bg_training.png', bgBallroom: 'img/bg_ballroom.png',
+            bgThrone: 'img/bg_throne.png', bgNight: 'img/bg_night.png',
+            // 캐릭터 (default, happy, sad, angry)
+            kairen: { default: 'img/kairen.png', happy: 'img/kairen_happy.png', sad: 'img/kairen_sad.png', angry: 'img/kairen_angry.png' },
+            lizette: { default: 'img/lizette.png', happy: 'img/lizette_happy.png', sad: 'img/lizette_sad.png', angry: 'img/lizette_angry.png' },
+            adeline: { default: 'img/adeline.png', happy: 'img/adeline_happy.png', sad: 'img/adeline_sad.png', angry: 'img/adeline_angry.png' },
+            karen: { default: 'img/karen.png', happy: 'img/karen_happy.png', sad: 'img/karen_sad.png', angry: 'img/karen_angry.png' },
+            elia: { default: 'img/elia.png', happy: 'img/elia_happy.png', sad: 'img/elia_sad.png', angry: 'img/elia_angry.png' },
+            selene: { default: 'img/selene.png', happy: 'img/selene_happy.png', sad: 'img/selene_sad.png', angry: 'img/selene_angry.png' },
+            luna: { default: 'img/luna.png', happy: 'img/luna_happy.png', sad: 'img/luna_sad.png', angry: 'img/luna_angry.png' },
+            fullKairen: 'img/full_kairen.png', fullLizette: 'img/full_lizette.png', fullAdeline: 'img/full_adeline.png',
+            fullKaren: 'img/full_karen.png', fullElia: 'img/full_elia.png', fullSelene: 'img/full_selene.png', fullLuna: 'img/full_luna.png',
         };
 
+        // ========== 캐릭터 데이터 ==========
         const characters = {
             kairen: { name: "카이른", fullName: "카이른 폰 레이센", color: "#9d8ec2", description: "숨겨진 황자", tags: ["#숨겨진_황자", "#계산적", "#온화한_미소", "#먼치킨"], quote: "모두가 내게 소중한 존재야." },
             lizette: { name: "리제트", fullName: "리제트 밀러", color: "#d4a0a8", personality: "소심 · 집착", description: "카이른의 소꿉친구 하녀", tags: ["#소꿉친구", "#소심", "#조용한_집착", "#하녀"], quote: "저, 저는 항상 도련님 편이에요.." },
             adeline: { name: "아델린", fullName: "아델린 폰 크로이츠", color: "#c4b090", personality: "츤데레", description: "공작가 영애", tags: ["#공작영애", "#츤데레", "#도도함", "#순정"], quote: "착각하지 마세요. 전 그저 의무를 따를 뿐입니다." },
-            karen: { name: "카렌", fullName: "카렌 폰 슈테른", color: "#8aadc0", personality: "무감정", description: "황실 근위대장", tags: ["#근위대장", "#무표정", "#실력주의", "#쿨뷰티"], quote: "...넌 그냥 명령에 따르면 돼." },
+            karen: { name: "카렌", fullName: "카렌 폰 슈테른", color: "#8aadc0", personality: "무감정", description: "황실 근위대장", tags: ["#근위대장", "#무표정", "#실력주의", "#쿨뷰티"], quote: "...명령에 따를 뿐이다." },
             elia: { name: "엘리아", fullName: "엘리아 폰 베른트", color: "#c49898", personality: "욕데레", description: "당신의 소꿉친구 기사", tags: ["#소꿉친구", "#욕쟁이", "#츤츤", "#여린_속마음"], quote: "하... 진짜, 너 같은 멍청이는 내가 없으면 안 돼." },
             selene: { name: "셀레네", fullName: "셀레네 아르카디엔", color: "#a890b8", personality: "소유욕", description: "제3황녀", tags: ["#황녀", "#소유욕", "#우아함", "#집착"], quote: "후후, 폐하는 제 것이에요. 누구도 가져갈 수 없죠." },
             luna: { name: "루나", fullName: "루나", color: "#c8909c", personality: "메스가키", description: "당신의 의붓동생", tags: ["#의붓동생", "#메스가키", "#츤데레", "#경멸"], quote: "흥, 뭐야 그 눈. 쳐다보지 마." }
         };
 
+        // ========== 스토리 데이터 ==========
+        const STORY = {
+            chapter1: { title: "Chapter 1", subtitle: "사생아의 비밀", bgm: "default", scenes: [
+                { id: "1-1", bg: "bgRoom", chars: [], dialogs: [
+                    { speaker: "narrator", text: "레이센 후작가의 별채." },
+                    { speaker: "narrator", text: "그곳에는 공식적으로 '존재하지 않는' 아이가 살고 있었다." },
+                    { speaker: "narrator", text: "바로, 당신이다." },
+                ]},
+                { id: "1-2", bg: "bgRoom", chars: [{ id: "lizette", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "lizette", text: "도, 도련님... 일어나셨어요?", emotion: "default" },
+                    { speaker: "you", text: "...리제트? 무슨 일이야, 이른 아침부터." },
+                    { speaker: "lizette", text: "저, 저기... 큰일 났어요.", emotion: "sad" },
+                    { speaker: "lizette", text: "본가에서... 사람이 왔어요.", emotion: "sad" },
+                    { speaker: "you", text: "본가에서?" },
+                    { speaker: "narrator", text: "레이센 후작가 본가. 태어나서 한 번도 가본 적 없는 곳." },
+                ]},
+                { id: "1-3", bg: "bgRoom", chars: [{ id: "lizette", pos: "center", emotion: "sad" }], dialogs: [
+                    { speaker: "lizette", text: "도련님이... 황실의 핏줄이라고...", emotion: "sad" },
+                    { speaker: "you", text: "...뭐라고?" },
+                    { speaker: "lizette", text: "돌아가신 선황후께서... 도련님의 어머니셨대요.", emotion: "sad" },
+                    { speaker: "narrator", text: "머릿속이 하얘진다. 사생아가 아니라, 황자?" },
+                    { speaker: "lizette", text: "도, 도련님...", emotion: "sad" },
+                ], choices: [
+                    { text: "리제트를 안심시킨다", next: "1-4a" },
+                    { text: "충격에 말을 잇지 못한다", next: "1-4b" }
+                ]},
+                { id: "1-4a", bg: "bgRoom", chars: [{ id: "lizette", pos: "center", emotion: "happy" }], dialogs: [
+                    { speaker: "you", text: "괜찮아, 리제트. 놀라긴 했지만... 네가 옆에 있으니까." },
+                    { speaker: "lizette", text: "도, 도련님...!", emotion: "happy" },
+                    { speaker: "narrator", text: "리제트의 얼굴이 빨개진다." },
+                    { speaker: "lizette", text: "저, 저는 언제나 도련님 곁에 있을 거예요!", emotion: "happy" },
+                ], next: "1-5" },
+                { id: "1-4b", bg: "bgRoom", chars: [{ id: "lizette", pos: "center", emotion: "sad" }], dialogs: [
+                    { speaker: "you", text: "......" },
+                    { speaker: "lizette", text: "도련님? 괜찮으세요?", emotion: "sad" },
+                    { speaker: "narrator", text: "입술이 떨린다. 지금까지의 삶이 전부 거짓이었던 건가." },
+                    { speaker: "lizette", text: "저, 저는... 도련님이 누구든 상관없어요.", emotion: "sad" },
+                    { speaker: "narrator", text: "리제트의 손이 내 손을 감싼다. 따뜻하다." },
+                ], next: "1-5" },
+                { id: "1-5", bg: "bgRoom", chars: [{ id: "lizette", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "you", text: "...본가로 가야겠어." },
+                    { speaker: "lizette", text: "네? 지, 지금 당장요?", emotion: "default" },
+                    { speaker: "you", text: "진실을 알아야 해. 내가 정말 누구인지." },
+                    { speaker: "lizette", text: "그, 그럼 저도 같이...!", emotion: "default" },
+                    { speaker: "you", text: "당연하지. 넌 내 하녀잖아." },
+                    { speaker: "lizette", text: "...네! 도련님!", emotion: "happy" },
+                    { speaker: "narrator", text: "이것이 모든 것의 시작이었다." },
+                ], next: "chapter2" },
+            ]},
+            chapter2: { title: "Chapter 2", subtitle: "갑작스러운 약혼", bgm: "default", scenes: [
+                { id: "2-1", bg: "bgHall", chars: [], dialogs: [
+                    { speaker: "narrator", text: "레이센 후작가 본가. 생각했던 것보다 훨씬 거대한 저택이었다." },
+                ]},
+                { id: "2-2", bg: "bgHall", chars: [{ id: "adeline", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "narrator", text: "한 여인이 서 있었다. 금발에 차가운 눈동자." },
+                    { speaker: "adeline", text: "당신이 그 숨겨진 황자라는 사람인가요?", emotion: "default" },
+                    { speaker: "you", text: "...누구시죠?" },
+                    { speaker: "adeline", text: "아델린 폰 크로이츠. 크로이츠 공작가의 영애예요.", emotion: "default" },
+                    { speaker: "adeline", text: "그리고... 당신의 약혼녀가 될 사람이에요.", emotion: "angry" },
+                    { speaker: "you", text: "...예?" },
+                    { speaker: "adeline", text: "착각하지 마세요. 이건 제 의지가 아니에요.", emotion: "angry" },
+                ], choices: [
+                    { text: "정중하게 인사한다", next: "2-3a" },
+                    { text: "솔직하게 당황함을 표현한다", next: "2-3b" }
+                ]},
+                { id: "2-3a", bg: "bgHall", chars: [{ id: "adeline", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "you", text: "카이른 폰 레이센입니다. 잘 부탁드립니다, 아델린 양." },
+                    { speaker: "adeline", text: "......", emotion: "default" },
+                    { speaker: "adeline", text: "의외로 예의는 있네요.", emotion: "default" },
+                    { speaker: "narrator", text: "아델린의 표정이 살짝 누그러진다." },
+                ], next: "2-4" },
+                { id: "2-3b", bg: "bgHall", chars: [{ id: "adeline", pos: "center", emotion: "angry" }], dialogs: [
+                    { speaker: "you", text: "잠깐, 약혼이라니... 갑자기 무슨..." },
+                    { speaker: "adeline", text: "저도 듣고 싶지 않았어요.", emotion: "angry" },
+                    { speaker: "adeline", text: "하지만 이건 이미 결정된 일이에요.", emotion: "default" },
+                ], next: "2-4" },
+                { id: "2-4", bg: "bgHall", chars: [{ id: "adeline", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "adeline", text: "어차피 형식적인 약혼이에요.", emotion: "default" },
+                    { speaker: "adeline", text: "당신이 능력을 증명하지 못하면 파혼될 거예요.", emotion: "default" },
+                    { speaker: "you", text: "능력?" },
+                    { speaker: "adeline", text: "기사단 입단 시험을 통과해야 해요.", emotion: "default" },
+                    { speaker: "narrator", text: "기사단... 제국 황실 근위기사단." },
+                    { speaker: "adeline", text: "열심히 하세요. 약혼자의 체면도 있으니까.", emotion: "default" },
+                    { speaker: "narrator", text: "아델린이 돌아섰다. 하지만 어딘가... 외로워 보이기도 했다." },
+                ], next: "chapter3" },
+            ]},
+            chapter3: { title: "Chapter 3", subtitle: "검의 여인", bgm: "tense", scenes: [
+                { id: "3-1", bg: "bgTraining", chars: [], dialogs: [
+                    { speaker: "narrator", text: "황실 근위기사단 훈련장." },
+                    { speaker: "narrator", text: "검과 검이 부딪히는 소리가 울려퍼진다." },
+                ]},
+                { id: "3-2", bg: "bgTraining", chars: [{ id: "karen", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "narrator", text: "그곳에서, 한 여인을 만났다. 은발에 날카로운 눈매." },
+                    { speaker: "narrator", text: "그녀의 주변으로 기사들이 쓰러져 있었다." },
+                    { speaker: "karen", text: "...뭘 보고 있지.", emotion: "default" },
+                    { speaker: "karen", text: "네가 그 숨겨진 황자인가.", emotion: "default" },
+                    { speaker: "you", text: "...알고 계셨습니까?" },
+                    { speaker: "karen", text: "카렌 폰 슈테른. 황실 근위기사단장이다.", emotion: "default" },
+                    { speaker: "narrator", text: "제국 최강이라 불리는 기사." },
+                ]},
+                { id: "3-3", bg: "bgTraining", chars: [{ id: "karen", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "karen", text: "...검을 들어라. 직접 테스트하겠다.", emotion: "default" },
+                    { speaker: "narrator", text: "근위대장이 직접?" },
+                ], choices: [
+                    { text: "자신있게 검을 든다", next: "3-4a" },
+                    { text: "긴장하며 검을 든다", next: "3-4b" }
+                ]},
+                { id: "3-4a", bg: "bgTraining", chars: [{ id: "karen", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "you", text: "...잘 부탁드립니다." },
+                    { speaker: "karen", text: "좋은 눈이다.", emotion: "default" },
+                ], next: "3-5" },
+                { id: "3-4b", bg: "bgTraining", chars: [{ id: "karen", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "you", text: "...최선을 다하겠습니다." },
+                    { speaker: "karen", text: "긴장할 수 있는 건 좋은 것이다.", emotion: "default" },
+                ], next: "3-5" },
+                { id: "3-5", bg: "bgTraining", chars: [{ id: "karen", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "narrator", text: "검이 부딪혔다. 한 합, 두 합, 세 합..." },
+                    { speaker: "narrator", text: "카렌의 검은 빠르고 정확했다. 하지만, 어느 순간—" },
+                    { speaker: "karen", text: "...합격이다.", emotion: "default" },
+                    { speaker: "you", text: "정말입니까?" },
+                    { speaker: "karen", text: "황실의 피는 속일 수 없군.", emotion: "default" },
+                    { speaker: "karen", text: "...재미있는 놈이 들어왔다.", emotion: "happy" },
+                    { speaker: "narrator", text: "처음으로, 카렌의 입가에 미소 같은 것이 스쳤다." },
+                ], next: "chapter4" },
+            ]},
+            chapter4: { title: "Chapter 4", subtitle: "재회", bgm: "default", scenes: [
+                { id: "4-1", bg: "bgTraining", chars: [], dialogs: [
+                    { speaker: "narrator", text: "근위기사단에 입단한 지 일주일." },
+                    { speaker: "narrator", text: "훈련은 예상보다 훨씬 힘들었다. 하지만 그보다 더 힘든 것이 있었으니—" },
+                ]},
+                { id: "4-2", bg: "bgTraining", chars: [{ id: "elia", pos: "center", emotion: "angry" }], dialogs: [
+                    { speaker: "elia", text: "야, 이 멍청아!", emotion: "angry" },
+                    { speaker: "you", text: "...엘리아?" },
+                    { speaker: "elia", text: "지금 여기서 뭐하는 거야?!", emotion: "angry" },
+                    { speaker: "narrator", text: "갈색 머리에 날카로운 눈매. 어릴 적 소꿉친구, 엘리아." },
+                    { speaker: "you", text: "...오랜만이네." },
+                    { speaker: "elia", text: "오랜만은 무슨! 연락도 없이 사라지더니!", emotion: "angry" },
+                ], choices: [
+                    { text: "진심으로 사과한다", next: "4-3a" },
+                    { text: "변명을 시도한다", next: "4-3b" }
+                ]},
+                { id: "4-3a", bg: "bgTraining", chars: [{ id: "elia", pos: "center", emotion: "sad" }], dialogs: [
+                    { speaker: "you", text: "미안해, 엘리아. 정말." },
+                    { speaker: "elia", text: "...바보.", emotion: "sad" },
+                    { speaker: "elia", text: "걱정했다고... 많이...", emotion: "sad" },
+                    { speaker: "narrator", text: "엘리아의 눈가가 붉어진다." },
+                    { speaker: "elia", text: "흥, 뭘 봐! 눈에 뭐 들어간 거야!", emotion: "angry" },
+                ], next: "4-4" },
+                { id: "4-3b", bg: "bgTraining", chars: [{ id: "elia", pos: "center", emotion: "angry" }], dialogs: [
+                    { speaker: "you", text: "연락하고 싶어도 할 수가 없었어. 본가에서—" },
+                    { speaker: "elia", text: "됐어, 듣기 싫어.", emotion: "angry" },
+                    { speaker: "elia", text: "...근데 왜 기사단에 있는 거야.", emotion: "default" },
+                    { speaker: "elia", text: "...바보같이.", emotion: "sad" },
+                ], next: "4-4" },
+                { id: "4-4", bg: "bgTraining", chars: [{ id: "elia", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "elia", text: "...나도 기사단이야.", emotion: "default" },
+                    { speaker: "elia", text: "어쨌든... 같은 기사단이 됐으니까.", emotion: "default" },
+                    { speaker: "elia", text: "네가 멍청한 짓 하면 내가 막아줄 거야.", emotion: "default" },
+                    { speaker: "you", text: "...고마워." },
+                    { speaker: "elia", text: "고마워하지 마! 짜증나니까!", emotion: "angry" },
+                    { speaker: "narrator", text: "변하지 않는 것도 있구나. 그 사실이 위안이 됐다." },
+                ], next: "chapter5" },
+            ]},
+            chapter5: { title: "Chapter 5", subtitle: "교차하는 시선", bgm: "default", scenes: [
+                { id: "5-1", bg: "bgGarden", chars: [], dialogs: [
+                    { speaker: "narrator", text: "황궁의 정원. 잠시 휴식을 취하며 걷고 있을 때였다." },
+                    { speaker: "narrator", text: "한 사람이 스쳐 지나갔다. 길지 않은 순간이었지만, 눈이 마주쳤다." },
+                    { speaker: "narrator", text: "엑스트라처럼 보이는 평범한 기사... 하지만 왠지 신경이 쓰였다." },
+                    { speaker: "you", text: "...저 사람은?" },
+                    { speaker: "narrator", text: "뒤돌아봤을 때, 그 기사는 이미 사라지고 없었다." },
+                ]},
+                { id: "5-2", bg: "bgGarden", chars: [{ id: "luna", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "luna", text: "뭘 그렇게 멍하니 서 있어, 오라버니?", emotion: "default" },
+                    { speaker: "you", text: "...루나?" },
+                    { speaker: "narrator", text: "분홍색 머리의 소녀. 아버지의 재혼으로 생긴 의붓동생." },
+                    { speaker: "luna", text: "흥, 이제 황자님이라고 나 무시하는 거야?", emotion: "angry" },
+                    { speaker: "luna", text: "맨날 본가에도 안 오고. 나쁜 오라버니.", emotion: "default" },
+                ], choices: [
+                    { text: "머리를 쓰다듬어준다", next: "5-3a" },
+                    { text: "장난스럽게 대응한다", next: "5-3b" }
+                ]},
+                { id: "5-3a", bg: "bgGarden", chars: [{ id: "luna", pos: "center", emotion: "happy" }], dialogs: [
+                    { speaker: "narrator", text: "루나의 머리를 쓰다듬었다." },
+                    { speaker: "luna", text: "뭐, 뭐야...! 갑자기 왜 이래!", emotion: "happy" },
+                    { speaker: "you", text: "잘 지내서 다행이야." },
+                    { speaker: "luna", text: "흥, 이상해.", emotion: "default" },
+                    { speaker: "narrator", text: "얼굴이 빨개진 루나가 고개를 돌린다." },
+                ], next: "5-4" },
+                { id: "5-3b", bg: "bgGarden", chars: [{ id: "luna", pos: "center", emotion: "angry" }], dialogs: [
+                    { speaker: "you", text: "내 덕분이라고? 건방진데?" },
+                    { speaker: "luna", text: "뭐야! 농담이잖아!", emotion: "angry" },
+                    { speaker: "luna", text: "진짜 나빠! 오라버니 나빠!", emotion: "angry" },
+                    { speaker: "narrator", text: "루나가 볼을 부풀린다. 변하지 않았구나." },
+                ], next: "5-4" },
+                { id: "5-4", bg: "bgGarden", chars: [{ id: "luna", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "luna", text: "아, 맞다. 황녀님이 오라버니 보고 싶어하시던데.", emotion: "default" },
+                    { speaker: "you", text: "황녀?" },
+                    { speaker: "luna", text: "응, 셀레네 황녀님. 나 모시는 분.", emotion: "default" },
+                    { speaker: "luna", text: "조심해, 오라버니. 그 분 무서워.", emotion: "default" },
+                    { speaker: "luna", text: "웃으면서 사람 잡는 타입이거든.", emotion: "default" },
+                ], next: "chapter6" },
+            ]},
+            chapter6: { title: "Chapter 6", subtitle: "황녀의 유혹", bgm: "romantic", scenes: [
+                { id: "6-1", bg: "bgNight", chars: [], dialogs: [
+                    { speaker: "narrator", text: "달빛이 비추는 밤의 정원. 황녀의 호출을 받고 이곳에 왔다." },
+                ]},
+                { id: "6-2", bg: "bgNight", chars: [{ id: "selene", pos: "center", emotion: "happy" }], dialogs: [
+                    { speaker: "selene", text: "어머, 오셨군요.", emotion: "happy" },
+                    { speaker: "narrator", text: "은빛 머리카락이 달빛에 빛난다. 아름답다는 말로는 부족한 여인." },
+                    { speaker: "selene", text: "처음 뵙네요, 숨겨진 황자님.", emotion: "happy" },
+                    { speaker: "selene", text: "후후, 딱딱하게 굴지 마세요. 저와 당신은... 같은 피를 나눈 사이잖아요?", emotion: "default" },
+                ]},
+                { id: "6-3", bg: "bgNight", chars: [{ id: "selene", pos: "center", emotion: "happy" }], dialogs: [
+                    { speaker: "selene", text: "당신에 대한 이야기를 들었어요. 근위대장이 직접 합격시켰다면서요?", emotion: "happy" },
+                    { speaker: "selene", text: "하지만 저는 알아요. 당신이... 특별하다는 것을요.", emotion: "happy" },
+                    { speaker: "selene", text: "황위 계승 서열. 관심 있으시죠?", emotion: "default" },
+                    { speaker: "selene", text: "저와 손을 잡으면... 가장 빠른 길이 될 거예요.", emotion: "happy" },
+                    { speaker: "narrator", text: "셀레네의 손이 내 손등에 닿는다." },
+                ], choices: [
+                    { text: "제안을 경청한다", next: "6-4a" },
+                    { text: "경계심을 드러낸다", next: "6-4b" }
+                ]},
+                { id: "6-4a", bg: "bgNight", chars: [{ id: "selene", pos: "center", emotion: "happy" }], dialogs: [
+                    { speaker: "you", text: "...어떤 조건이죠?" },
+                    { speaker: "selene", text: "후후, 역시 현명하시네요.", emotion: "happy" },
+                    { speaker: "selene", text: "간단해요. 저를 황후로 맞이해주세요.", emotion: "happy" },
+                    { speaker: "selene", text: "저와 당신이 합치면, 이 제국을 손에 넣을 수 있어요.", emotion: "default" },
+                ], next: "6-5" },
+                { id: "6-4b", bg: "bgNight", chars: [{ id: "selene", pos: "center", emotion: "default" }], dialogs: [
+                    { speaker: "you", text: "...왜 저를 돕겠다는 겁니까?" },
+                    { speaker: "selene", text: "후후, 의심이 많으시군요. 좋아요, 그런 면도.", emotion: "happy" },
+                    { speaker: "selene", text: "저도 원하는 게 있으니까요. 황후의 자리... 그리고 당신.", emotion: "happy" },
+                ], next: "6-5" },
+                { id: "6-5", bg: "bgNight", chars: [{ id: "selene", pos: "center", emotion: "happy" }], dialogs: [
+                    { speaker: "selene", text: "생각해두세요. 저는... 기다릴 줄 아는 여자니까요.", emotion: "happy" },
+                    { speaker: "narrator", text: "셀레네가 떠난 후에도 그녀의 향기가 남아있었다." },
+                    { speaker: "narrator", text: "황녀의 제안... 받아들여야 할까, 거절해야 할까." },
+                ], next: "chapter7" },
+            ]},
+            chapter7: { title: "Chapter 7", subtitle: "제국 최강", bgm: "tense", scenes: [
+                { id: "7-1", bg: "bgThrone", chars: [], dialogs: [
+                    { speaker: "narrator", text: "3년이 흘렀다." },
+                    { speaker: "narrator", text: "수많은 전쟁과 정치적 암투 끝에— 나는 황제의 자리에 올랐다." },
+                ]},
+                { id: "7-2", bg: "bgThrone", chars: [{ id: "lizette", pos: "left", emotion: "happy" }, { id: "adeline", pos: "right", emotion: "default" }], dialogs: [
+                    { speaker: "lizette", text: "폐, 폐하... 정말 멋지세요!", emotion: "happy" },
+                    { speaker: "adeline", text: "...흥, 겨우 황제가 된 것 가지고.", emotion: "default" },
+                    { speaker: "you", text: "아델린, 솔직하지 못하긴." },
+                    { speaker: "adeline", text: "뭐, 뭐가요!", emotion: "angry" },
+                ]},
+                { id: "7-3", bg: "bgThrone", chars: [{ id: "karen", pos: "left", emotion: "default" }, { id: "elia", pos: "right", emotion: "angry" }], dialogs: [
+                    { speaker: "karen", text: "...폐하를 지키는 것이 나의 의무다.", emotion: "default" },
+                    { speaker: "elia", text: "하... 이 멍청이 황제 지키느라 고생이다, 진짜.", emotion: "angry" },
+                    { speaker: "you", text: "고맙다, 엘리아." },
+                    { speaker: "elia", text: "고, 고마워하지 마! 그냥 내 일이니까!", emotion: "angry" },
+                ]},
+                { id: "7-4", bg: "bgThrone", chars: [{ id: "selene", pos: "left", emotion: "happy" }, { id: "luna", pos: "right", emotion: "angry" }], dialogs: [
+                    { speaker: "selene", text: "후후, 드디어 제 남편이 되셨군요.", emotion: "happy" },
+                    { speaker: "luna", text: "셀레네 언니, 독차지하려고 하지 마요!", emotion: "angry" },
+                    { speaker: "selene", text: "어머, 질투하는 거예요?", emotion: "happy" },
+                    { speaker: "luna", text: "질, 질투 아니거든요!", emotion: "angry" },
+                ]},
+                { id: "7-5", bg: "bgThrone", chars: [{ id: "lizette", pos: "left", emotion: "default" }, { id: "adeline", pos: "left", emotion: "default" }, { id: "karen", pos: "left", emotion: "default" }, { id: "elia", pos: "right", emotion: "default" }, { id: "selene", pos: "right", emotion: "default" }, { id: "luna", pos: "right", emotion: "default" }], dialogs: [
+                    { speaker: "narrator", text: "여섯 명의 여인이 모였다. 각자 다른 방식으로 나를 사랑하는 사람들." },
+                    { speaker: "narrator", text: "이것이 내가 이룬 하렘... 제국 최강의 남자로서의 삶이었다." },
+                ], choices: [
+                    { text: "모두에게 감사를 전한다", next: "7-6a" },
+                    { text: "앞으로의 각오를 다진다", next: "7-6b" }
+                ]},
+                { id: "7-6a", bg: "bgThrone", chars: [{ id: "lizette", pos: "left", emotion: "happy" }, { id: "adeline", pos: "left", emotion: "happy" }, { id: "karen", pos: "left", emotion: "default" }, { id: "elia", pos: "right", emotion: "happy" }, { id: "selene", pos: "right", emotion: "happy" }, { id: "luna", pos: "right", emotion: "happy" }], dialogs: [
+                    { speaker: "you", text: "모두... 고맙다. 너희가 있었기에 여기까지 올 수 있었다." },
+                    { speaker: "lizette", text: "폐하...", emotion: "happy" },
+                    { speaker: "adeline", text: "...당연한 걸 가지고.", emotion: "happy" },
+                    { speaker: "karen", text: "...폐하를 섬기는 것은 영광이다.", emotion: "default" },
+                    { speaker: "elia", text: "바보... 당연하잖아...", emotion: "happy" },
+                    { speaker: "selene", text: "후후, 저도 행복해요.", emotion: "happy" },
+                    { speaker: "luna", text: "오라버니... 아니, 폐하...", emotion: "happy" },
+                ], next: "7-7" },
+                { id: "7-6b", bg: "bgThrone", chars: [{ id: "lizette", pos: "left", emotion: "default" }, { id: "adeline", pos: "left", emotion: "default" }, { id: "karen", pos: "left", emotion: "default" }, { id: "elia", pos: "right", emotion: "default" }, { id: "selene", pos: "right", emotion: "default" }, { id: "luna", pos: "right", emotion: "default" }], dialogs: [
+                    { speaker: "you", text: "이제 시작이다. 제국을 더 강하게 만들 것이다." },
+                    { speaker: "karen", text: "...그것이 폐하의 뜻이라면.", emotion: "default" },
+                    { speaker: "adeline", text: "당연하죠. 저도 돕겠어요.", emotion: "default" },
+                    { speaker: "selene", text: "후후, 기대되네요.", emotion: "happy" },
+                ], next: "7-7" },
+                { id: "7-7", bg: "bgThrone", chars: [], dialogs: [
+                    { speaker: "narrator", text: "그렇게, 모든 것이 완벽해 보였다." },
+                    { speaker: "narrator", text: "하지만 이 이야기는... 여기서 끝나지 않는다." },
+                ], next: "chapter8" },
+            ]},
+            chapter8: { title: "Chapter 8", subtitle: "???", bgm: "tense", scenes: [
+                { id: "8-1", bg: "bgThrone", chars: [{ id: "lizette", pos: "left", emotion: "default" }, { id: "adeline", pos: "left", emotion: "default" }, { id: "karen", pos: "left", emotion: "default" }, { id: "elia", pos: "right", emotion: "default" }, { id: "selene", pos: "right", emotion: "default" }, { id: "luna", pos: "right", emotion: "default" }], dialogs: [
+                    { speaker: "selene", text: "폐하, 오늘 즉위식 정말 멋지셨어요.", emotion: "happy" },
+                    { speaker: "adeline", text: "...흥, 황후라고 너무 나서는 거 아니에요?", emotion: "angry" },
+                    { speaker: "selene", text: "후후, 무슨 말씀이세요. 폐하는 제 것인걸요.", emotion: "happy" },
+                    { speaker: "lizette", text: "저, 저기... 저도 폐하 곁에 있고 싶어요...", emotion: "sad" },
+                    { speaker: "elia", text: "하... 진짜 꼴보기 싫다. 너네 둘 다 좀 조용히 해.", emotion: "angry" },
+                    { speaker: "luna", text: "흥, 언니들 싸우는 거 재밌네요~ 폐하는 어떻게 생각하세요?", emotion: "happy" },
+                    { speaker: "karen", text: "...시끄럽군.", emotion: "default" },
+                    { speaker: "narrator", text: "여섯 여자들이 당신을 바라본다." },
+                ], choices: [
+                    { text: "셀레네의 손을 잡으며 웃는다", next: "8-2" },
+                    { text: "조용히 미소만 짓는다", next: "8-2" },
+                    { text: "리제트에게 다가가 머리를 쓰다듬는다", next: "8-2" }
+                ]},
+                { id: "8-2", bg: "bgThrone", chars: [], dialogs: [
+                    { speaker: "narrator", text: "갑자기, 세상이 멈췄다." },
+                    { speaker: "narrator", text: "ERROR: UNEXPECTED_ENTITY_DETECTED" },
+                    { speaker: "narrator", text: "WARNING: NARRATIVE_BREACH" },
+                    { speaker: "narrator", text: "시야가 왜곡되기 시작한다." },
+                ], next: "glitch" },
+            ]},
+        };
+
+        // ========== 유틸리티 ==========
         function Particles() {
-            const particles = useMemo(() => Array.from({ length: 20 }, (_, i) => ({
-                id: i, left: Math.random() * 100, top: 20 + Math.random() * 70,
-                size: 2 + Math.random() * 3, duration: 8 + Math.random() * 6,
-                delay: Math.random() * 8, opacity: 0.3 + Math.random() * 0.4
-            })), []);
-            return (
-                <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 5 }}>
-                    {particles.map(p => (
-                        <div key={p.id} style={{
-                            position: 'absolute', left: `${p.left}%`, top: `${p.top}%`,
-                            width: `${p.size}px`, height: `${p.size}px`,
-                            background: `rgba(255, 255, 255, ${p.opacity})`, borderRadius: '50%',
-                            boxShadow: `0 0 ${p.size * 2}px rgba(255, 255, 255, 0.3)`,
-                            animation: `particleDrift ${p.duration}s ease-in-out ${p.delay}s infinite`
-                        }} />
-                    ))}
-                </div>
-            );
+            const particles = useMemo(() => Array.from({ length: 20 }, (_, i) => ({ id: i, left: Math.random() * 100, top: 20 + Math.random() * 70, size: 2 + Math.random() * 3, duration: 8 + Math.random() * 6, delay: Math.random() * 8, opacity: 0.3 + Math.random() * 0.4 })), []);
+            return (<div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 5 }}>{particles.map(p => (<div key={p.id} style={{ position: 'absolute', left: `${p.left}%`, top: `${p.top}%`, width: `${p.size}px`, height: `${p.size}px`, background: `rgba(255, 255, 255, ${p.opacity})`, borderRadius: '50%', boxShadow: `0 0 ${p.size * 2}px rgba(255, 255, 255, 0.3)`, animation: `particleDrift ${p.duration}s ease-in-out ${p.delay}s infinite` }} />))}</div>);
         }
 
-        function TitleScreen({ onStart }) {
+        // ========== 타이틀 화면 ==========
+        function TitleScreen({ onStart, onChapterSelect }) {
             const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+            const [showChapters, setShowChapters] = useState(false);
             useEffect(() => { const h = () => setIsMobile(window.innerWidth <= 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
 
-            const TitleLogo = () => IMAGES.titleLogo 
-                ? <img src={IMAGES.titleLogo} alt="제국 최강이 되기까지" style={{ maxWidth: isMobile ? '160px' : '320px', height: 'auto' }} />
-                : <div style={{ padding: isMobile ? '12px 18px' : '18px 25px', border: '1px dashed #3d3850', borderRadius: '6px' }}>
-                    <div style={{ fontSize: '0.55rem', color: '#6b6480', marginBottom: '4px' }}>[ 타이틀 로고 ]</div>
-                    <div style={{ fontSize: isMobile ? '1rem' : '1.7rem', fontFamily: "'Noto Serif KR', serif", fontWeight: 700, color: '#d8d4e2' }}>제국 최강이 되기까지</div>
-                  </div>;
+            const TitleLogo = () => IMAGES.titleLogo ? <img src={IMAGES.titleLogo} alt="Title" style={{ maxWidth: isMobile ? '160px' : '320px', height: 'auto' }} /> : <div style={{ padding: isMobile ? '12px 18px' : '18px 25px', border: '1px dashed #3d3850', borderRadius: '6px' }}><div style={{ fontSize: '0.55rem', color: '#6b6480', marginBottom: '4px' }}>[ 타이틀 로고 ]</div><div style={{ fontSize: isMobile ? '1rem' : '1.7rem', fontFamily: "'Noto Serif KR', serif", fontWeight: 700, color: '#d8d4e2' }}>제국 최강이 되기까지</div></div>;
+            const MenuBtn = ({ text, onClick, main }) => (<button onClick={onClick} style={{ padding: isMobile ? '7px 14px' : '12px 28px', fontSize: isMobile ? '0.7rem' : '0.88rem', fontWeight: main ? 600 : 400, background: main ? 'rgba(157, 142, 194, 0.9)' : 'rgba(30, 28, 38, 0.6)', border: main ? 'none' : '1px solid rgba(100, 90, 120, 0.3)', color: main ? '#0a0810' : 'rgba(180, 170, 200, 0.9)', borderRadius: '4px', cursor: 'pointer', width: '100%', maxWidth: isMobile ? '120px' : '180px' }}>{main && <span style={{ marginRight: '4px' }}>▶</span>}{text}</button>);
+            const CharArea = () => IMAGES.titleCharacter ? <img src={IMAGES.titleCharacter} style={{ maxWidth: '62%', maxHeight: '62%', objectFit: 'contain' }} /> : <div style={{ color: '#2a2836', fontSize: '0.6rem', padding: '25px', border: '1px dashed #2a2836', borderRadius: '6px' }}>[ 캐릭터 이미지 ]</div>;
 
-            const MenuBtn = ({ text, main }) => (
-                <button onClick={main ? () => { playSound('select'); onStart(); } : () => playSound('click')} style={{
-                    padding: isMobile ? '7px 14px' : '12px 28px', fontSize: isMobile ? '0.7rem' : '0.88rem', fontWeight: main ? 600 : 400,
-                    background: main ? 'rgba(157, 142, 194, 0.9)' : 'rgba(30, 28, 38, 0.6)',
-                    border: main ? 'none' : '1px solid rgba(100, 90, 120, 0.3)',
-                    color: main ? '#0a0810' : 'rgba(180, 170, 200, 0.7)', borderRadius: '4px',
-                    cursor: main ? 'pointer' : 'default', opacity: main ? 1 : 0.6, width: '100%', maxWidth: isMobile ? '120px' : '180px'
-                }}>{main && <span style={{ marginRight: '4px' }}>▶</span>}{text}</button>
+            const chapters = [{ id: 'chapter1', title: '사생아의 비밀' }, { id: 'chapter2', title: '갑작스러운 약혼' }, { id: 'chapter3', title: '검의 여인' }, { id: 'chapter4', title: '재회' }, { id: 'chapter5', title: '교차하는 시선' }, { id: 'chapter6', title: '황녀의 유혹' }, { id: 'chapter7', title: '제국 최강' }, { id: 'chapter8', title: '???' }];
+
+            if (showChapters) return (
+                <div style={{ height: '100vh', background: '#0a0810', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+                    <h2 style={{ fontSize: isMobile ? '1.2rem' : '1.5rem', color: '#9d8ec2', marginBottom: '24px', fontFamily: "'Noto Serif KR', serif" }}>Chapter Select</h2>
+                    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: '10px', maxWidth: '500px', width: '100%' }}>
+                        {chapters.map((ch, i) => (<button key={ch.id} onClick={() => { playSfx('click'); onChapterSelect(ch.id); }} style={{ padding: '12px 16px', background: 'rgba(30, 28, 38, 0.8)', border: '1px solid #3d3850', borderRadius: '6px', color: '#e8e6ed', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '10px' }}><span style={{ color: '#9d8ec2', fontSize: '0.7rem' }}>CH.{i + 1}</span><span style={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}>{ch.title}</span></button>))}
+                    </div>
+                    <button onClick={() => setShowChapters(false)} style={{ marginTop: '24px', padding: '8px 24px', background: 'transparent', border: '1px solid #3d3850', borderRadius: '4px', color: '#6b6480', cursor: 'pointer', fontSize: '0.8rem' }}>뒤로</button>
+                </div>
             );
 
-            const CharArea = () => IMAGES.titleCharacter 
-                ? <img src={IMAGES.titleCharacter} style={{ maxWidth: '62%', maxHeight: '62%', objectFit: 'contain', objectPosition: 'left bottom' }} />
-                : <div style={{ color: '#2a2836', fontSize: '0.6rem', padding: '25px', border: '1px dashed #2a2836', borderRadius: '6px' }}>[ 캐릭터 이미지 ]</div>;
-
-            if (isMobile) return (
+            return (
                 <div style={{ height: '100vh', position: 'relative', overflow: 'hidden', background: IMAGES.titleBackground ? `url(${IMAGES.titleBackground}) center/cover no-repeat` : '#0a0810' }}>
                     <Particles />
-                    <div style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><CharArea /></div>
-                    <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '50%', background: 'linear-gradient(90deg, transparent, rgba(10,8,16,0.85) 15%)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', zIndex: 10 }}>
-                        <div style={{ marginBottom: '14px' }}><TitleLogo /></div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center' }}>
-                            {['GAME START', 'DATA LOAD', 'CONFIG', 'GALLERY', 'EXIT'].map(t => <MenuBtn key={t} text={t} main={t === 'GAME START'} />)}
-                        </div>
-                    </div>
+                    {isMobile ? (<><div style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><CharArea /></div><div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '50%', background: 'linear-gradient(90deg, transparent, rgba(10,8,16,0.85) 15%)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', zIndex: 10 }}><div style={{ marginBottom: '14px' }}><TitleLogo /></div><div style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center' }}><MenuBtn text="GAME START" onClick={() => { playSfx('click'); onStart(); }} main /><MenuBtn text="CHAPTER" onClick={() => { playSfx('click'); setShowChapters(true); }} /><MenuBtn text="CONFIG" onClick={() => playSfx('click')} /></div></div></>) : (<><div style={{ position: 'absolute', left: '-3%', top: '50%', transform: 'translateY(-45%)' }}><CharArea /></div><div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '45%', background: 'linear-gradient(90deg, transparent, rgba(10,8,16,0.85) 20%)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', zIndex: 10 }}><div style={{ marginBottom: '35px' }}><TitleLogo /></div><div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}><MenuBtn text="GAME START" onClick={() => { playSfx('click'); onStart(); }} main /><MenuBtn text="CHAPTER SELECT" onClick={() => { playSfx('click'); setShowChapters(true); }} /><MenuBtn text="CONFIG" onClick={() => playSfx('click')} /></div><div style={{ position: 'absolute', bottom: '16px', fontSize: '0.6rem', color: '#3d3850' }}>made by CowardMole</div></div></>)}
                     <div style={{ position: 'absolute', bottom: '8px', right: '12px', fontSize: '0.5rem', color: '#3d3850', zIndex: 10 }}>made by CowardMole</div>
                 </div>
             );
-
-            return (
-                <div style={{ height: '100vh', position: 'relative', overflow: 'hidden', background: IMAGES.titleBackground ? `url(${IMAGES.titleBackground}) center/cover no-repeat` : '#0a0810' }}>
-                    <Particles />
-                    <div style={{ position: 'absolute', left: '-3%', top: '50%', transform: 'translateY(-45%)', justifyContent: 'center', alignItems: 'center' }}><CharArea /></div>
-                    <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '45%', background: 'linear-gradient(90deg, transparent, rgba(10,8,16,0.85) 20%)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', zIndex: 10 }}>
-                        <div style={{ marginBottom: '35px' }}><TitleLogo /></div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
-                            {['GAME START', 'DATA LOAD', 'CONFIG', 'GALLERY', 'EXIT'].map(t => <MenuBtn key={t} text={t} main={t === 'GAME START'} />)}
-                        </div>
-                        <div style={{ position: 'absolute', bottom: '16px', fontSize: '0.6rem', color: '#3d3850' }}>made by CowardMole</div>
-                    </div>
-                </div>
-            );
         }
 
-        function LoadingScreen({ onComplete }) {
-            const [progress, setProgress] = useState(0);
-            const [done, setDone] = useState(false);
-            useEffect(() => { const i = setInterval(() => setProgress(p => { if (p >= 100) { clearInterval(i); setTimeout(() => setDone(true), 250); return 100; } return p + Math.random() * 20 + 10; }), 120); return () => clearInterval(i); }, []);
-            useEffect(() => { if (done) { const t = setTimeout(onComplete, 1600); return () => clearTimeout(t); } }, [done, onComplete]);
-
-            return (
-                <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#0a0810' }}>
-                    {!done ? (
-                        <>
-                            <div style={{ marginBottom: '1rem', color: '#6b6480', letterSpacing: '0.12em', fontSize: '0.8rem' }}>Now Loading...</div>
-                            <div style={{ width: '240px', height: '3px', background: '#1a1820', borderRadius: '2px', overflow: 'hidden' }}>
-                                <div style={{ width: `${Math.min(progress, 100)}%`, height: '100%', background: '#9d8ec2', transition: 'width 0.12s' }} />
-                            </div>
-                        </>
-                    ) : (
-                        <div style={{ textAlign: 'center', animation: 'fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }}>
-                            <div style={{ fontSize: '1rem', color: '#b8b0c8', marginBottom: '0.6rem' }}>저장 데이터 발견</div>
-                            <div style={{ fontSize: '0.85rem', color: '#8880a0' }}>마지막 체크포인트에서 시작합니다</div>
-                            <div style={{ marginTop: '1rem', fontSize: '0.75rem', color: '#6b6480', padding: '8px 20px', background: '#14121a', borderRadius: '14px' }}>Chapter 12: 황제의 즉위식</div>
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        function AffectionUI({ affections, isMobile }) {
-            const list = ['lizette', 'adeline', 'karen', 'elia', 'selene', 'luna'];
-            return (
-                <div style={{ position: 'absolute', top: isMobile ? '6px' : '14px', right: isMobile ? '6px' : '14px', background: 'rgba(10, 8, 16, 0.95)', border: '1px solid #252230', borderRadius: isMobile ? '6px' : '10px', padding: isMobile ? '6px 8px' : '16px 18px', minWidth: isMobile ? '90px' : '220px', zIndex: 100 }}>
-                    <div style={{ textAlign: 'center', fontSize: isMobile ? '0.48rem' : '0.8rem', color: '#9d8ec2', marginBottom: isMobile ? '4px' : '14px', paddingBottom: isMobile ? '3px' : '10px', borderBottom: '1px solid #252230' }}>♥ AFFECTION</div>
-                    {list.map(k => (
-                        <div key={k} style={{ marginBottom: isMobile ? '3px' : '10px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: isMobile ? '0.44rem' : '0.78rem', marginBottom: isMobile ? '1px' : '4px' }}>
-                                <span style={{ color: characters[k].color }}>{characters[k].name}</span>
-                                <span style={{ color: '#c8c4d4' }}>{affections[k]}</span>
-                            </div>
-                            <div style={{ height: isMobile ? '2px' : '6px', background: '#1a1820', borderRadius: '3px', overflow: 'hidden' }}>
-                                <div style={{ width: `${affections[k]}%`, height: '100%', background: characters[k].color, transition: 'width 0.3s' }} />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            );
-        }
-
-        function GameScreen({ onGlitch }) {
+        // ========== 게임 화면 ==========
+        function GameScreen({ startChapter, onGlitch }) {
+            const [currentChapter, setCurrentChapter] = useState(startChapter || 'chapter1');
+            const [sceneIndex, setSceneIndex] = useState(0);
             const [dialogIndex, setDialogIndex] = useState(0);
-            const [showChoices, setShowChoices] = useState(false);
-            const [selectedChoice, setSelectedChoice] = useState(null);
-            const [charEmotion, setCharEmotion] = useState('idle');
             const [displayedText, setDisplayedText] = useState('');
             const [isTyping, setIsTyping] = useState(false);
-            const [phase, setPhase] = useState('dialog');
-            const [affections, setAffections] = useState({ lizette: 97, adeline: 89, karen: 85, elia: 82, selene: 94, luna: 78 });
-            const [afterChoiceIndex, setAfterChoiceIndex] = useState(0);
+            const [showChoices, setShowChoices] = useState(false);
             const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-            const [currentSpeaker, setCurrentSpeaker] = useState(null);
             const [isAuto, setIsAuto] = useState(false);
             const [canProceed, setCanProceed] = useState(false);
+            const [showChapterTitle, setShowChapterTitle] = useState(true);
 
             useEffect(() => { const h = () => setIsMobile(window.innerWidth <= 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
 
-            // 캐릭터 위치 - 간격 좁힘
-            const charPositions = {
-                lizette: { left: '5%' },
-                adeline: { left: '16%' },
-                karen: { left: '27%' },
-                elia: { right: '27%' },
-                selene: { right: '16%' },
-                luna: { right: '5%' }
-            };
+            const chapter = STORY[currentChapter];
+            const scene = chapter?.scenes[sceneIndex];
+            const dialog = scene?.dialogs[dialogIndex];
 
-            // 감정별 애니메이션
-            const getEmotionAnimation = (emotion) => {
-                const anims = {
-                    happy: 'happyBounce 1.5s ease-in-out infinite',
-                    angry: 'angryTremble 1s ease-in-out infinite',
-                    sad: 'sadDroop 4s ease-in-out infinite',
-                    surprise: 'surpriseJolt 0.8s ease-out forwards',
-                    idle: 'speaking 3s ease-in-out infinite'
-                };
-                return anims[emotion] || anims.idle;
-            };
-
-            const dialogs = useMemo(() => [
-                { speaker: "selene", text: "폐하, 오늘 즉위식 정말 멋지셨어요.", emotion: "happy" },
-                { speaker: "selene", text: "역시 제 남편이시네요. 후후.", emotion: "happy" },
-                { speaker: "adeline", text: "...흥, 황후라고 너무 나서는 거 아니에요?", emotion: "angry" },
-                { speaker: "adeline", text: "폐하께서는 모두의 것이에요.", emotion: "angry" },
-                { speaker: "selene", text: "후후, 무슨 말씀이세요. 폐하는 제 것인걸요.", emotion: "happy" },
-                { speaker: "lizette", text: "저, 저기... 저도 폐하 곁에 있고 싶어요...", emotion: "sad" },
-                { speaker: "elia", text: "하... 진짜 꼴보기 싫다. 너네 둘 다 좀 조용히 해.", emotion: "angry" },
-                { speaker: "luna", text: "흥, 언니들 싸우는 거 재밌네요~ 폐하는 어떻게 생각하세요?", emotion: "happy" },
-                { speaker: "karen", text: "...시끄럽군.", emotion: "idle" },
-                { speaker: "narrator", text: "여섯 여자들이 당신을 바라본다.", emotion: "idle" }
-            ], []);
-
-            const choices = useMemo(() => [
-                { text: "셀레네의 손을 잡으며 웃는다", effects: { selene: +5, adeline: -8, lizette: -5, luna: -3 } },
-                { text: "조용히 미소만 짓는다", effects: { karen: +3 } },
-                { text: "리제트에게 다가가 머리를 쓰다듬는다", effects: { lizette: +10, selene: -10, adeline: -5, luna: -5 } }
-            ], []);
-
-            const afterDialogs = useMemo(() => [
-                [{ speaker: "selene", text: "후후... 역시 폐하는 절 가장 사랑하시는 거죠?", emotion: "happy" }, { speaker: "adeline", text: "...!", emotion: "surprise" }, { speaker: "lizette", text: "도련님... 아, 폐하...", emotion: "sad" }],
-                [{ speaker: "luna", text: "에이~ 폐하 비겁해요! 확실히 말해주세요!", emotion: "angry" }, { speaker: "karen", text: "...현명한 판단이군.", emotion: "idle" }, { speaker: "elia", text: "뭐야, 재미없게. 그냥 아무나 찍어.", emotion: "angry" }],
-                [{ speaker: "lizette", text: "폐, 폐하...! 저, 저는... 행복해요...", emotion: "happy" }, { speaker: "selene", text: "...폐하?", emotion: "angry" }, { speaker: "adeline", text: "저, 저 하녀한테...?!", emotion: "surprise" }]
-            ], []);
-
-            const getCurrent = useCallback(() => phase === 'afterChoice' && selectedChoice !== null ? afterDialogs[selectedChoice][afterChoiceIndex] : dialogs[dialogIndex], [phase, selectedChoice, afterChoiceIndex, dialogIndex, afterDialogs, dialogs]);
+            useEffect(() => { if (chapter) { setShowChapterTitle(true); playBgm(chapter.bgm || 'default'); const t = setTimeout(() => setShowChapterTitle(false), 2500); return () => clearTimeout(t); } }, [currentChapter]);
 
             useEffect(() => {
-                const cur = getCurrent(); if (!cur) return;
-                setIsTyping(true); setDisplayedText(''); setCharEmotion(cur.emotion); setCurrentSpeaker(cur.speaker); setCanProceed(false);
+                if (!dialog || showChapterTitle) return;
+                setIsTyping(true); setDisplayedText(''); setCanProceed(false);
                 let i = 0;
-                const iv = setInterval(() => { if (i < cur.text.length) { setDisplayedText(cur.text.slice(0, i + 1)); i++; } else { clearInterval(iv); setIsTyping(false); setCanProceed(true); } }, 28);
+                const iv = setInterval(() => { if (i < dialog.text.length) { setDisplayedText(dialog.text.slice(0, i + 1)); i++; } else { clearInterval(iv); setIsTyping(false); setCanProceed(true); } }, 30);
                 return () => clearInterval(iv);
-            }, [dialogIndex, afterChoiceIndex, phase, selectedChoice, getCurrent]);
+            }, [dialog, dialogIndex, sceneIndex, currentChapter, showChapterTitle]);
 
-            useEffect(() => { if (!isAuto || isTyping || !canProceed) return; const t = setTimeout(proceed, 1300); return () => clearTimeout(t); }, [isAuto, isTyping, canProceed]);
+            useEffect(() => { if (!isAuto || isTyping || !canProceed || showChoices) return; const t = setTimeout(proceed, 1500); return () => clearTimeout(t); }, [isAuto, isTyping, canProceed, showChoices]);
 
             const proceed = useCallback(() => {
-                if (!canProceed) return;
-                if (phase === 'dialog') { if (dialogIndex < dialogs.length - 1) setDialogIndex(d => d + 1); else { setPhase('choice'); setShowChoices(true); } }
-                else if (phase === 'afterChoice' && selectedChoice !== null) { if (afterChoiceIndex < afterDialogs[selectedChoice].length - 1) setAfterChoiceIndex(i => i + 1); else { setPhase('glitch'); onGlitch(); } }
-            }, [canProceed, phase, dialogIndex, dialogs.length, afterDialogs, selectedChoice, afterChoiceIndex, onGlitch]);
+                if (!canProceed || showChoices) return;
+                if (dialogIndex < scene.dialogs.length - 1) setDialogIndex(d => d + 1);
+                else if (scene.choices) setShowChoices(true);
+                else if (scene.next) goToScene(scene.next);
+            }, [canProceed, showChoices, dialogIndex, scene]);
 
-            const handleChoice = (i) => {
-                playSound('select'); setShowChoices(false); setSelectedChoice(i);
-                const fx = choices[i].effects;
-                setAffections(p => { const n = { ...p }; Object.entries(fx).forEach(([k, v]) => { n[k] = Math.max(0, Math.min(100, n[k] + v)); }); return n; });
-                setAfterChoiceIndex(0); setPhase('afterChoice');
+            const goToScene = (nextId) => {
+                if (nextId === 'glitch') { onGlitch(); return; }
+                if (nextId.startsWith('chapter')) { setCurrentChapter(nextId); setSceneIndex(0); setDialogIndex(0); return; }
+                const idx = chapter.scenes.findIndex(s => s.id === nextId);
+                if (idx !== -1) { setSceneIndex(idx); setDialogIndex(0); }
             };
 
-            const handleClick = (e) => { if (showChoices || e.target.closest('button') || isTyping) return; proceed(); };
+            const handleChoice = (choice) => { playSfx('decision'); setShowChoices(false); goToScene(choice.next); };
+            const handleClick = (e) => {
+                if (showChoices || e.target.closest('button') || showChapterTitle) return;
+                if (isTyping) { setDisplayedText(dialog.text); setIsTyping(false); setCanProceed(true); } else proceed();
+            };
 
-            const cur = getCurrent(); if (!cur) return null;
-            const spk = cur.speaker === 'narrator' ? { name: '', color: '#7a7888' } : { name: characters[cur.speaker]?.name || '', color: characters[cur.speaker]?.color || '#fff' };
+            if (!chapter || !scene) return null;
+
+            if (showChapterTitle) return (<div style={{ height: '100vh', background: '#0a0810', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', animation: 'fadeIn 0.5s' }}><div style={{ fontSize: isMobile ? '0.8rem' : '1rem', color: '#6b6480', letterSpacing: '0.3em', marginBottom: '12px' }}>{chapter.title}</div><div style={{ fontSize: isMobile ? '1.5rem' : '2.2rem', color: '#e8e6ed', fontFamily: "'Noto Serif KR', serif", fontWeight: 700 }}>{chapter.subtitle}</div></div>);
+
+            const getCharPosition = (chars, idx) => {
+                const count = chars.length;
+                if (count === 1) return { left: '50%', transform: 'translateX(-50%)' };
+                if (count === 2) return idx === 0 ? { left: '25%' } : { right: '25%' };
+                const positions = [{ left: '5%' }, { left: '18%' }, { left: '31%' }, { right: '31%' }, { right: '18%' }, { right: '5%' }];
+                return positions[idx] || positions[0];
+            };
+
+            const currentSpeaker = dialog?.speaker === 'narrator' || dialog?.speaker === 'you' ? null : dialog?.speaker;
+            const speakerData = dialog?.speaker === 'you' ? { name: '당신', color: '#9d8ec2' } : dialog?.speaker === 'narrator' ? { name: '', color: '#7a7888' } : { name: characters[dialog?.speaker]?.name || '', color: characters[dialog?.speaker]?.color || '#fff' };
+            const getEmotionAnimation = (emotion) => ({ happy: 'happyBounce 1.5s ease-in-out infinite', angry: 'angryTremble 1s ease-in-out infinite', sad: 'sadDroop 4s ease-in-out infinite', default: 'speaking 3s ease-in-out infinite' }[emotion] || 'speaking 3s ease-in-out infinite');
+            const bgUrl = IMAGES[scene.bg];
 
             return (
                 <div onClick={handleClick} style={{ height: '100vh', position: 'relative', background: '#0a0810', overflow: 'hidden', cursor: showChoices ? 'default' : 'pointer' }}>
-                    <div style={{ position: 'absolute', inset: 0, background: IMAGES.gameBackground ? `url(${IMAGES.gameBackground}) center/cover` : '#100e16' }}>
-                        {!IMAGES.gameBackground && <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', color: '#1a1820', fontSize: '0.7rem' }}>[ 배경 이미지 ]</div>}
-                    </div>
+                    <div style={{ position: 'absolute', inset: 0, background: bgUrl ? `url(${bgUrl}) center/cover` : '#100e16', transition: 'background 0.5s' }}>{!bgUrl && <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', color: '#1a1820', fontSize: '0.7rem' }}>[ {scene.bg} ]</div>}</div>
 
-                    {!isMobile && (
-                        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '42px', background: 'linear-gradient(#0a0810, transparent)', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '6px' }}>
-                            {['SAVE', 'LOAD', 'TITLE', 'CONFIG'].map(t => <button key={t} onClick={e => { e.stopPropagation(); playSound('click'); }} style={{ padding: '4px 12px', fontSize: '0.68rem', background: 'transparent', border: '1px solid #252230', color: '#6b6480', borderRadius: '10px', cursor: 'pointer' }}>{t}</button>)}
-                        </div>
-                    )}
+                    {!isMobile && (<div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '42px', background: 'linear-gradient(#0a0810, transparent)', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '6px', zIndex: 60 }}>{['SAVE', 'LOAD', 'TITLE', 'CONFIG'].map(t => (<button key={t} onClick={e => { e.stopPropagation(); playSfx('click'); }} style={{ padding: '4px 12px', fontSize: '0.68rem', background: 'transparent', border: '1px solid #252230', color: '#6b6480', borderRadius: '10px', cursor: 'pointer' }}>{t}</button>))}</div>)}
 
-                    <AffectionUI affections={affections} isMobile={isMobile} />
-
-                    {/* 6명 캐릭터 - 미연시 스타일 */}
-                    {Object.keys(charPositions).map(charKey => {
-                        const isSpeaking = currentSpeaker === charKey;
-                        const pos = charPositions[charKey];
-                        
-                        return (
-                            <div key={charKey} style={{
-                                position: 'absolute',
-                                ...pos,
-                                bottom: isMobile ? '90px' : '100px',
-                                width: isMobile ? '150px' : '280px',
-                                height: isMobile ? '240px' : '450px',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'flex-end',
-                                transition: 'filter 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                                filter: isSpeaking ? 'brightness(1) drop-shadow(0 0 12px rgba(255,255,255,0.12))' : 'brightness(0.5)',
-                                transform: isSpeaking ? 'scale(1.06)' : 'scale(0.95)',
-                                animation: isSpeaking ? getEmotionAnimation(charEmotion) : 'idleBreathing 5s ease-in-out infinite',
-                                zIndex: isSpeaking ? 50 : 1
-                            }}>
-                                {IMAGES[`char${charKey.charAt(0).toUpperCase()}${charKey.slice(1)}`] 
-                                    ? <img src={IMAGES[`char${charKey.charAt(0).toUpperCase()}${charKey.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', objectPosition: 'bottom' }} />
-                                    : <div style={{ color: '#2a2836', fontSize: '0.55rem', padding: '15px', border: '1px dashed #2a2836', borderRadius: '4px' }}>[{characters[charKey].name}]</div>
-                                }
-                            </div>
-                        );
+                    {scene.chars.map((char, idx) => {
+                        const isSpeaking = currentSpeaker === char.id;
+                        const emotion = isSpeaking && dialog?.emotion ? dialog.emotion : char.emotion;
+                        const charImg = IMAGES[char.id]?.[emotion] || IMAGES[char.id]?.default;
+                        const pos = getCharPosition(scene.chars, idx);
+                        return (<div key={`${char.id}-${idx}`} style={{ position: 'absolute', ...pos, bottom: isMobile ? '100px' : '120px', width: isMobile ? '140px' : '260px', height: isMobile ? '220px' : '420px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', transition: 'filter 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)', filter: isSpeaking ? 'brightness(1) drop-shadow(0 0 12px rgba(255,255,255,0.12))' : 'brightness(0.5)', transform: isSpeaking ? 'scale(1.12)' : 'scale(0.95)', animation: isSpeaking ? getEmotionAnimation(emotion) : 'idleBreathing 5s ease-in-out infinite', zIndex: isSpeaking ? 50 : 1 }}>{charImg ? <img src={charImg} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', objectPosition: 'bottom' }} /> : <div style={{ color: '#2a2836', fontSize: '0.55rem', padding: '15px', border: '1px dashed #2a2836', borderRadius: '4px' }}>[{characters[char.id]?.name} - {emotion}]</div>}</div>);
                     })}
 
-                    {phase !== 'choice' && (
-                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: isMobile ? '10px' : '16px' }}>
-                            <div style={{ maxWidth: '880px', margin: '0 auto', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #252230', borderRadius: isMobile ? '8px' : '10px', padding: isMobile ? '12px 14px' : '18px 24px', position: 'relative' }}>
-                                {spk.name && <div style={{ position: 'absolute', top: isMobile ? '-11px' : '-13px', left: isMobile ? '12px' : '20px', background: spk.color, padding: isMobile ? '2px 12px' : '3px 16px', borderRadius: '12px', color: '#0a0810', fontSize: isMobile ? '0.72rem' : '0.78rem', fontWeight: 600 }}>{spk.name}</div>}
-                                <div style={{ fontSize: isMobile ? '0.88rem' : '0.98rem', lineHeight: 1.8, color: cur.speaker === 'narrator' ? '#7a7888' : '#e8e6ed', fontStyle: cur.speaker === 'narrator' ? 'italic' : 'normal', minHeight: isMobile ? '42px' : '52px', paddingTop: spk.name ? '6px' : 0, display: 'flex', alignItems: 'center' }}>
-                                    <span>{displayedText}</span>
-                                    {isTyping && <span style={{ borderRight: '2px solid #9d8ec2', marginLeft: '1px', animation: 'blink 0.5s infinite' }}>&nbsp;</span>}
-                                    {!isTyping && canProceed && <span style={{ marginLeft: '8px', color: '#9d8ec2', fontSize: '0.75rem', animation: 'arrowBounce 0.7s infinite' }}>▼</span>}
-                                </div>
-                                <div style={{ position: 'absolute', bottom: isMobile ? '7px' : '10px', right: isMobile ? '8px' : '14px', display: 'flex', gap: isMobile ? '4px' : '6px' }}>
-                                    {['SKIP', 'AUTO', 'LOG'].map(t => <button key={t} onClick={e => { e.stopPropagation(); if (t === 'AUTO') setIsAuto(!isAuto); }} style={{ padding: isMobile ? '2px 8px' : '4px 10px', fontSize: isMobile ? '0.56rem' : '0.66rem', background: t === 'AUTO' && isAuto ? 'rgba(157, 142, 194, 0.2)' : 'transparent', border: `1px solid ${t === 'AUTO' && isAuto ? '#9d8ec2' : '#252230'}`, color: t === 'AUTO' && isAuto ? '#b8aed0' : '#6b6480', borderRadius: '8px', cursor: 'pointer' }}>{t}</button>)}
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                    {!showChoices && (<div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: isMobile ? '10px' : '16px', zIndex: 60 }}><div style={{ maxWidth: '880px', margin: '0 auto', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #252230', borderRadius: isMobile ? '8px' : '10px', padding: isMobile ? '12px 14px' : '18px 24px', position: 'relative' }}>{speakerData.name && (<div style={{ position: 'absolute', top: isMobile ? '-11px' : '-13px', left: isMobile ? '12px' : '20px', background: speakerData.color, padding: isMobile ? '2px 12px' : '3px 16px', borderRadius: '12px', color: '#0a0810', fontSize: isMobile ? '0.72rem' : '0.78rem', fontWeight: 600 }}>{speakerData.name}</div>)}<div style={{ fontSize: isMobile ? '0.88rem' : '0.98rem', lineHeight: 1.8, color: dialog?.speaker === 'narrator' ? '#7a7888' : '#e8e6ed', fontStyle: dialog?.speaker === 'narrator' ? 'italic' : 'normal', minHeight: isMobile ? '42px' : '52px', paddingTop: speakerData.name ? '6px' : 0, display: 'flex', alignItems: 'center' }}><span>{displayedText}</span>{isTyping && <span style={{ borderRight: '2px solid #9d8ec2', marginLeft: '1px', animation: 'blink 0.5s infinite' }}>&nbsp;</span>}{!isTyping && canProceed && <span style={{ marginLeft: '8px', color: '#9d8ec2', fontSize: '0.75rem', animation: 'arrowBounce 0.7s infinite' }}>▼</span>}</div><div style={{ position: 'absolute', bottom: isMobile ? '7px' : '10px', right: isMobile ? '8px' : '14px', display: 'flex', gap: isMobile ? '4px' : '6px' }}>{['SKIP', 'AUTO', 'LOG'].map(t => (<button key={t} onClick={e => { e.stopPropagation(); if (t === 'AUTO') setIsAuto(!isAuto); playSfx('click'); }} style={{ padding: isMobile ? '2px 8px' : '4px 10px', fontSize: isMobile ? '0.56rem' : '0.66rem', background: t === 'AUTO' && isAuto ? 'rgba(157, 142, 194, 0.2)' : 'transparent', border: `1px solid ${t === 'AUTO' && isAuto ? '#9d8ec2' : '#252230'}`, color: t === 'AUTO' && isAuto ? '#b8aed0' : '#6b6480', borderRadius: '8px', cursor: 'pointer' }}>{t}</button>))}</div></div></div>)}
 
-                    {showChoices && (
-                        <div style={{ position: 'absolute', top: isMobile ? '35%' : '40%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', gap: isMobile ? '5px' : '9px', animation: 'fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1)', zIndex: 200, width: isMobile ? '75%' : 'auto', maxWidth: '380px' }}>
-                            {choices.map((c, i) => <button key={i} onClick={() => handleChoice(i)} style={{ padding: isMobile ? '8px 12px' : '15px 26px', fontSize: isMobile ? '0.72rem' : '0.92rem', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #3d3850', color: '#e8e6ed', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', width: '100%' }}><span style={{ color: '#9d8ec2', marginRight: '6px' }}>▸</span>{c.text}</button>)}
-                        </div>
-                    )}
+                    {showChoices && scene.choices && (<div style={{ position: 'absolute', top: isMobile ? '35%' : '40%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', gap: isMobile ? '8px' : '12px', animation: 'fadeIn 0.4s', zIndex: 200, width: isMobile ? '80%' : 'auto', maxWidth: '420px' }}>{scene.choices.map((choice, i) => (<button key={i} onClick={() => handleChoice(choice)} style={{ padding: isMobile ? '12px 16px' : '18px 28px', fontSize: isMobile ? '0.8rem' : '0.95rem', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #3d3850', color: '#e8e6ed', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', width: '100%' }}><span style={{ color: '#9d8ec2', marginRight: '8px' }}>▸</span>{choice.text}</button>))}</div>)}
                 </div>
             );
         }
 
+        // ========== 글리치 화면 ==========
         function GlitchScreen({ onComplete }) {
             const [phase, setPhase] = useState(0);
             const msgs = ["ERROR: UNEXPECTED_ENTITY_DETECTED", "WARNING: NARRATIVE_BREACH", "FATAL: OBSERVER_OVERFLOW", "SYSTEM FAILURE..."];
-            useEffect(() => { const timers = [setTimeout(() => setPhase(1), 200), setTimeout(() => setPhase(2), 700), setTimeout(() => setPhase(3), 1200), setTimeout(() => setPhase(4), 1700), setTimeout(onComplete, 2800)]; return () => timers.forEach(clearTimeout); }, [onComplete]);
-
-            return (
-                <div style={{ height: '100vh', background: '#050508', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.08), rgba(0,0,0,0.08) 1px, transparent 1px, transparent 2px)' }} />
-                    {phase >= 1 && [...Array(8)].map((_, i) => <div key={i} style={{ position: 'absolute', top: `${Math.random() * 100}%`, left: 0, right: 0, height: `${Math.random() * 2 + 1}px`, background: `rgba(160, 100, 130, ${Math.random() * 0.25 + 0.05})`, transform: `translateX(${Math.random() * 8 - 4}px)` }} />)}
-                    <div style={{ fontFamily: 'monospace', fontSize: '0.85rem', color: '#a06880', textShadow: '0 0 6px rgba(160, 100, 130, 0.5)', animation: 'glitchText 0.15s infinite', textAlign: 'center', zIndex: 10 }}>{phase > 0 && msgs[phase - 1]}</div>
-                </div>
-            );
+            useEffect(() => { playSfx('glitch'); stopBgm(); const timers = [setTimeout(() => setPhase(1), 200), setTimeout(() => setPhase(2), 700), setTimeout(() => setPhase(3), 1200), setTimeout(() => setPhase(4), 1700), setTimeout(onComplete, 3000)]; return () => timers.forEach(clearTimeout); }, [onComplete]);
+            return (<div style={{ height: '100vh', background: '#050508', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', overflow: 'hidden' }}><div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.08), rgba(0,0,0,0.08) 1px, transparent 1px, transparent 2px)' }} />{phase >= 1 && [...Array(12)].map((_, i) => (<div key={i} style={{ position: 'absolute', top: `${Math.random() * 100}%`, left: 0, right: 0, height: `${Math.random() * 3 + 1}px`, background: `rgba(160, 100, 130, ${Math.random() * 0.3 + 0.1})`, transform: `translateX(${Math.random() * 10 - 5}px)` }} />))}<div style={{ fontFamily: 'monospace', fontSize: '0.9rem', color: '#a06880', textShadow: '0 0 8px rgba(160, 100, 130, 0.6)', animation: 'glitchText 0.12s infinite', textAlign: 'center', zIndex: 10 }}>{phase > 0 && msgs[phase - 1]}</div></div>);
         }
 
+        // ========== 캐릭터 사이트 ==========
         function CharacterSite() {
             const [selected, setSelected] = useState(null);
             const [showIntro, setShowIntro] = useState(true);
             const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
             useEffect(() => { const h = () => setIsMobile(window.innerWidth <= 768); window.addEventListener('resize', h); return () => window.removeEventListener('resize', h); }, []);
-            useEffect(() => { const t = setTimeout(() => setShowIntro(false), 2200); return () => clearTimeout(t); }, []);
+            useEffect(() => { const t = setTimeout(() => setShowIntro(false), 2500); return () => clearTimeout(t); }, []);
 
-            if (showIntro) return (
-                <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#0a0810', animation: 'fadeIn 0.7s cubic-bezier(0.4, 0, 0.2, 1)', padding: '20px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '1rem', color: '#9d8ec2', marginBottom: '0.6rem' }}>당신은 미연시 『제국 최강이 되기까지』속으로</div>
-                    <div style={{ fontSize: '2rem', color: '#e8e6ed', fontWeight: 700, fontFamily: "'Noto Serif KR', serif" }}>빙의했습니다.</div>
-                    <div style={{ marginTop: '2rem', padding: '12px 28px', background: '#14121a', borderRadius: '16px' }}>
-                        <div style={{ color: '#9d8ec2', fontSize: '0.7rem', marginBottom: '3px' }}>YOUR ROLE</div>
-                        <div style={{ color: '#d8d4e2', fontSize: '0.95rem' }}>이름 없는 엑스트라 기사</div>
-                    </div>
-                </div>
-            );
+            if (showIntro) return (<div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: '#0a0810', animation: 'fadeIn 0.7s', padding: '20px', textAlign: 'center' }}><div style={{ fontSize: '1rem', color: '#9d8ec2', marginBottom: '0.6rem' }}>당신은 미연시 『제국 최강이 되기까지』속으로</div><div style={{ fontSize: '2rem', color: '#e8e6ed', fontWeight: 700, fontFamily: "'Noto Serif KR', serif" }}>빙의했습니다.</div><div style={{ marginTop: '2rem', padding: '12px 28px', background: '#14121a', borderRadius: '16px' }}><div style={{ color: '#9d8ec2', fontSize: '0.7rem', marginBottom: '3px' }}>YOUR ROLE</div><div style={{ color: '#d8d4e2', fontSize: '0.95rem' }}>이름 없는 엑스트라 기사</div></div></div>);
 
             const list = Object.entries(characters);
 
             return (
                 <div style={{ minHeight: '100vh', background: '#0a0810', padding: isMobile ? '20px 12px' : '32px 18px' }}>
-                    <header style={{ textAlign: 'center', marginBottom: isMobile ? '22px' : '36px' }}>
-                        <div style={{ fontSize: '0.65rem', color: '#6b6480', letterSpacing: '0.2em', marginBottom: '6px' }}>CHARACTER</div>
-                        <h1 style={{ fontFamily: "'Noto Serif KR', serif", fontSize: isMobile ? '1.3rem' : '1.7rem', color: '#e8e6ed' }}>등장인물</h1>
-                        <div style={{ width: '50px', height: '1px', background: '#3d3850', margin: '10px auto 0' }} />
-                    </header>
+                    <header style={{ textAlign: 'center', marginBottom: isMobile ? '22px' : '36px' }}><div style={{ fontSize: '0.65rem', color: '#6b6480', letterSpacing: '0.2em', marginBottom: '6px' }}>CHARACTER</div><h1 style={{ fontFamily: "'Noto Serif KR', serif", fontSize: isMobile ? '1.3rem' : '1.7rem', color: '#e8e6ed' }}>등장인물</h1><div style={{ width: '50px', height: '1px', background: '#3d3850', margin: '10px auto 0' }} /></header>
 
                     <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(170px, 1fr))', gap: isMobile ? '8px' : '14px', maxWidth: '980px', margin: '0 auto' }}>
-                        {list.map(([k, c], i) => (
-                            <div key={k} onClick={() => setSelected(k)} style={{ background: '#14121a', border: '1px solid #1a1820', borderRadius: '10px', overflow: 'hidden', cursor: 'pointer', animation: `slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.05}s both` }}>
-                                <div style={{ width: '100%', height: isMobile ? '140px' : '195px', background: '#100e16', display: 'flex', justifyContent: 'center', alignItems: 'center', borderBottom: '1px solid #1a1820' }}>
-                                    {IMAGES[`full${k.charAt(0).toUpperCase()}${k.slice(1)}`] ? <img src={IMAGES[`full${k.charAt(0).toUpperCase()}${k.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'cover' }} /> : <span style={{ color: '#1a1820', fontSize: '0.55rem' }}>[ 이미지 ]</span>}
-                                </div>
-                                <div style={{ padding: isMobile ? '9px' : '12px' }}>
-                                    <div style={{ color: c.color, fontSize: isMobile ? '0.52rem' : '0.6rem', marginBottom: '2px' }}>{c.description}</div>
-                                    <h3 style={{ color: '#e8e6ed', fontSize: isMobile ? '0.85rem' : '0.95rem', marginBottom: '4px', fontWeight: 500 }}>{c.fullName}</h3>
-                                    {c.personality && <div style={{ color: '#6b6480', fontSize: isMobile ? '0.62rem' : '0.7rem' }}>{c.personality}</div>}
-                                </div>
-                            </div>
-                        ))}
+                        {list.map(([k, c], i) => (<div key={k} onClick={() => { playSfx('click'); setSelected(k); }} style={{ background: '#14121a', border: '1px solid #1a1820', borderRadius: '10px', overflow: 'hidden', cursor: 'pointer', animation: `slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.05}s both` }}><div style={{ width: '100%', height: isMobile ? '140px' : '195px', background: '#100e16', display: 'flex', justifyContent: 'center', alignItems: 'center', borderBottom: '1px solid #1a1820' }}>{IMAGES[`full${k.charAt(0).toUpperCase()}${k.slice(1)}`] ? <img src={IMAGES[`full${k.charAt(0).toUpperCase()}${k.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'cover' }} /> : <span style={{ color: '#2a2836', fontSize: '0.55rem' }}>[ {c.name} ]</span>}</div><div style={{ padding: isMobile ? '9px' : '12px' }}><div style={{ color: c.color, fontSize: isMobile ? '0.52rem' : '0.6rem', marginBottom: '2px' }}>{c.description}</div><h3 style={{ color: '#e8e6ed', fontSize: isMobile ? '0.85rem' : '0.95rem', marginBottom: '4px', fontWeight: 500 }}>{c.fullName}</h3>{c.personality && <div style={{ color: '#6b6480', fontSize: isMobile ? '0.62rem' : '0.7rem' }}>{c.personality}</div>}</div></div>))}
                     </div>
 
-                    {selected && (
-                        <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(5, 4, 10, 0.95)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '12px', animation: 'fadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1)' }}>
-                            <div onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: isMobile ? '100%' : '800px', height: isMobile ? '86vh' : '76vh', maxHeight: isMobile ? 'none' : '540px', background: '#100e16', border: `1px solid ${characters[selected].color}40`, borderRadius: '14px', display: 'flex', flexDirection: isMobile ? 'column' : 'row', position: 'relative', overflow: 'hidden' }}>
-                                <div style={{ flex: isMobile ? '0 0 40%' : 1, background: '#0a0810', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRight: isMobile ? 'none' : '1px solid #1a1820', borderBottom: isMobile ? '1px solid #1a1820' : 'none' }}>
-                                    {IMAGES[`full${selected.charAt(0).toUpperCase()}${selected.slice(1)}`] ? <img src={IMAGES[`full${selected.charAt(0).toUpperCase()}${selected.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} /> : <div style={{ color: '#1a1820', fontSize: '0.7rem' }}>[ 전신 이미지 ]</div>}
-                                </div>
-                                <div style={{ flex: 1, padding: isMobile ? '16px' : '24px', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
-                                    <button onClick={() => setSelected(null)} style={{ position: 'absolute', top: '10px', right: '10px', background: 'transparent', border: '1px solid #3d3850', color: '#6b6480', width: '28px', height: '28px', cursor: 'pointer', fontSize: '0.9rem', borderRadius: '50%' }}>✕</button>
-                                    <div style={{ marginBottom: '14px' }}>
-                                        <div style={{ color: characters[selected].color, fontSize: '0.65rem', marginBottom: '4px' }}>{characters[selected].description}</div>
-                                        <h2 style={{ color: '#e8e6ed', fontSize: isMobile ? '1.3rem' : '1.5rem', fontFamily: "'Noto Serif KR', serif" }}>{characters[selected].fullName}</h2>
-                                    </div>
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '14px' }}>
-                                        {characters[selected].tags.map((t, i) => <span key={i} style={{ padding: '3px 9px', background: `${characters[selected].color}18`, border: `1px solid ${characters[selected].color}30`, borderRadius: '10px', fontSize: '0.65rem', color: characters[selected].color }}>{t}</span>)}
-                                    </div>
-                                    <div style={{ width: '100%', height: '1px', background: '#1a1820', marginBottom: '14px' }} />
-                                    <div style={{ padding: '10px 14px', background: '#0a0810', borderRadius: '8px', borderLeft: `2px solid ${characters[selected].color}`, marginBottom: '14px' }}>
-                                        <div style={{ color: '#6b6480', fontSize: '0.6rem', marginBottom: '3px' }}>QUOTE</div>
-                                        <div style={{ color: '#c8c4d4', fontSize: isMobile ? '0.82rem' : '0.9rem', fontStyle: 'italic', lineHeight: 1.5 }}>"{characters[selected].quote}"</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                    {selected && (<div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(5, 4, 10, 0.95)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, padding: '12px', animation: 'fadeIn 0.35s' }}><div onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: isMobile ? '100%' : '800px', height: isMobile ? '86vh' : '76vh', maxHeight: isMobile ? 'none' : '540px', background: '#100e16', border: `1px solid ${characters[selected].color}40`, borderRadius: '14px', display: 'flex', flexDirection: isMobile ? 'column' : 'row', position: 'relative', overflow: 'hidden' }}><div style={{ flex: isMobile ? '0 0 40%' : 1, background: '#0a0810', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRight: isMobile ? 'none' : '1px solid #1a1820', borderBottom: isMobile ? '1px solid #1a1820' : 'none' }}>{IMAGES[`full${selected.charAt(0).toUpperCase()}${selected.slice(1)}`] ? <img src={IMAGES[`full${selected.charAt(0).toUpperCase()}${selected.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} /> : <div style={{ color: '#2a2836', fontSize: '0.7rem' }}>[ 전신 이미지 ]</div>}</div><div style={{ flex: 1, padding: isMobile ? '16px' : '24px', display: 'flex', flexDirection: 'column', overflow: 'auto' }}><button onClick={() => setSelected(null)} style={{ position: 'absolute', top: '10px', right: '10px', background: 'transparent', border: '1px solid #3d3850', color: '#6b6480', width: '28px', height: '28px', cursor: 'pointer', fontSize: '0.9rem', borderRadius: '50%' }}>✕</button><div style={{ marginBottom: '14px' }}><div style={{ color: characters[selected].color, fontSize: '0.65rem', marginBottom: '4px' }}>{characters[selected].description}</div><h2 style={{ color: '#e8e6ed', fontSize: isMobile ? '1.3rem' : '1.5rem', fontFamily: "'Noto Serif KR', serif" }}>{characters[selected].fullName}</h2></div><div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '14px' }}>{characters[selected].tags.map((t, i) => <span key={i} style={{ padding: '3px 9px', background: `${characters[selected].color}18`, border: `1px solid ${characters[selected].color}30`, borderRadius: '10px', fontSize: '0.65rem', color: characters[selected].color }}>{t}</span>)}</div><div style={{ width: '100%', height: '1px', background: '#1a1820', marginBottom: '14px' }} /><div style={{ padding: '10px 14px', background: '#0a0810', borderRadius: '8px', borderLeft: `2px solid ${characters[selected].color}`, marginBottom: '14px' }}><div style={{ color: '#6b6480', fontSize: '0.6rem', marginBottom: '3px' }}>QUOTE</div><div style={{ color: '#c8c4d4', fontSize: isMobile ? '0.82rem' : '0.9rem', fontStyle: 'italic', lineHeight: 1.5 }}>"{characters[selected].quote}"</div></div></div></div></div>)}
 
-                    <footer style={{ textAlign: 'center', marginTop: isMobile ? '30px' : '45px', padding: '18px', borderTop: '1px solid #1a1820' }}>
-                        <p style={{ color: '#1a1820', fontSize: '0.6rem' }}>made by CowardMole</p>
-                    </footer>
+                    <footer style={{ textAlign: 'center', marginTop: isMobile ? '30px' : '45px', padding: '18px', borderTop: '1px solid #1a1820' }}><p style={{ color: '#3d3850', fontSize: '0.6rem' }}>made by CowardMole</p></footer>
                 </div>
             );
         }
 
+        // ========== 메인 앱 ==========
         function App() {
             const [screen, setScreen] = useState('title');
-            return <div id="game-container" style={{ minHeight: '100vh' }}>
-                {screen === 'title' && <TitleScreen onStart={() => setScreen('loading')} />}
-                {screen === 'loading' && <LoadingScreen onComplete={() => setScreen('game')} />}
-                {screen === 'game' && <GameScreen onGlitch={() => setScreen('glitch')} />}
-                {screen === 'glitch' && <GlitchScreen onComplete={() => setScreen('site')} />}
-                {screen === 'site' && <CharacterSite />}
-            </div>;
+            const [startChapter, setStartChapter] = useState('chapter1');
+            const handleStart = () => { setStartChapter('chapter1'); setScreen('game'); };
+            const handleChapterSelect = (chapterId) => { setStartChapter(chapterId); setScreen('game'); };
+            return (<div id="game-container" style={{ minHeight: '100vh' }}>{screen === 'title' && <TitleScreen onStart={handleStart} onChapterSelect={handleChapterSelect} />}{screen === 'game' && <GameScreen startChapter={startChapter} onGlitch={() => setScreen('glitch')} />}{screen === 'glitch' && <GlitchScreen onComplete={() => setScreen('site')} />}{screen === 'site' && <CharacterSite />}</div>);
         }
 
         ReactDOM.render(<App />, document.getElementById('root'));
