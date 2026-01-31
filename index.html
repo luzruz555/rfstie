@@ -433,13 +433,12 @@
                                 {isTyping && <span style={{ borderRight: '2px solid #9d8ec2', marginLeft: '1px', animation: 'blink 0.5s infinite' }}>&nbsp;</span>}
                                 {!isTyping && canProceed && <span style={{ marginLeft: '8px', color: '#9d8ec2', fontSize: '0.75rem', animation: 'arrowBounce 0.7s infinite' }}>▼</span>}
                             </div>
-                        )}
                             <div style={{ position: 'absolute', bottom: isMobile ? '7px' : '10px', right: isMobile ? '8px' : '14px', display: 'flex', gap: isMobile ? '4px' : '6px' }}>
                                 {['SKIP', 'AUTO', 'LOG'].map(t => <button key={t} onClick={e => { e.stopPropagation(); if (t === 'AUTO') setIsAuto(!isAuto); }} style={{ padding: isMobile ? '2px 8px' : '4px 10px', fontSize: isMobile ? '0.56rem' : '0.66rem', background: t === 'AUTO' && isAuto ? 'rgba(157, 142, 194, 0.2)' : 'transparent', border: `1px solid ${t === 'AUTO' && isAuto ? '#9d8ec2' : '#252230'}`, color: t === 'AUTO' && isAuto ? '#b8aed0' : '#6b6480', borderRadius: '8px', cursor: 'pointer' }}>{t}</button>)}
                             </div>
                         </div>
                     </div>
-
+                )}
                     {showChoices && (
                         <div style={{ position: 'absolute', top: isMobile ? '35%' : '45%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column', gap: isMobile ? '5px' : '9px', animation: 'fadeIn 0.2s', zIndex: 200, width: isMobile ? '75%' : 'auto', maxWidth: '380px' }}>
                             {choices.map((c, i) => <button key={i} onClick={() => handleChoice(i)} style={{ padding: isMobile ? '8px 12px' : '15px 26px', fontSize: isMobile ? '0.72rem' : '0.92rem', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #3d3850', color: '#e8e6ed', cursor: 'pointer', borderRadius: '8px', textAlign: 'left', width: '100%' }}><span style={{ color: '#9d8ec2', marginRight: '6px' }}>▸</span>{c.text}</button>)}
