@@ -195,7 +195,7 @@
                             left: 0, 
                             top: '50%',
                             transform: 'translateY(-50%)',
-                            width: '75%', 
+                            width: '50%', 
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center'
@@ -419,12 +419,12 @@
 
                     <AffectionUI affections={affections} isMobile={isMobile} />
 
-                    <div className={emoClass} style={{ position: 'absolute', bottom: isMobile ? '160px' : '190px', left: '50%', transform: 'translateX(-50%)', width: isMobile ? '240px' : '360px', height: isMobile ? '280px' : '440px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}>
+                    <div className={emoClass} style={{ position: 'absolute', bottom: isMobile ? '160px' : '190px', left: '50%', transform: 'translateX(-50%)', width: isMobile ? '240px' : '720px', height: isMobile ? '280px' : '880px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}>
                         {IMAGES[`char${currentSpeaker?.charAt(0).toUpperCase()}${currentSpeaker?.slice(1)}`]
                             ? <img src={IMAGES[`char${currentSpeaker?.charAt(0).toUpperCase()}${currentSpeaker?.slice(1)}`]} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
                             : <div style={{ color: '#1a1820', fontSize: '0.65rem', padding: '22px', border: '1px dashed #1a1820', borderRadius: '6px' }}>[ {spk.name || '캐릭터'} ]</div>}
                     </div>
-
+                {phase !== 'choice' && (
                     <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: isMobile ? '10px' : '16px' }}>
                         <div style={{ maxWidth: '880px', margin: '0 auto', background: 'rgba(10, 8, 16, 0.96)', border: '1px solid #252230', borderRadius: isMobile ? '8px' : '10px', padding: isMobile ? '12px 14px' : '18px 24px', position: 'relative' }}>
                             {spk.name && <div style={{ position: 'absolute', top: isMobile ? '-11px' : '-13px', left: isMobile ? '12px' : '20px', background: spk.color, padding: isMobile ? '2px 12px' : '3px 16px', borderRadius: '12px', color: '#0a0810', fontSize: isMobile ? '0.72rem' : '0.78rem', fontWeight: 600 }}>{spk.name}</div>}
@@ -433,6 +433,7 @@
                                 {isTyping && <span style={{ borderRight: '2px solid #9d8ec2', marginLeft: '1px', animation: 'blink 0.5s infinite' }}>&nbsp;</span>}
                                 {!isTyping && canProceed && <span style={{ marginLeft: '8px', color: '#9d8ec2', fontSize: '0.75rem', animation: 'arrowBounce 0.7s infinite' }}>▼</span>}
                             </div>
+                        )}
                             <div style={{ position: 'absolute', bottom: isMobile ? '7px' : '10px', right: isMobile ? '8px' : '14px', display: 'flex', gap: isMobile ? '4px' : '6px' }}>
                                 {['SKIP', 'AUTO', 'LOG'].map(t => <button key={t} onClick={e => { e.stopPropagation(); if (t === 'AUTO') setIsAuto(!isAuto); }} style={{ padding: isMobile ? '2px 8px' : '4px 10px', fontSize: isMobile ? '0.56rem' : '0.66rem', background: t === 'AUTO' && isAuto ? 'rgba(157, 142, 194, 0.2)' : 'transparent', border: `1px solid ${t === 'AUTO' && isAuto ? '#9d8ec2' : '#252230'}`, color: t === 'AUTO' && isAuto ? '#b8aed0' : '#6b6480', borderRadius: '8px', cursor: 'pointer' }}>{t}</button>)}
                             </div>
