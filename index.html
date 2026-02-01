@@ -181,66 +181,66 @@ const STORY = {
     // 챕터 1: 사생아의 비밀
     // ═══════════════════════════════════════════════════════════════
     chapter1: {
-    title: "Chapter 1", subtitle: "사생아의 비밀", bgm: "default",
-    scenes: [
-        { id:"1-1", bg:"bgRoom", chars:[], dialogs:[
-            { speaker:"narrator", text:"레이센 후작가의 외딴 별채" },
-            { speaker:"narrator", text:"그곳에는 공식적으로 '존재하지 않는' 아이가 살고 있었다." },
-            { speaker:"narrator", text:"바로 나, 카이른 폰 레이센이다." },
-            { speaker:"narrator", text:"나는 어릴때부터 사생아로 불리며 자랐다." },
-            { speaker:"narrator", text:"모두가 나를 무시했고, 신경써주지 않았다." },
-            { speaker:"narrator", text:"그럼에도 항상 내 곁을 지켜와준 사람이 있었기에 지금까지 올수 있었고, 버틸수 있었다." },
-            { speaker:"narrator", text:"언제나 내 곁을 지켜주는 하녀..." },
-        ]},
-        { id:"1-2", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-            { speaker:"lizette", text:"도, 도련님... 아침이에요..", emotion:"default" },
-            { speaker:"lizette", text:"몸은 좀 괜찮으신가요..?", emotion:"sad" },
-            { speaker:"lizette", text:"감기에 좋다는 죽을 가져왔어요..", emotion:"sad" },
-            { speaker:"narrator", text:"노란 머릿결이 햇살에 반사되어 더욱 빛나보인다." },
-            { speaker:"narrator", text:"내 눈앞의 하녀복 차림의 소녀, 리제트." },
-            { speaker:"narrator", text:"어릴때부터 내 곁을 지켜준 전담 하녀이다." },
-            { speaker:"narrator", text:"말이 하녀지, 어릴때부터 함께한 유일한 친구라 해도 과언이 아니다." },
-        ]},
-        { id:"1-2b", bgm:"tense", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-            { speaker:"lizette", text:"아.. 아앗..!!", emotion:"sad" },
-            { speaker:"narrator", text:"쨍그랑!" },
-            { speaker:"narrator", text:"리제트가 문턱에 걸려 넘어지며 죽을 쏟았다." },
-            { speaker:"narrator", text:"깨진 그릇 파편들은 바닥에 굴러다니고 뜨거운 죽이 바닥에 어지럽게 튀어져있다." },
-            { speaker:"lizette", text:"죄.. 죄송해요, 도련님...", emotion:"sad" },
-            { speaker:"lizette", text:"아..안다치셨어요..? 뜨거우니 조심하셔야 해요..", emotion:"sad" },
-            { speaker:"narrator", text:"리제트는 당장이라도 울거같은 표정으로 무릎을 꿇고 깨진 그릇 파편들을 손을 덜덜 떨며 줍는 중이다." },
-        ], choices:[
-            { text:"몸을 숙여 리제트와 함께 파편들을 줍는다.", next:"1-3a", affection: {lizette:+5} },
-            { text:"잘못을 한 리제트를 다그친다.", next:"1-3b", affection: {lizette:-10} },
-            { text:"리제트에게 다친곳은 없는지 묻는다.", next:"1-3c", affection: {lizette:+7} }
-        ]},
-        { id:"1-3a", bgm:"romantic", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-            { speaker:"narrator", text:"몸을 숙여 떨어진 파편들을 리제트와 함께 줍는다." },
-            { speaker:"lizette", text:"도.. 도련님..! 쉬세요! 제가 할게요!", emotion:"sad" },
-            { speaker:"you", text:"에이.. 괜찮아. 나 주려다 흘린건데 내가 할게." },
-            { speaker:"lizette", text:"도.. 도련님...", emotion:"default" },
-            { speaker:"lizette", text:"너.. 너무 감사해요..", emotion:"happy" },
-        ], next:"1-4"},
-        { id:"1-3b", bgm:"tense", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-            { speaker:"you", text:"지금 뭐하는거야? 다 튀었잖아!!" },
-            { speaker:"lizette", text:"저.. 정말 죄송해요.. 도련님..", emotion:"sad" },
-            { speaker:"you", text:"죄송해할 시간에 빨리 치우기나 해." },
-            { speaker:"lizette", text:"도.. 도련님...", emotion:"sad" },
-            { speaker:"narrator", text:"글썽이며 뭔가 말하려다 다시 입을 닫는다." },
-            { speaker:"lizette", text:"죄.. 죄송해요.. 빨리 치울게요..", emotion:"sad" },
-        ], next:"1-4"},
-        { id:"1-3c", bgm:"romantic", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-            { speaker:"you", text:"괜찮아? 많이 놀랐지.. 다친데는 없고..!" },
-            { speaker:"lizette", text:"네..네?! 저.. 저는 괜찮아요.. ...걱정해주셔서 감사해요..", emotion:"sad" },
-            { speaker:"you", text:"에이.. 괜찮아. 나 주려다 흘린건데.. 정리는 내가 할게" },
-            { speaker:"lizette", text:"도.. 도련님...", emotion:"default" },
-            { speaker:"lizette", text:"제.. 제가 할게요! 도련님은 쉬세요!", emotion:"happy" },
-        ], next:"1-4"},
-        { id:"1-4", bgm:"default", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-            { speaker:"narrator", text:"그렇게 죽을 다시 먹었다." },
-        ], next:"chapter2"},
-    ],
-},
+        title: "Chapter 1", subtitle: "사생아의 비밀", bgm: "default",
+        scenes: [
+            { id:"1-1", bg:"bgRoom", chars:[], dialogs:[
+                { speaker:"narrator", text:"레이센 후작가의 외딴 별채" },
+                { speaker:"narrator", text:"그곳에는 공식적으로 '존재하지 않는' 아이가 살고 있었다." },
+                { speaker:"narrator", text:"바로 나, 카이른 폰 레이센이다." },
+                { speaker:"narrator", text:"나는 어릴때부터 사생아로 불리며 자랐다." },
+                { speaker:"narrator", text:"모두가 나를 무시했고, 신경써주지 않았다." },
+                { speaker:"narrator", text:"그럼에도 항상 내 곁을 지켜와준 사람이 있었기에 지금까지 올수 있었고, 버틸수 있었다." },
+                { speaker:"narrator", text:"언제나 내 곁을 지켜주는 하녀..." },
+            ]},
+            { id:"1-2", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
+                { speaker:"lizette", text:"도, 도련님... 아침이에요..", emotion:"default" },
+                { speaker:"lizette", text:"몸은 좀 괜찮으신가요..?", emotion:"sad" },
+                { speaker:"lizette", text:"감기에 좋다는 죽을 가져왔어요..", emotion:"sad" },
+                { speaker:"narrator", text:"노란 머릿결이 햇살에 반사되어 더욱 빛나보인다." },
+                { speaker:"narrator", text:"내 눈앞의 하녀복 차림의 소녀, 리제트." },
+                { speaker:"narrator", text:"어릴때부터 내 곁을 지켜준 전담 하녀이다." },
+                { speaker:"narrator", text:"말이 하녀지, 어릴때부터 함께한 유일한 친구라 해도 과언이 아니다." },
+            ]},
+            { id:"1-2b", bgm:"tense", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
+                { speaker:"lizette", text:"아.. 아앗..!!", emotion:"sad" },
+                { speaker:"narrator", text:"쨍그랑!" },
+                { speaker:"narrator", text:"리제트가 문턱에 걸려 넘어지며 죽을 쏟았다." },
+                { speaker:"narrator", text:"깨진 그릇 파편들은 바닥에 굴러다니고 뜨거운 죽이 바닥에 어지럽게 튀어져있다." },
+                { speaker:"lizette", text:"죄.. 죄송해요, 도련님...", emotion:"sad" },
+                { speaker:"lizette", text:"아..안다치셨어요..? 뜨거우니 조심하셔야 해요..", emotion:"sad" },
+                { speaker:"narrator", text:"리제트는 당장이라도 울거같은 표정으로 무릎을 꿇고 깨진 그릇 파편들을 손을 덜덜 떨며 줍는 중이다." },
+            ], choices:[
+                { text:"몸을 숙여 리제트와 함께 파편들을 줍는다.", next:"1-3a", affection: {lizette:+5} },
+                { text:"잘못을 한 리제트를 다그친다.", next:"1-3b", affection: {lizette:-10} },
+                { text:"리제트에게 다친곳은 없는지 묻는다.", next:"1-3c", affection: {lizette:+7} }
+            ]},
+            { id:"1-3a", bgm:"romantic", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
+                { speaker:"narrator", text:"몸을 숙여 떨어진 파편들을 리제트와 함께 줍는다." },
+                { speaker:"lizette", text:"도.. 도련님..! 쉬세요! 제가 할게요!", emotion:"sad" },
+                { speaker:"you", text:"에이.. 괜찮아. 나 주려다 흘린건데 내가 할게." },
+                { speaker:"lizette", text:"도.. 도련님...", emotion:"default" },
+                { speaker:"lizette", text:"너.. 너무 감사해요..", emotion:"happy" },
+            ], next:"1-4"},
+            { id:"1-3b", bgm:"tense", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
+                { speaker:"you", text:"지금 뭐하는거야? 다 튀었잖아!!" },
+                { speaker:"lizette", text:"저.. 정말 죄송해요.. 도련님..", emotion:"sad" },
+                { speaker:"you", text:"죄송해할 시간에 빨리 치우기나 해." },
+                { speaker:"lizette", text:"도.. 도련님...", emotion:"sad" },
+                { speaker:"narrator", text:"글썽이며 뭔가 말하려다 다시 입을 닫는다." },
+                { speaker:"lizette", text:"죄.. 죄송해요.. 빨리 치울게요..", emotion:"sad" },
+            ], next:"1-4"},
+            { id:"1-3c", bgm:"romantic", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
+                { speaker:"you", text:"괜찮아? 많이 놀랐지.. 다친데는 없고..!" },
+                { speaker:"lizette", text:"네..네?! 저.. 저는 괜찮아요.. ...걱정해주셔서 감사해요..", emotion:"sad" },
+                { speaker:"you", text:"에이.. 괜찮아. 나 주려다 흘린건데.. 정리는 내가 할게" },
+                { speaker:"lizette", text:"도.. 도련님...", emotion:"default" },
+                { speaker:"lizette", text:"제.. 제가 할게요! 도련님은 쉬세요!", emotion:"happy" },
+            ], next:"1-4"},
+            { id:"1-4", bgm:"default", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
+                { speaker:"narrator", text:"그렇게 죽을 다시 먹었다." },
+            ], next:"chapter2"},
+        ],
+    },
 
     // ═══════════════════════════════════════════════════════════════
     // 챕터 2: 갑작스러운 약혼
