@@ -100,15 +100,15 @@ const deleteSave = (slot) => {
 // 1️⃣ 사운드 설정 - null을 파일 경로로 교체
 // ════════════════════════════════════════════════════════════════════════════
 const SOUNDS = {
-    bgmDefault: null,      // 'audio/bgm_default.mp3'  ← 평화로운
-    bgmTense: null,        // 'audio/bgm_tense.mp3'    ← 긴박한
-    bgmRomantic: null,     // 'audio/bgm_romantic.mp3' ← 로맨틱
-    sfxClick: null,        // 'audio/sfx_click.mp3'
-    sfxDecision: null,     // 'audio/sfx_decision.mp3'
+    bgmDefault: 'audio/default.mp3',      // 'audio/bgm_default.mp3'  ← 평화로운
+    bgmTense: 'audio/tense.mp3',        // 'audio/bgm_tense.mp3'    ← 긴박한
+    bgmRomantic: 'audio/romantic.mp3',     // 'audio/bgm_romantic.mp3' ← 로맨틱
+    sfxClick: 'audio/click_sound.mp3',        // 'audio/sfx_click.mp3'
+    sfxDecision: 'audio/dcs.mp3',     // 'audio/sfx_decision.mp3'
     sfxSurprise: null,     // 'audio/sfx_surprise.mp3'
-    sfxHeartbeat: null,    // 'audio/sfx_heartbeat.mp3'
-    sfxSword: null,        // 'audio/sfx_sword.mp3'
-    sfxGlitch: null,       // 'audio/sfx_glitch.mp3'
+    sfxHeartbeat: 'audio/heartbeat.mp3',    // 'audio/sfx_heartbeat.mp3'
+    sfxSword: 'audio/sword.mp3',        // 'audio/sfx_sword.mp3'
+    sfxGlitch: 'audio/glitch.mp3',       // 'audio/sfx_glitch.mp3'
 };
 
 let currentBgm = null;
@@ -131,14 +131,14 @@ const IMAGES = {
     bgThrone: 'img/bg_throne.png',
     bgNight: 'img/bg_night.png',
     bgEnding: 'img/bg_ending.png',
-    lizette: { default:'img/lizette.png', happy:'img/lizette_happy.png', sad:'img/lizette_sad.png', angry:'img/lizette_angry.png' },
-    adeline: { default:'img/adeline.png', happy:'img/adeline_happy.png', sad:'img/adeline_sad.png', angry:'img/adeline_angry.png' },
-    karen: { default:'img/karen.png', happy:'img/karen_happy.png', sad:'img/karen_sad.png', angry:'img/karen_angry.png' },
-    elia: { default:'img/elia.png', happy:'img/elia_happy.png', sad:'img/elia_sad.png', angry:'img/elia_angry.png' },
-    selene: { default:'img/selene.png', happy:'img/selene_happy.png', sad:'img/selene_sad.png', angry:'img/selene_angry.png' },
-    luna: { default:'img/luna.png', happy:'img/luna_happy.png', sad:'img/luna_sad.png', angry:'img/luna_angry.png' },
-    fullKairen:'img/full_kairen.png', fullLizette:'img/full_lizette.png', fullAdeline:'img/full_adeline.png',
-    fullKaren:'img/full_karen.png', fullElia:'img/full_elia.png', fullSelene:'img/full_selene.png', fullLuna:'img/full_luna.png',
+    lizette: { default:'img/l.png', happy:'img/lizette_happy.png', sad:'img/lizette_sad.png', angry:'img/lizette_angry.png' },
+    adeline: { default:'img/a.png', happy:'img/adeline_happy.png', sad:'img/adeline_sad.png', angry:'img/adeline_angry.png' },
+    karen: { default:'img/c.png', happy:'img/karen_happy.png', sad:'img/karen_sad.png', angry:'img/karen_angry.png' },
+    elia: { default:'img/e.png', happy:'img/elia_happy.png', sad:'img/elia_sad.png', angry:'img/elia_angry.png' },
+    selene: { default:'img/s.png', happy:'img/selene_happy.png', sad:'img/selene_sad.png', angry:'img/selene_angry.png' },
+    luna: { default:'img/lu.png', happy:'img/luna_happy.png', sad:'img/luna_sad.png', angry:'img/luna_angry.png' },
+    fullKairen:'img/full_kairen.png', fullLizette:'img/fulll.png', fullAdeline:'img/fulla.png',
+    fullKaren:'img/fullc.png', fullElia:'img/fulle.png', fullSelene:'img/fulls.png', fullLuna:'img/fulllu.png',
 };
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -184,36 +184,61 @@ const STORY = {
         title: "Chapter 1", subtitle: "사생아의 비밀", bgm: "default",
         scenes: [
             { id:"1-1", bg:"bgRoom", chars:[], dialogs:[
-                { speaker:"narrator", text:"레이센 후작가의 별채." },
+                { speaker:"narrator", text:"레이센 후작가의 외딴 별채" },
                 { speaker:"narrator", text:"그곳에는 공식적으로 '존재하지 않는' 아이가 살고 있었다." },
-                { speaker:"narrator", text:"바로, 당신이다." },
+                { speaker:"narrator", text:"바로 나, 카이른 폰 레이센이다." },
+                { speaker:"narrator", text:"나는 어릴때부터 사생아로 불리며 자랐다." },
+                { speaker:"narrator", text:"모두가 나를 무시했고, 신경써주지 않았다." },
+                { speaker:"narrator", text:"그럼에도 항상 내 곁을 지켜와준 사람이 있었기에 지금까지 올수 있었고, 버틸수 있었다." },
+                { speaker:"narrator", text:"언제나 내 곁을 지켜주는 드녀..." },
             ]},
             { id:"1-2", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"lizette", text:"도, 도련님... 일어나셨어요?", emotion:"default" },
-                { speaker:"you", text:"...리제트? 무슨 일이야?" },
-                { speaker:"lizette", text:"저, 저기... 큰일 났어요.", emotion:"sad" },
-                { speaker:"lizette", text:"본가에서... 사람이 왔어요. 도련님이... 황실의 핏줄이라고...", emotion:"sad" },
-                { speaker:"you", text:"...뭐라고?" },
-                { speaker:"narrator", text:"머릿속이 하얘진다. 사생아가 아니라, 황자?" },
-            ], choices:[
-                { text:"리제트를 안심시킨다", next:"1-3a", affection:{lizette:+15} },
-                { text:"충격에 말을 잇지 못한다", next:"1-3b", affection:{lizette:+5} }
+                { speaker:"lizette", text:"도, 도련님... 아침이에요..", emotion:"default" },
+                { speaker:"lizette", text:"몸은 좀 괜찮으신가요..?", emotion:"sad" },
+                { speaker:"lizette", text:"감기에 좋다는 죽을 가져왔어요..", emotion:"sad" },
+                { speaker:"narrator", text:"노란 머릿결이 햇살에 반사되어 더욱 빛나보인다." },
+                { speaker:"narrator", text:"내 눈앞의 하녀복 차림의 소녀, 리제트." },
+                { speaker:"narrator", text:"어릴때부터 내 곁을 지켜준 전담 하녀이다." },
+                { speaker:"narrator", text:"말이 하녀지, 어릴때부터 함께한 유일한 친구라 해도 과언이 아니다." },
             ]},
-            { id:"1-3a", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"you", text:"괜찮아, 리제트. 네가 옆에 있으니까." },
-                { speaker:"lizette", text:"도, 도련님...!", emotion:"happy", sfx:"heartbeat" },
-                { speaker:"lizette", text:"저는 언제나 도련님 곁에 있을 거예요!", emotion:"happy" },
-            ], next:"1-4" },
-            { id:"1-3b", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"......" },
-                { speaker:"lizette", text:"저는... 도련님이 누구든 상관없어요.", emotion:"sad" },
-                { speaker:"narrator", text:"리제트의 손이 내 손을 감싼다. 따뜻하다." },
-            ], next:"1-4" },
-            { id:"1-4", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"...본가로 가야겠어. 진실을 알아야 해." },
-                { speaker:"lizette", text:"저도 같이 갈게요!", emotion:"happy" },
-                { speaker:"narrator", text:"이것이 모든 것의 시작이었다." },
-            ], next:"chapter2" },
+            { id:"1-2", bgm:"tense",  bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
+                { speaker:"lizette", text:"아.. 아앗..!!",  emotion:"sad" },
+                { speaker:"narrator", text:"쨍그랑!" },
+                { speaker:"narrator", text:"리제트가 문턱에 걸려 넘어지며 죽을 쏟았다." },
+                { speaker:"narrator", text:"깨진 그릇 파편들은 바닥에 굴러다니고 뜨거운 죽이 바닥에 어지럽게 튀어져있다." },
+                { speaker:"lizette", text:"죄.. 죄송해요, 도련님...", emotion:"sad" },
+                { speaker:"lizette", text:"아..안다치셨어요..? 뜨거우니 조심하셔야 해요..", emotion:"sad" },
+                { speaker:"narrator", text:"리제트는 당장이라도 울거같은 표정으로 무릎을 꿇고 깨진 그릇 파편들을 손을 덜덜 떨며 줍는 중이다." },
+            ], choices:[
+                { text:"몸을 숙여 리제트와 함께 파편들을 줍는다.", next:"1-3a", affection: {lizette:+5} },
+                { text:"잘못을 한 리제트를 다그친다.", next:"1-3b", affection: {lizette:-10} },
+                { text:"리제트에게 다친곳은 없는지 묻는다.", next:"1-3c", affection: {lizette:+7} }
+            ]},
+            { id:"1-3a", bgm:"romantic", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialog:[
+                { speaker:"narrator", text:"몸을 숙여 떨어진 파편들을 리제트와 함께 줍는다." },
+                { speaker:"lizette", text:"도.. 도련님..! 쉬세요! 제가 할게요!" , emotion:"sad" },
+                { speaker:"you", text:"에이.. 괜찮아. 나 주려다 흘린건데 내가 할게." },
+                { speaker:"lizette", text:"도.. 도련님...", emotion:"default" },
+                { speaker:"lizette", text:"너.. 너무 감사해요..", emotion:"happy" },
+            ], next:"1-4"}
+            { id:"1-3b", bgm:"tense", bg:"bgRoom", chars:[{id"lizette",pos:"center",emotion:"default }], dialog:[
+                { speaker:"you", text:"지금 뭐하는거야? 다 튀었잖아!!" },
+                { speaker:"lizette", text:"저.. 정말 죄송해요.. 도련님.." , emotion:"sad" },
+                { speaker:"you", text:"죄송해할 시간에 빨리 치우기나 해." },
+                { speaker:"lizette", text:"도.. 도련님...", emotion:"sad" },
+                { speaker:"narrator", text:"글썽이며 뭔가 말하려다 다시 입을 닫는다." },
+                { speaker:"lizette", text:"죄.. 죄송해요.. 빨리 치울게요..", emotion:"sad" },
+            ], next:"1-4"}
+            { id:"1-3c", bgm:"romantic", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialog:[
+                { speaker:"you", text:"괜찮아? 많이 놀랐지.. 다친데는 없고..!" },
+                { speaker:"lizette", text:"네..네?! 저.. 저는 괜찮아요.. ...걱정해주셔서 감사해요.." , emotion:"sad" },
+                { speaker:"you", text:"에이.. 괜찮아. 나 주려다 흘린건데.. 정리는 내가 할게" },
+                { speaker:"lizette", text:"도.. 도련님...", emotion:"default" },
+                { speaker:"lizette", text:"제.. 제가 할게요! 도련님은 쉬세요!", emotion:"happy" },
+            ], next:"1-4"},
+            { id:"1-4", bgm:"default", bg:"bgRoom", chars: [id:"lizette",pos:"center",emotion:"default"}], dialog:[
+                { speaker:"narrator", text:"그렇게 죽을 다시 먹었다." },
+           ], next:"chapter2"},
         ],
     },
 
@@ -481,624 +506,4 @@ const STORY = {
             { speaker:"narrator", text: "카렌이 검을 내려놓고 당신 곁에 섰다." },
             { speaker:"karen", text: "...폐하를 지키는 것이 아니라, 사랑하는 것으로.", emotion:"happy" },
             { speaker:"narrator", text: "제국 최강의 기사와의 해피엔딩." },
-            { speaker:"narrator", text: "「카렌 엔딩 - 검과 왕관」 달성!" },
-        ], next:"glitch" }],
-    },
-    ending_elia: {
-        title: "Ending", subtitle: "엘리아 엔딩 - 솔직한 마음", bgm: "romantic",
-        scenes: [{ id:"end", bg:"bgEnding", chars:[{id:"elia",pos:"center",emotion:"happy"}], dialogs:[
-            { speaker:"narrator", text: "엘리아가 드디어 솔직해졌다." },
-            { speaker:"elia", text: "...좋아해. 처음부터 계속.", emotion:"happy" },
-            { speaker:"narrator", text: "욕쟁이 소꿉친구와의 해피엔딩." },
-            { speaker:"narrator", text: "「엘리아 엔딩 - 솔직한 마음」 달성!" },
-        ], next:"glitch" }],
-    },
-    ending_selene: {
-        title: "Ending", subtitle: "셀레네 엔딩 - 제국의 여주인", bgm: "romantic",
-        scenes: [{ id:"end", bg:"bgEnding", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
-            { speaker:"narrator", text: "셀레네가 황후의 자리에 올랐다." },
-            { speaker:"selene", text: "후후, 처음부터 이렇게 될 줄 알았어요.", emotion:"happy" },
-            { speaker:"narrator", text: "야망의 황녀와의 해피엔딩." },
-            { speaker:"narrator", text: "「셀레네 엔딩 - 제국의 여주인」 달성!" },
-        ], next:"glitch" }],
-    },
-    ending_luna: {
-        title: "Ending", subtitle: "루나 엔딩 - 금지된 사랑", bgm: "romantic",
-        scenes: [{ id:"end", bg:"bgEnding", chars:[{id:"luna",pos:"center",emotion:"happy"}], dialogs:[
-            { speaker:"narrator", text: "루나가 의붓동생이라는 벽을 넘었다." },
-            { speaker:"luna", text: "...오라버니만 있으면 돼.", emotion:"happy" },
-            { speaker:"narrator", text: "메스가키 의붓동생과의 해피엔딩." },
-            { speaker:"narrator", text: "「루나 엔딩 - 금지된 사랑」 달성!" },
-        ], next:"glitch" }],
-    },
-    ending_harem: {
-        title: "Ending", subtitle: "하렘 엔딩 - 제국 최강의 남자", bgm: "romantic",
-        scenes: [{ id:"end", bg:"bgThrone", chars:[
-            {id:"lizette",pos:"left",emotion:"happy"},
-            {id:"adeline",pos:"left",emotion:"happy"},
-            {id:"karen",pos:"left",emotion:"happy"},
-            {id:"elia",pos:"right",emotion:"happy"},
-            {id:"selene",pos:"right",emotion:"happy"},
-            {id:"luna",pos:"right",emotion:"happy"}
-        ], dialogs:[
-            { speaker:"narrator", text: "당신은 여섯 명의 여인 모두와 함께했다." },
-            { speaker:"narrator", text: "진정한 제국 최강의 남자로서." },
-            { speaker:"narrator", text: "「하렘 엔딩 - 제국 최강의 남자」 달성!" },
-        ], next:"glitch" }],
-    },
-    ending_bad: {
-        title: "Ending", subtitle: "배드 엔딩 - 고독한 왕좌", bgm: "tense",
-        scenes: [{ id:"end", bg:"bgThrone", chars:[], dialogs:[
-            { speaker:"narrator", text: "아무도 당신 곁에 남지 않았다." },
-            { speaker:"narrator", text: "권력만이 남은 차가운 왕좌." },
-            { speaker:"narrator", text: "반란이 일어났고, 당신은..." },
-            { speaker:"narrator", text: "「배드 엔딩 - 고독한 왕좌」" },
-        ], next:"glitch" }],
-    },
-};
-
-// ════════════════════════════════════════════════════════════════════════════
-// 시스템 코드 (수정 불필요)
-// ════════════════════════════════════════════════════════════════════════════
-
-const HEROINES = ['lizette','adeline','karen','elia','selene','luna'];
-const DEFAULT_AFFECTION = { lizette:20, adeline:20, karen:20, elia:20, selene:20, luna:20 };
-
-function Particles() {
-    const particles = useMemo(() => Array.from({length:20},(_,i)=>({id:i,left:Math.random()*100,top:20+Math.random()*70,size:2+Math.random()*3,duration:8+Math.random()*6,delay:Math.random()*8,opacity:0.3+Math.random()*0.4})),[]);
-    return (<div style={{position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:5}}>{particles.map(p=>(<div key={p.id} style={{position:'absolute',left:`${p.left}%`,top:`${p.top}%`,width:`${p.size}px`,height:`${p.size}px`,background:`rgba(255,255,255,${p.opacity})`,borderRadius:'50%',animation:`particleDrift ${p.duration}s ease-in-out ${p.delay}s infinite`}}/>))}</div>);
-}
-
-// 시작 팝업
-function StartPopup({ onClose }) {
-    return (
-        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.9)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:10000,animation:'fadeIn 0.5s'}}>
-            <div style={{background:'#14121a',border:'1px solid #3d3850',borderRadius:'16px',padding:'32px',maxWidth:'500px',width:'90%',textAlign:'center'}}>
-                <h2 style={{color:'#9d8ec2',fontSize:'1.4rem',marginBottom:'20px',fontFamily:"'Noto Serif KR',serif"}}>플레이 전 안내</h2>
-                <div style={{textAlign:'left',color:'#c8c4d4',fontSize:'0.9rem',lineHeight:1.8,marginBottom:'24px'}}>
-                    <p style={{marginBottom:'12px'}}>• 본 게임의 <span style={{color:'#d4a0a8'}}>모든 일러스트는 AI로 생성</span>되었습니다.</p>
-                    <p style={{marginBottom:'12px'}}>• 총 <span style={{color:'#c4b090'}}>8개의 챕터</span>로 구성되어 있습니다.</p>
-                    <p style={{marginBottom:'12px'}}>• <span style={{color:'#8aadc0'}}>선택에 따라 호감도</span>가 변동됩니다.</p>
-                    <p style={{marginBottom:'12px'}}>• 호감도에 따라 <span style={{color:'#a890b8'}}>8개의 엔딩</span> 중 하나로 분기됩니다.</p>
-                    <p style={{marginBottom:'12px',color:'#9d8ec2'}}>• 세이브/로드 기능이 지원됩니다.</p>
-                    <p style={{color:'#6b6480',fontSize:'0.8rem'}}>※ 화면 클릭으로 대사를 넘길 수 있습니다.</p>
-                </div>
-                <button onClick={onClose} style={{padding:'12px 40px',background:'rgba(157,142,194,0.9)',border:'none',borderRadius:'8px',color:'#0a0810',fontSize:'1rem',fontWeight:600,cursor:'pointer'}}>
-                    게임 시작
-                </button>
-            </div>
-        </div>
-    );
-}
-
-// 호감도 패널
-function AffectionPanel({ affection, onClose, isMobile }) {
-    return (
-        <div onClick={onClose} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000,animation:'fadeIn 0.3s'}}>
-            <div onClick={e=>e.stopPropagation()} style={{background:'#14121a',border:'1px solid #3d3850',borderRadius:'16px',padding:isMobile?'20px':'32px',maxWidth:'500px',width:'90%'}}>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
-                    <h3 style={{color:'#9d8ec2',fontSize:'1.2rem'}}>💕 호감도</h3>
-                    <button onClick={onClose} style={{background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',borderRadius:'50%',cursor:'pointer'}}>✕</button>
-                </div>
-                <div style={{display:'flex',flexDirection:'column',gap:'12px'}}>
-                    {HEROINES.map(id => {
-                        const char = characters[id];
-                        const value = affection[id] || 0;
-                        return (
-                            <div key={id} style={{display:'flex',alignItems:'center',gap:'12px'}}>
-                                <div style={{width:'70px',color:char.color,fontSize:'0.85rem',fontWeight:500}}>{char.name}</div>
-                                <div style={{flex:1,height:'20px',background:'#1a1820',borderRadius:'10px',overflow:'hidden',position:'relative'}}>
-                                    <div style={{height:'100%',width:`${value}%`,background:`linear-gradient(90deg,${char.color}88,${char.color})`,borderRadius:'10px',transition:'width 0.5s'}}/>
-                                    <span style={{position:'absolute',right:'8px',top:'50%',transform:'translateY(-50%)',fontSize:'0.7rem',color:'#e8e6ed'}}>{value}</span>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-                <div style={{marginTop:'16px',padding:'12px',background:'#0a0810',borderRadius:'8px',fontSize:'0.75rem',color:'#6b6480'}}>
-                    <p>• 모든 히로인 50 이상 → 하렘 엔딩</p>
-                    <p>• 모든 히로인 30 이하 → 배드 엔딩</p>
-                    <p>• 그 외 → 최고 호감도 히로인 엔딩</p>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-// 세이브/로드 패널
-function SaveLoadPanel({ mode, onClose, onSave, onLoad, currentState, isMobile }) {
-    const [saves, setSaves] = useState([]);
-    const [confirmDelete, setConfirmDelete] = useState(null);
-
-    useEffect(() => {
-        const loadSaves = () => {
-            const saveInfos = [];
-            for (let i = 1; i <= SAVE_SLOTS; i++) {
-                saveInfos.push({ slot: i, ...getSaveInfo(i) });
-            }
-            setSaves(saveInfos);
-        };
-        loadSaves();
-    }, []);
-
-    const handleSave = (slot) => {
-        if (onSave) {
-            onSave(slot);
-            setSaves(prev => prev.map(s => 
-                s.slot === slot ? { slot, ...getSaveInfo(slot) } : s
-            ));
-        }
-    };
-
-    const handleLoad = (slot) => {
-        const data = loadGame(slot);
-        if (data && onLoad) {
-            onLoad(data);
-            onClose();
-        }
-    };
-
-    const handleDelete = (slot) => {
-        deleteSave(slot);
-        setSaves(prev => prev.map(s => 
-            s.slot === slot ? { slot, exists: false } : s
-        ));
-        setConfirmDelete(null);
-    };
-
-    const formatDate = (isoString) => {
-        if (!isoString) return '';
-        const date = new Date(isoString);
-        return `${date.getFullYear()}.${String(date.getMonth()+1).padStart(2,'0')}.${String(date.getDate()).padStart(2,'0')} ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`;
-    };
-
-    const getChapterTitle = (chapterId) => {
-        if (!chapterId) return '???';
-        const chapter = STORY[chapterId];
-        return chapter ? chapter.subtitle : chapterId;
-    };
-
-    return (
-        <div onClick={onClose} style={{
-            position: 'fixed', inset: 0, background: 'rgba(5,4,10,0.95)',
-            display: 'flex', justifyContent: 'center', alignItems: 'center',
-            zIndex: 1000, animation: 'fadeIn 0.3s'
-        }}>
-            <div onClick={e => e.stopPropagation()} style={{
-                width: '90%', maxWidth: '450px', background: '#14121a',
-                border: '1px solid #3d3850', borderRadius: '12px',
-                padding: isMobile ? '16px' : '24px', position: 'relative'
-            }}>
-                {/* 헤더 */}
-                <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-                    <div style={{ fontSize: '0.65rem', color: '#6b6480', letterSpacing: '0.15em', marginBottom: '4px' }}>
-                        {mode === 'save' ? 'SAVE GAME' : 'LOAD GAME'}
-                    </div>
-                    <h2 style={{ fontSize: isMobile ? '1.1rem' : '1.3rem', color: '#e8e6ed', fontFamily: "'Noto Serif KR', serif" }}>
-                        {mode === 'save' ? '게임 저장' : '게임 불러오기'}
-                    </h2>
-                </div>
-
-                {/* 닫기 버튼 */}
-                <button onClick={onClose} style={{
-                    position: 'absolute', top: '12px', right: '12px',
-                    background: 'transparent', border: '1px solid #3d3850',
-                    color: '#6b6480', width: '28px', height: '28px',
-                    cursor: 'pointer', fontSize: '0.9rem', borderRadius: '50%'
-                }}>✕</button>
-
-                {/* 세이브 슬롯 목록 */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    {saves.map(save => (
-                        <div key={save.slot} style={{
-                            background: '#0a0810', border: '1px solid #2a2836',
-                            borderRadius: '8px', padding: '14px',
-                            display: 'flex', justifyContent: 'space-between', alignItems: 'center'
-                        }}>
-                            <div style={{ flex: 1 }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                                    <span style={{ color: '#9d8ec2', fontSize: '0.75rem', fontWeight: 600 }}>
-                                        SLOT {save.slot}
-                                    </span>
-                                    {save.exists && (
-                                        <span style={{ color: '#6b6480', fontSize: '0.65rem' }}>
-                                            {formatDate(save.timestamp)}
-                                        </span>
-                                    )}
-                                </div>
-                                {save.exists ? (
-                                    <div style={{ color: '#c8c4d4', fontSize: isMobile ? '0.8rem' : '0.9rem' }}>
-                                        📖 {getChapterTitle(save.chapter)}
-                                    </div>
-                                ) : (
-                                    <div style={{ color: '#4a4658', fontSize: isMobile ? '0.8rem' : '0.9rem', fontStyle: 'italic' }}>
-                                        빈 슬롯
-                                    </div>
-                                )}
-                            </div>
-                            
-                            <div style={{ display: 'flex', gap: '6px' }}>
-                                {confirmDelete === save.slot ? (
-                                    <>
-                                        <button onClick={() => handleDelete(save.slot)} style={{
-                                            padding: '6px 10px', fontSize: '0.7rem',
-                                            background: '#8b3a3a', border: 'none',
-                                            color: '#fff', borderRadius: '4px', cursor: 'pointer'
-                                        }}>삭제</button>
-                                        <button onClick={() => setConfirmDelete(null)} style={{
-                                            padding: '6px 10px', fontSize: '0.7rem',
-                                            background: '#3d3850', border: 'none',
-                                            color: '#c8c4d4', borderRadius: '4px', cursor: 'pointer'
-                                        }}>취소</button>
-                                    </>
-                                ) : (
-                                    <>
-                                        {mode === 'save' ? (
-                                            <button onClick={() => handleSave(save.slot)} style={{
-                                                padding: '6px 12px', fontSize: '0.75rem',
-                                                background: save.exists ? '#4a4658' : '#9d8ec2',
-                                                border: 'none', color: save.exists ? '#c8c4d4' : '#0a0810',
-                                                borderRadius: '4px', cursor: 'pointer', fontWeight: 500
-                                            }}>
-                                                {save.exists ? '덮어쓰기' : '저장'}
-                                            </button>
-                                        ) : (
-                                            <button 
-                                                onClick={() => save.exists && handleLoad(save.slot)} 
-                                                disabled={!save.exists}
-                                                style={{
-                                                    padding: '6px 12px', fontSize: '0.75rem',
-                                                    background: save.exists ? '#9d8ec2' : '#2a2836',
-                                                    border: 'none', 
-                                                    color: save.exists ? '#0a0810' : '#4a4658',
-                                                    borderRadius: '4px', 
-                                                    cursor: save.exists ? 'pointer' : 'not-allowed',
-                                                    fontWeight: 500
-                                                }}
-                                            >불러오기</button>
-                                        )}
-                                        {save.exists && (
-                                            <button onClick={() => setConfirmDelete(save.slot)} style={{
-                                                padding: '6px 8px', fontSize: '0.7rem',
-                                                background: 'transparent', border: '1px solid #5a3a3a',
-                                                color: '#a06060', borderRadius: '4px', cursor: 'pointer'
-                                            }}>🗑</button>
-                                        )}
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                {/* 안내 문구 */}
-                <div style={{ 
-                    marginTop: '16px', padding: '10px', 
-                    background: '#0a0810', borderRadius: '6px',
-                    fontSize: '0.7rem', color: '#6b6480', textAlign: 'center'
-                }}>
-                    {mode === 'save' 
-                        ? '💡 같은 슬롯에 저장하면 기존 데이터가 덮어씌워집니다.'
-                        : '💡 저장된 시점부터 다시 플레이합니다.'}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function TitleScreen({ onStart, onLoad }) {
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-    const [showLoad, setShowLoad] = useState(false);
-    useEffect(() => { const h=()=>setIsMobile(window.innerWidth<=768); window.addEventListener('resize',h); return()=>window.removeEventListener('resize',h); }, []);
-
-    const TitleLogo = () => IMAGES.titleLogo ? <img src={IMAGES.titleLogo} alt="Title" style={{maxWidth:isMobile?'160px':'320px',height:'auto'}}/> : <div style={{padding:isMobile?'12px 18px':'18px 25px',border:'1px dashed #3d3850',borderRadius:'6px'}}><div style={{fontSize:'0.55rem',color:'#6b6480',marginBottom:'4px'}}>[ 타이틀 로고 ]</div><div style={{fontSize:isMobile?'1rem':'1.7rem',fontFamily:"'Noto Serif KR',serif",fontWeight:700,color:'#d8d4e2'}}>제국 최강이 되기까지</div></div>;
-    const MenuBtn = ({text,onClick,main}) => (<button onClick={onClick} style={{padding:isMobile?'7px 14px':'12px 28px',fontSize:isMobile?'0.7rem':'0.88rem',fontWeight:main?600:400,background:main?'rgba(157,142,194,0.9)':'rgba(30,28,38,0.6)',border:main?'none':'1px solid rgba(100,90,120,0.3)',color:main?'#0a0810':'rgba(180,170,200,0.9)',borderRadius:'4px',cursor:'pointer',width:'100%',maxWidth:isMobile?'120px':'180px'}}>{main&&<span style={{marginRight:'4px'}}>▶</span>}{text}</button>);
-    const CharArea = () => IMAGES.titleCharacter ? <img src={IMAGES.titleCharacter} style={{maxWidth:'62%',maxHeight:'62%',objectFit:'contain'}}/> : <div style={{color:'#2a2836',fontSize:'0.6rem',padding:'25px',border:'1px dashed #2a2836',borderRadius:'6px'}}>[ 캐릭터 이미지 ]</div>;
-
-    if (showLoad) return (
-        <SaveLoadPanel 
-            mode="load" 
-            onClose={() => setShowLoad(false)}
-            onLoad={onLoad}
-            isMobile={isMobile}
-        />
-    );
-
-    return (
-        <div style={{height:'100vh',position:'relative',overflow:'hidden',background:IMAGES.titleBackground?`url(${IMAGES.titleBackground}) center/cover no-repeat`:'#0a0810'}}>
-            <Particles />
-            {isMobile ? (
-                <>
-                    <div style={{position:'absolute',left:0,top:'50%',transform:'translateY(-50%)',width:'50%',display:'flex',justifyContent:'center',alignItems:'center'}}><CharArea/></div>
-                    <div style={{position:'absolute',right:0,top:0,bottom:0,width:'50%',background:'linear-gradient(90deg,transparent,rgba(10,8,16,0.85) 15%)',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',zIndex:10}}>
-                        <div style={{marginBottom:'14px'}}><TitleLogo/></div>
-                        <div style={{display:'flex',flexDirection:'column',gap:'5px',alignItems:'center'}}>
-                            <MenuBtn text="GAME START" onClick={()=>{playSfx('click');onStart();}} main/>
-                            <MenuBtn text="LOAD" onClick={()=>{playSfx('click');setShowLoad(true);}}/>
-                        </div>
-                    </div>
-                </>
-            ) : (
-                <>
-                    <div style={{position:'absolute',left:'-3%',top:'50%',transform:'translateY(-45%)'}}><CharArea/></div>
-                    <div style={{position:'absolute',right:0,top:0,bottom:0,width:'45%',background:'linear-gradient(90deg,transparent,rgba(10,8,16,0.85) 20%)',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',zIndex:10}}>
-                        <div style={{marginBottom:'35px'}}><TitleLogo/></div>
-                        <div style={{display:'flex',flexDirection:'column',gap:'8px',alignItems:'center'}}>
-                            <MenuBtn text="GAME START" onClick={()=>{playSfx('click');onStart();}} main/>
-                            <MenuBtn text="LOAD GAME" onClick={()=>{playSfx('click');setShowLoad(true);}}/>
-                        </div>
-                        <div style={{position:'absolute',bottom:'16px',fontSize:'0.6rem',color:'#3d3850'}}>made by CowardMole</div>
-                    </div>
-                </>
-            )}
-        </div>
-    );
-}
-
-function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, onGlitch, onTitle, affection, setAffection }) {
-    const [currentChapter, setCurrentChapter] = useState(startChapter || 'chapter1');
-    const [sceneIndex, setSceneIndex] = useState(startSceneIndex);
-    const [dialogIndex, setDialogIndex] = useState(startDialogIndex);
-    const [displayedText, setDisplayedText] = useState('');
-    const [isTyping, setIsTyping] = useState(false);
-    const [showChoices, setShowChoices] = useState(false);
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-    const [isAuto, setIsAuto] = useState(false);
-    const [canProceed, setCanProceed] = useState(false);
-    const [showChapterTitle, setShowChapterTitle] = useState(true);
-    const [showAffection, setShowAffection] = useState(false);
-    const [affectionPopup, setAffectionPopup] = useState(null);
-    const [showSaveLoad, setShowSaveLoad] = useState(null);
-
-    useEffect(() => { const h=()=>setIsMobile(window.innerWidth<=768); window.addEventListener('resize',h); return()=>window.removeEventListener('resize',h); }, []);
-
-    const chapter = STORY[currentChapter];
-    const scene = chapter?.scenes[sceneIndex];
-    const dialog = scene?.dialogs[dialogIndex];
-
-    useEffect(() => { if(chapter){setShowChapterTitle(true);playBgm(chapter.bgm||'default');const t=setTimeout(()=>setShowChapterTitle(false),2500);return()=>clearTimeout(t);} }, [currentChapter]);
-
-    useEffect(() => {
-        if(!dialog||showChapterTitle)return;
-        if(dialog.sfx)playSfx(dialog.sfx);
-        setIsTyping(true);setDisplayedText('');setCanProceed(false);
-        let i=0;
-        const iv=setInterval(()=>{if(i<dialog.text.length){setDisplayedText(dialog.text.slice(0,i+1));i++;}else{clearInterval(iv);setIsTyping(false);setCanProceed(true);}},30);
-        return()=>clearInterval(iv);
-    }, [dialog, dialogIndex, sceneIndex, currentChapter, showChapterTitle]);
-
-    useEffect(() => { if(!isAuto||isTyping||!canProceed||showChoices)return; const t=setTimeout(proceed,1500); return()=>clearTimeout(t); }, [isAuto, isTyping, canProceed, showChoices]);
-
-    const determineEnding = useCallback(() => {
-        const values = HEROINES.map(h => affection[h] || 0);
-        const allHigh = values.every(v => v >= 50);
-        const allLow = values.every(v => v <= 30);
-        if (allHigh) return 'ending_harem';
-        if (allLow) return 'ending_bad';
-        const maxVal = Math.max(...values);
-        const maxIdx = values.indexOf(maxVal);
-        return `ending_${HEROINES[maxIdx]}`;
-    }, [affection]);
-
-    const proceed = useCallback(() => {
-        if(!canProceed||showChoices)return;
-        if(dialogIndex<scene.dialogs.length-1){setDialogIndex(d=>d+1);}
-        else if(scene.choices){setShowChoices(true);}
-        else if(scene.next){goToScene(scene.next);}
-        else if(sceneIndex<chapter.scenes.length-1){setSceneIndex(s=>s+1);setDialogIndex(0);}
-    }, [canProceed, showChoices, dialogIndex, scene, sceneIndex, chapter]);
-
-    const goToScene = (nextId) => {
-        if(nextId==='glitch'){onGlitch();return;}
-        if(nextId==='ending_check'){
-            const ending = determineEnding();
-            setCurrentChapter(ending);setSceneIndex(0);setDialogIndex(0);return;
-        }
-        if(nextId.startsWith('chapter')||nextId.startsWith('ending')){setCurrentChapter(nextId);setSceneIndex(0);setDialogIndex(0);return;}
-        const idx=chapter.scenes.findIndex(s=>s.id===nextId);
-        if(idx!==-1){setSceneIndex(idx);setDialogIndex(0);}
-    };
-
-    const handleChoice = (choice) => {
-        playSfx('decision');
-        setShowChoices(false);
-        if(choice.affection){
-            const newAff = {...affection};
-            let changes = [];
-            Object.entries(choice.affection).forEach(([char,delta])=>{
-                newAff[char] = Math.max(0, Math.min(100, (newAff[char]||0)+delta));
-                if(delta>0) changes.push({char,delta});
-            });
-            setAffection(newAff);
-            if(changes.length>0){
-                setAffectionPopup(changes);
-                setTimeout(()=>setAffectionPopup(null),1500);
-            }
-        }
-        goToScene(choice.next);
-    };
-
-    const handleClick = (e) => {
-        if(showChoices||e.target.closest('button')||showChapterTitle||showAffection||showSaveLoad)return;
-        if(isTyping){setDisplayedText(dialog.text);setIsTyping(false);setCanProceed(true);}else proceed();
-    };
-
-    // 세이브 함수
-    const handleSave = (slot) => {
-        const gameState = {
-            currentChapter,
-            sceneIndex,
-            dialogIndex,
-            affection
-        };
-        saveGame(slot, gameState);
-        playSfx('decision');
-    };
-
-    // 로드 함수
-    const handleLoadInGame = (saveData) => {
-        setCurrentChapter(saveData.currentChapter);
-        setSceneIndex(saveData.sceneIndex);
-        setDialogIndex(saveData.dialogIndex);
-        setAffection(saveData.affection);
-        setShowSaveLoad(null);
-        setShowChapterTitle(true);
-    };
-
-    if(!chapter||!scene)return null;
-
-    if(showChapterTitle)return(<div style={{height:'100vh',background:'#0a0810',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',animation:'fadeIn 0.5s'}}><div style={{fontSize:isMobile?'0.8rem':'1rem',color:'#6b6480',letterSpacing:'0.3em',marginBottom:'12px'}}>{chapter.title}</div><div style={{fontSize:isMobile?'1.5rem':'2.2rem',color:'#e8e6ed',fontFamily:"'Noto Serif KR',serif",fontWeight:700}}>{chapter.subtitle}</div></div>);
-
-    const getCharPosition = (chars,idx) => {
-        const count=chars.length;
-        if(count===1)return{left:'50%',transform:'translateX(-50%)'};
-        if(count===2)return idx===0?{left:'25%'}:{right:'25%'};
-        const positions=[{left:'5%'},{left:'18%'},{left:'31%'},{right:'31%'},{right:'18%'},{right:'5%'}];
-        return positions[idx]||positions[0];
-    };
-
-    const currentSpeaker = dialog?.speaker==='narrator'||dialog?.speaker==='you'?null:dialog?.speaker;
-    const speakerData = dialog?.speaker==='you'?{name:'당신',color:'#9d8ec2'}:dialog?.speaker==='narrator'?{name:'',color:'#7a7888'}:{name:characters[dialog?.speaker]?.name||'',color:characters[dialog?.speaker]?.color||'#fff'};
-    const getEmotionAnimation = (emotion) => ({happy:'happyBounce 1.5s ease-in-out infinite',angry:'angryTremble 1s ease-in-out infinite',sad:'sadDroop 4s ease-in-out infinite',default:'speaking 3s ease-in-out infinite'}[emotion]||'speaking 3s ease-in-out infinite');
-    const bgUrl = IMAGES[scene.bg];
-
-    return (
-        <div onClick={handleClick} style={{height:'100vh',position:'relative',background:'#0a0810',overflow:'hidden',cursor:showChoices?'default':'pointer'}}>
-            <div style={{position:'absolute',inset:0,background:bgUrl?`url(${bgUrl}) center/cover`:'#100e16',transition:'background 0.5s'}}>{!bgUrl&&<div style={{position:'absolute',top:'40%',left:'50%',transform:'translate(-50%,-50%)',color:'#1a1820',fontSize:'0.7rem'}}>[ {scene.bg} ]</div>}</div>
-
-            {/* 상단 UI */}
-            <div style={{position:'absolute',top:0,left:0,right:0,height:'42px',background:'linear-gradient(#0a0810,transparent)',display:'flex',alignItems:'center',padding:'0 16px',gap:'6px',zIndex:60}}>
-                <button onClick={e=>{e.stopPropagation();playSfx('click');setShowAffection(true);}} style={{padding:'4px 12px',fontSize:'0.68rem',background:'rgba(157,142,194,0.2)',border:'1px solid #9d8ec2',color:'#b8aed0',borderRadius:'10px',cursor:'pointer'}}>💕 호감도</button>
-                <button onClick={e=>{e.stopPropagation();playSfx('click');setShowSaveLoad('save');}} style={{padding:'4px 10px',fontSize:'0.65rem',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'10px',cursor:'pointer'}}>💾 SAVE</button>
-                <button onClick={e=>{e.stopPropagation();playSfx('click');setShowSaveLoad('load');}} style={{padding:'4px 10px',fontSize:'0.65rem',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'10px',cursor:'pointer'}}>📂 LOAD</button>
-                {!isMobile && <button onClick={e=>{e.stopPropagation();playSfx('click');if(onTitle)onTitle();}} style={{padding:'4px 12px',fontSize:'0.68rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'10px',cursor:'pointer'}}>TITLE</button>}
-            </div>
-
-            {/* 호감도 변동 팝업 */}
-            {affectionPopup && (
-                <div style={{position:'absolute',top:'80px',right:'20px',zIndex:100,animation:'slideDown 0.3s'}}>
-                    {affectionPopup.map((item,i)=>(
-                        <div key={i} style={{background:'rgba(157,142,194,0.2)',border:'1px solid #9d8ec2',borderRadius:'8px',padding:'8px 16px',marginBottom:'4px',display:'flex',alignItems:'center',gap:'8px',animation:'heartPop 0.5s'}}>
-                            <span style={{color:characters[item.char]?.color}}>{characters[item.char]?.name}</span>
-                            <span style={{color:'#d4a0a8'}}>+{item.delta} 💕</span>
-                        </div>
-                    ))}
-                </div>
-            )}
-
-            {/* 캐릭터들 */}
-            {scene.chars.map((char,idx)=>{
-                const isSpeaking=currentSpeaker===char.id;
-                const emotion=isSpeaking&&dialog?.emotion?dialog.emotion:char.emotion;
-                const charImg=IMAGES[char.id]?.[emotion]||IMAGES[char.id]?.default;
-                const pos=getCharPosition(scene.chars,idx);
-                return(<div key={`${char.id}-${idx}`} style={{position:'absolute',...pos,bottom:isMobile?'100px':'120px',width:isMobile?'140px':'260px',height:isMobile?'220px':'420px',display:'flex',justifyContent:'center',alignItems:'flex-end',transition:'filter 0.5s ease,transform 0.5s cubic-bezier(0.34,1.56,0.64,1)',filter:isSpeaking?'brightness(1) drop-shadow(0 0 12px rgba(255,255,255,0.12))':'brightness(0.5)',transform:isSpeaking?'scale(1.12)':'scale(0.95)',animation:isSpeaking?getEmotionAnimation(emotion):'idleBreathing 5s ease-in-out infinite',zIndex:isSpeaking?50:1}}>{charImg?<img src={charImg} style={{maxHeight:'100%',maxWidth:'100%',objectFit:'contain',objectPosition:'bottom'}}/>:<div style={{color:'#2a2836',fontSize:'0.55rem',padding:'15px',border:'1px dashed #2a2836',borderRadius:'4px'}}>[{characters[char.id]?.name}-{emotion}]</div>}</div>);
-            })}
-
-            {/* 대화창 */}
-            {!showChoices&&(<div style={{position:'absolute',bottom:0,left:0,right:0,padding:isMobile?'10px':'16px',zIndex:60}}><div style={{maxWidth:'880px',margin:'0 auto',background:'rgba(10,8,16,0.96)',border:'1px solid #252230',borderRadius:isMobile?'8px':'10px',padding:isMobile?'12px 14px':'18px 24px',position:'relative'}}>{speakerData.name&&(<div style={{position:'absolute',top:isMobile?'-11px':'-13px',left:isMobile?'12px':'20px',background:speakerData.color,padding:isMobile?'2px 12px':'3px 16px',borderRadius:'12px',color:'#0a0810',fontSize:isMobile?'0.72rem':'0.78rem',fontWeight:600}}>{speakerData.name}</div>)}<div style={{fontSize:isMobile?'0.88rem':'0.98rem',lineHeight:1.8,color:dialog?.speaker==='narrator'?'#7a7888':'#e8e6ed',fontStyle:dialog?.speaker==='narrator'?'italic':'normal',minHeight:isMobile?'42px':'52px',paddingTop:speakerData.name?'6px':0,display:'flex',alignItems:'center'}}><span>{displayedText}</span>{isTyping&&<span style={{borderRight:'2px solid #9d8ec2',marginLeft:'1px',animation:'blink 0.5s infinite'}}>&nbsp;</span>}{!isTyping&&canProceed&&<span style={{marginLeft:'8px',color:'#9d8ec2',fontSize:'0.75rem',animation:'arrowBounce 0.7s infinite'}}>▼</span>}</div><div style={{position:'absolute',bottom:isMobile?'7px':'10px',right:isMobile?'8px':'14px',display:'flex',gap:isMobile?'4px':'6px'}}>{['SKIP','AUTO','LOG'].map(t=>(<button key={t} onClick={e=>{e.stopPropagation();if(t==='AUTO')setIsAuto(!isAuto);playSfx('click');}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:t==='AUTO'&&isAuto?'rgba(157,142,194,0.2)':'transparent',border:`1px solid ${t==='AUTO'&&isAuto?'#9d8ec2':'#252230'}`,color:t==='AUTO'&&isAuto?'#b8aed0':'#6b6480',borderRadius:'8px',cursor:'pointer'}}>{t}</button>))}</div></div></div>)}
-
-            {/* 선택지 */}
-            {showChoices&&scene.choices&&(<div style={{position:'absolute',top:isMobile?'35%':'40%',left:'50%',transform:'translate(-50%,-50%)',display:'flex',flexDirection:'column',gap:isMobile?'8px':'12px',animation:'fadeIn 0.4s',zIndex:200,width:isMobile?'85%':'auto',maxWidth:'450px'}}>{scene.choices.map((choice,i)=>(<button key={i} onClick={()=>handleChoice(choice)} style={{padding:isMobile?'12px 16px':'18px 28px',fontSize:isMobile?'0.8rem':'0.95rem',background:'rgba(10,8,16,0.96)',border:'1px solid #3d3850',color:'#e8e6ed',cursor:'pointer',borderRadius:'8px',textAlign:'left',width:'100%'}}><span style={{color:'#9d8ec2',marginRight:'8px'}}>▸</span>{choice.text}{choice.affection&&<span style={{float:'right',color:'#d4a0a8',fontSize:'0.75rem'}}>💕</span>}</button>))}</div>)}
-
-            {/* 호감도 패널 */}
-            {showAffection && <AffectionPanel affection={affection} onClose={()=>setShowAffection(false)} isMobile={isMobile}/>}
-
-            {/* 세이브/로드 패널 */}
-            {showSaveLoad && (
-                <SaveLoadPanel 
-                    mode={showSaveLoad}
-                    onClose={() => setShowSaveLoad(null)}
-                    onSave={handleSave}
-                    onLoad={handleLoadInGame}
-                    currentState={{ currentChapter, sceneIndex, dialogIndex, affection }}
-                    isMobile={isMobile}
-                />
-            )}
-        </div>
-    );
-}
-
-function GlitchScreen({ onComplete }) {
-    const [phase, setPhase] = useState(0);
-    const msgs = ["ERROR: UNEXPECTED_ENTITY_DETECTED","WARNING: NARRATIVE_BREACH","FATAL: OBSERVER_OVERFLOW","SYSTEM FAILURE..."];
-    useEffect(() => { playSfx('glitch');stopBgm();const timers=[setTimeout(()=>setPhase(1),200),setTimeout(()=>setPhase(2),700),setTimeout(()=>setPhase(3),1200),setTimeout(()=>setPhase(4),1700),setTimeout(onComplete,3000)];return()=>timers.forEach(clearTimeout); }, [onComplete]);
-    return (<div style={{height:'100vh',background:'#050508',display:'flex',justifyContent:'center',alignItems:'center',position:'relative',overflow:'hidden'}}><div style={{position:'absolute',inset:0,background:'repeating-linear-gradient(0deg,rgba(0,0,0,0.08),rgba(0,0,0,0.08) 1px,transparent 1px,transparent 2px)'}}/>{phase>=1&&[...Array(12)].map((_,i)=>(<div key={i} style={{position:'absolute',top:`${Math.random()*100}%`,left:0,right:0,height:`${Math.random()*3+1}px`,background:`rgba(160,100,130,${Math.random()*0.3+0.1})`,transform:`translateX(${Math.random()*10-5}px)`}}/>))}<div style={{fontFamily:'monospace',fontSize:'0.9rem',color:'#a06880',textShadow:'0 0 8px rgba(160,100,130,0.6)',animation:'glitchText 0.12s infinite',textAlign:'center',zIndex:10}}>{phase>0&&msgs[phase-1]}</div></div>);
-}
-
-function CharacterSite() {
-    const [selected, setSelected] = useState(null);
-    const [showIntro, setShowIntro] = useState(true);
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-    useEffect(() => { const h=()=>setIsMobile(window.innerWidth<=768); window.addEventListener('resize',h); return()=>window.removeEventListener('resize',h); }, []);
-    useEffect(() => { const t=setTimeout(()=>setShowIntro(false),2500); return()=>clearTimeout(t); }, []);
-
-    if(showIntro)return(<div style={{height:'100vh',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',background:'#0a0810',animation:'fadeIn 0.7s',padding:'20px',textAlign:'center'}}><div style={{fontSize:'1rem',color:'#9d8ec2',marginBottom:'0.6rem'}}>당신은 미연시 『제국 최강이 되기까지』속으로</div><div style={{fontSize:'2rem',color:'#e8e6ed',fontWeight:700,fontFamily:"'Noto Serif KR',serif"}}>빙의했습니다.</div><div style={{marginTop:'2rem',padding:'12px 28px',background:'#14121a',borderRadius:'16px'}}><div style={{color:'#9d8ec2',fontSize:'0.7rem',marginBottom:'3px'}}>YOUR ROLE</div><div style={{color:'#d8d4e2',fontSize:'0.95rem'}}>이름 없는 엑스트라 기사</div></div></div>);
-
-    const list = Object.entries(characters);
-
-    return (
-        <div style={{minHeight:'100vh',background:'#0a0810',padding:isMobile?'20px 12px':'32px 18px'}}>
-            <header style={{textAlign:'center',marginBottom:isMobile?'22px':'36px'}}><div style={{fontSize:'0.65rem',color:'#6b6480',letterSpacing:'0.2em',marginBottom:'6px'}}>CHARACTER</div><h1 style={{fontFamily:"'Noto Serif KR',serif",fontSize:isMobile?'1.3rem':'1.7rem',color:'#e8e6ed'}}>등장인물</h1><div style={{width:'50px',height:'1px',background:'#3d3850',margin:'10px auto 0'}}/></header>
-
-            <div style={{display:'grid',gridTemplateColumns:isMobile?'repeat(2,1fr)':'repeat(auto-fit,minmax(170px,1fr))',gap:isMobile?'8px':'14px',maxWidth:'980px',margin:'0 auto'}}>
-                {list.map(([k,c],i)=>(<div key={k} onClick={()=>{playSfx('click');setSelected(k);}} style={{background:'#14121a',border:'1px solid #1a1820',borderRadius:'10px',overflow:'hidden',cursor:'pointer',animation:`slideUp 0.5s cubic-bezier(0.16,1,0.3,1) ${i*0.05}s both`}}><div style={{width:'100%',height:isMobile?'140px':'195px',background:'#100e16',display:'flex',justifyContent:'center',alignItems:'center',borderBottom:'1px solid #1a1820'}}>{IMAGES[`full${k.charAt(0).toUpperCase()+k.slice(1)}`]?<img src={IMAGES[`full${k.charAt(0).toUpperCase()+k.slice(1)}`]} style={{maxHeight:'100%',maxWidth:'100%',objectFit:'cover'}}/>:<span style={{color:'#2a2836',fontSize:'0.55rem'}}>[ {c.name} ]</span>}</div><div style={{padding:isMobile?'9px':'12px'}}><div style={{color:c.color,fontSize:isMobile?'0.52rem':'0.6rem',marginBottom:'2px'}}>{c.description}</div><h3 style={{color:'#e8e6ed',fontSize:isMobile?'0.85rem':'0.95rem',marginBottom:'4px',fontWeight:500}}>{c.fullName}</h3>{c.personality&&<div style={{color:'#6b6480',fontSize:isMobile?'0.62rem':'0.7rem'}}>{c.personality}</div>}</div></div>))}
-            </div>
-
-            {selected&&(<div onClick={()=>setSelected(null)} style={{position:'fixed',inset:0,background:'rgba(5,4,10,0.95)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000,padding:'12px',animation:'fadeIn 0.35s'}}><div onClick={e=>e.stopPropagation()} style={{width:'100%',maxWidth:isMobile?'100%':'800px',height:isMobile?'86vh':'76vh',maxHeight:isMobile?'none':'540px',background:'#100e16',border:`1px solid ${characters[selected].color}40`,borderRadius:'14px',display:'flex',flexDirection:isMobile?'column':'row',position:'relative',overflow:'hidden'}}><div style={{flex:isMobile?'0 0 40%':1,background:'#0a0810',display:'flex',justifyContent:'center',alignItems:'center',borderRight:isMobile?'none':'1px solid #1a1820',borderBottom:isMobile?'1px solid #1a1820':'none'}}>{IMAGES[`full${selected.charAt(0).toUpperCase()+selected.slice(1)}`]?<img src={IMAGES[`full${selected.charAt(0).toUpperCase()+selected.slice(1)}`]} style={{maxHeight:'100%',maxWidth:'100%',objectFit:'contain'}}/>:<div style={{color:'#2a2836',fontSize:'0.7rem'}}>[ 전신 이미지 ]</div>}</div><div style={{flex:1,padding:isMobile?'16px':'24px',display:'flex',flexDirection:'column',overflow:'auto'}}><button onClick={()=>setSelected(null)} style={{position:'absolute',top:'10px',right:'10px',background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',cursor:'pointer',fontSize:'0.9rem',borderRadius:'50%'}}>✕</button><div style={{marginBottom:'14px'}}><div style={{color:characters[selected].color,fontSize:'0.65rem',marginBottom:'4px'}}>{characters[selected].description}</div><h2 style={{color:'#e8e6ed',fontSize:isMobile?'1.3rem':'1.5rem',fontFamily:"'Noto Serif KR',serif"}}>{characters[selected].fullName}</h2></div><div style={{display:'flex',flexWrap:'wrap',gap:'5px',marginBottom:'14px'}}>{characters[selected].tags.map((t,i)=><span key={i} style={{padding:'3px 9px',background:`${characters[selected].color}18`,border:`1px solid ${characters[selected].color}30`,borderRadius:'10px',fontSize:'0.65rem',color:characters[selected].color}}>{t}</span>)}</div><div style={{width:'100%',height:'1px',background:'#1a1820',marginBottom:'14px'}}/><div style={{padding:'10px 14px',background:'#0a0810',borderRadius:'8px',borderLeft:`2px solid ${characters[selected].color}`,marginBottom:'14px'}}><div style={{color:'#6b6480',fontSize:'0.6rem',marginBottom:'3px'}}>QUOTE</div><div style={{color:'#c8c4d4',fontSize:isMobile?'0.82rem':'0.9rem',fontStyle:'italic',lineHeight:1.5}}>"{characters[selected].quote}"</div></div></div></div></div>)}
-
-            <footer style={{textAlign:'center',marginTop:isMobile?'30px':'45px',padding:'18px',borderTop:'1px solid #1a1820'}}><p style={{color:'#3d3850',fontSize:'0.6rem'}}>made by CowardMole</p></footer>
-        </div>
-    );
-}
-
-function App() {
-    const [screen, setScreen] = useState('popup');
-    const [startChapter, setStartChapter] = useState('chapter1');
-    const [startSceneIndex, setStartSceneIndex] = useState(0);
-    const [startDialogIndex, setStartDialogIndex] = useState(0);
-    const [affection, setAffection] = useState({...DEFAULT_AFFECTION});
-
-    const handleStart = () => { 
-        setAffection({...DEFAULT_AFFECTION}); 
-        setStartChapter('chapter1'); 
-        setStartSceneIndex(0);
-        setStartDialogIndex(0);
-        setScreen('game'); 
-    };
-    
-    const handleLoadFromTitle = (saveData) => {
-        setStartChapter(saveData.currentChapter);
-        setStartSceneIndex(saveData.sceneIndex);
-        setStartDialogIndex(saveData.dialogIndex);
-        setAffection(saveData.affection);
-        setScreen('game');
-    };
-
-    const handleTitle = () => {
-        setScreen('title');
-    };
-
-    return (
-        <div id="game-container" style={{minHeight:'100vh'}}>
-            {screen === 'popup' && <StartPopup onClose={()=>setScreen('title')}/>}
-            {screen === 'title' && <TitleScreen onStart={handleStart} onLoad={handleLoadFromTitle}/>}
-            {screen === 'game' && <GameScreen 
-                startChapter={startChapter} 
-                startSceneIndex={startSceneIndex}
-                startDialogIndex={startDialogIndex}
-                onGlitch={()=>setScreen('glitch')} 
-                onTitle={handleTitle}
-                affection={affection} 
-                setAffection={setAffection}
-            />}
-            {screen === 'glitch' && <GlitchScreen onComplete={()=>setScreen('site')}/>}
-            {screen === 'site' && <CharacterSite/>}
-        </div>
-    );
-}
-
-ReactDOM.render(<App/>, document.getElementById('root'));
-    </script>
-</body>
-</html>
+            { speaker:"narrator"
