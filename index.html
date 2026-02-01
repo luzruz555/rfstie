@@ -56,6 +56,47 @@ const { useState, useEffect, useCallback, useMemo } = React;
 */
 
 // ════════════════════════════════════════════════════════════════════════════
+// 💾 세이브/로드 시스템
+// ════════════════════════════════════════════════════════════════════════════
+const SAVE_SLOTS = 3;
+
+const saveGame = (slot, gameState) => {
+    const saveData = {
+        ...gameState,
+        timestamp: new Date().toISOString(),
+        version: '1.0'
+    };
+    localStorage.setItem(`visualnovel_save_${slot}`, JSON.stringify(saveData));
+    return true;
+};
+
+const loadGame = (slot) => {
+    const data = localStorage.getItem(`visualnovel_save_${slot}`);
+    if (data) {
+        return JSON.parse(data);
+    }
+    return null;
+};
+
+const getSaveInfo = (slot) => {
+    const data = localStorage.getItem(`visualnovel_save_${slot}`);
+    if (data) {
+        const parsed = JSON.parse(data);
+        return {
+            exists: true,
+            chapter: parsed.currentChapter,
+            timestamp: parsed.timestamp,
+            affection: parsed.affection
+        };
+    }
+    return { exists: false };
+};
+
+const deleteSave = (slot) => {
+    localStorage.removeItem(`visualnovel_save_${slot}`);
+};
+
+// ════════════════════════════════════════════════════════════════════════════
 // 1️⃣ 사운드 설정 - null을 파일 경로로 교체
 // ════════════════════════════════════════════════════════════════════════════
 const SOUNDS = {
@@ -513,13 +554,13 @@ function StartPopup({ onClose }) {
     return (
         <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.9)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:10000,animation:'fadeIn 0.5s'}}>
             <div style={{background:'#14121a',border:'1px solid #3d3850',borderRadius:'16px',padding:'32px',maxWidth:'500px',width:'90%',textAlign:'center'}}>
-                <h2 style={{color:'#9d8ec2',fontSize:'1.4rem',marginBottom:'20px',fontFamily:"'Noto Serif KR',serif"}}>📜 플레이 전 안내</h2>
+                <h2 style={{color:'#9d8ec2',fontSize:'1.4rem',marginBottom:'20px',fontFamily:"'Noto Serif KR',serif"}}>플레이 전 안내</h2>
                 <div style={{textAlign:'left',color:'#c8c4d4',fontSize:'0.9rem',lineHeight:1.8,marginBottom:'24px'}}>
                     <p style={{marginBottom:'12px'}}>• 본 게임의 <span style={{color:'#d4a0a8'}}>모든 일러스트는 AI로 생성</span>되었습니다.</p>
                     <p style={{marginBottom:'12px'}}>• 총 <span style={{color:'#c4b090'}}>8개의 챕터</span>로 구성되어 있습니다.</p>
                     <p style={{marginBottom:'12px'}}>• <span style={{color:'#8aadc0'}}>선택에 따라 호감도</span>가 변동됩니다.</p>
                     <p style={{marginBottom:'12px'}}>• 호감도에 따라 <span style={{color:'#a890b8'}}>8개의 엔딩</span> 중 하나로 분기됩니다.</p>
-                    <p style={{marginBottom:'12px',color:'#c49898'}}>• 세이브/로드 기능은 지원되지 않습니다.</p>
+                    <p style={{marginBottom:'12px',color:'#9d8ec2'}}>• 세이브/로드 기능이 지원됩니다.</p>
                     <p style={{color:'#6b6480',fontSize:'0.8rem'}}>※ 화면 클릭으로 대사를 넘길 수 있습니다.</p>
                 </div>
                 <button onClick={onClose} style={{padding:'12px 40px',background:'rgba(157,142,194,0.9)',border:'none',borderRadius:'8px',color:'#0a0810',fontSize:'1rem',fontWeight:600,cursor:'pointer'}}>
@@ -564,39 +605,240 @@ function AffectionPanel({ affection, onClose, isMobile }) {
     );
 }
 
-function TitleScreen({ onStart, onChapterSelect }) {
+// 세이브/로드 패널
+function SaveLoadPanel({ mode, onClose, onSave, onLoad, currentState, isMobile }) {
+    const [saves, setSaves] = useState([]);
+    const [confirmDelete, setConfirmDelete] = useState(null);
+
+    useEffect(() => {
+        const loadSaves = () => {
+            const saveInfos = [];
+            for (let i = 1; i <= SAVE_SLOTS; i++) {
+                saveInfos.push({ slot: i, ...getSaveInfo(i) });
+            }
+            setSaves(saveInfos);
+        };
+        loadSaves();
+    }, []);
+
+    const handleSave = (slot) => {
+        if (onSave) {
+            onSave(slot);
+            setSaves(prev => prev.map(s => 
+                s.slot === slot ? { slot, ...getSaveInfo(slot) } : s
+            ));
+        }
+    };
+
+    const handleLoad = (slot) => {
+        const data = loadGame(slot);
+        if (data && onLoad) {
+            onLoad(data);
+            onClose();
+        }
+    };
+
+    const handleDelete = (slot) => {
+        deleteSave(slot);
+        setSaves(prev => prev.map(s => 
+            s.slot === slot ? { slot, exists: false } : s
+        ));
+        setConfirmDelete(null);
+    };
+
+    const formatDate = (isoString) => {
+        if (!isoString) return '';
+        const date = new Date(isoString);
+        return `${date.getFullYear()}.${String(date.getMonth()+1).padStart(2,'0')}.${String(date.getDate()).padStart(2,'0')} ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`;
+    };
+
+    const getChapterTitle = (chapterId) => {
+        if (!chapterId) return '???';
+        const chapter = STORY[chapterId];
+        return chapter ? chapter.subtitle : chapterId;
+    };
+
+    return (
+        <div onClick={onClose} style={{
+            position: 'fixed', inset: 0, background: 'rgba(5,4,10,0.95)',
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
+            zIndex: 1000, animation: 'fadeIn 0.3s'
+        }}>
+            <div onClick={e => e.stopPropagation()} style={{
+                width: '90%', maxWidth: '450px', background: '#14121a',
+                border: '1px solid #3d3850', borderRadius: '12px',
+                padding: isMobile ? '16px' : '24px', position: 'relative'
+            }}>
+                {/* 헤더 */}
+                <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                    <div style={{ fontSize: '0.65rem', color: '#6b6480', letterSpacing: '0.15em', marginBottom: '4px' }}>
+                        {mode === 'save' ? 'SAVE GAME' : 'LOAD GAME'}
+                    </div>
+                    <h2 style={{ fontSize: isMobile ? '1.1rem' : '1.3rem', color: '#e8e6ed', fontFamily: "'Noto Serif KR', serif" }}>
+                        {mode === 'save' ? '게임 저장' : '게임 불러오기'}
+                    </h2>
+                </div>
+
+                {/* 닫기 버튼 */}
+                <button onClick={onClose} style={{
+                    position: 'absolute', top: '12px', right: '12px',
+                    background: 'transparent', border: '1px solid #3d3850',
+                    color: '#6b6480', width: '28px', height: '28px',
+                    cursor: 'pointer', fontSize: '0.9rem', borderRadius: '50%'
+                }}>✕</button>
+
+                {/* 세이브 슬롯 목록 */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {saves.map(save => (
+                        <div key={save.slot} style={{
+                            background: '#0a0810', border: '1px solid #2a2836',
+                            borderRadius: '8px', padding: '14px',
+                            display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                        }}>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                    <span style={{ color: '#9d8ec2', fontSize: '0.75rem', fontWeight: 600 }}>
+                                        SLOT {save.slot}
+                                    </span>
+                                    {save.exists && (
+                                        <span style={{ color: '#6b6480', fontSize: '0.65rem' }}>
+                                            {formatDate(save.timestamp)}
+                                        </span>
+                                    )}
+                                </div>
+                                {save.exists ? (
+                                    <div style={{ color: '#c8c4d4', fontSize: isMobile ? '0.8rem' : '0.9rem' }}>
+                                        📖 {getChapterTitle(save.chapter)}
+                                    </div>
+                                ) : (
+                                    <div style={{ color: '#4a4658', fontSize: isMobile ? '0.8rem' : '0.9rem', fontStyle: 'italic' }}>
+                                        빈 슬롯
+                                    </div>
+                                )}
+                            </div>
+                            
+                            <div style={{ display: 'flex', gap: '6px' }}>
+                                {confirmDelete === save.slot ? (
+                                    <>
+                                        <button onClick={() => handleDelete(save.slot)} style={{
+                                            padding: '6px 10px', fontSize: '0.7rem',
+                                            background: '#8b3a3a', border: 'none',
+                                            color: '#fff', borderRadius: '4px', cursor: 'pointer'
+                                        }}>삭제</button>
+                                        <button onClick={() => setConfirmDelete(null)} style={{
+                                            padding: '6px 10px', fontSize: '0.7rem',
+                                            background: '#3d3850', border: 'none',
+                                            color: '#c8c4d4', borderRadius: '4px', cursor: 'pointer'
+                                        }}>취소</button>
+                                    </>
+                                ) : (
+                                    <>
+                                        {mode === 'save' ? (
+                                            <button onClick={() => handleSave(save.slot)} style={{
+                                                padding: '6px 12px', fontSize: '0.75rem',
+                                                background: save.exists ? '#4a4658' : '#9d8ec2',
+                                                border: 'none', color: save.exists ? '#c8c4d4' : '#0a0810',
+                                                borderRadius: '4px', cursor: 'pointer', fontWeight: 500
+                                            }}>
+                                                {save.exists ? '덮어쓰기' : '저장'}
+                                            </button>
+                                        ) : (
+                                            <button 
+                                                onClick={() => save.exists && handleLoad(save.slot)} 
+                                                disabled={!save.exists}
+                                                style={{
+                                                    padding: '6px 12px', fontSize: '0.75rem',
+                                                    background: save.exists ? '#9d8ec2' : '#2a2836',
+                                                    border: 'none', 
+                                                    color: save.exists ? '#0a0810' : '#4a4658',
+                                                    borderRadius: '4px', 
+                                                    cursor: save.exists ? 'pointer' : 'not-allowed',
+                                                    fontWeight: 500
+                                                }}
+                                            >불러오기</button>
+                                        )}
+                                        {save.exists && (
+                                            <button onClick={() => setConfirmDelete(save.slot)} style={{
+                                                padding: '6px 8px', fontSize: '0.7rem',
+                                                background: 'transparent', border: '1px solid #5a3a3a',
+                                                color: '#a06060', borderRadius: '4px', cursor: 'pointer'
+                                            }}>🗑</button>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* 안내 문구 */}
+                <div style={{ 
+                    marginTop: '16px', padding: '10px', 
+                    background: '#0a0810', borderRadius: '6px',
+                    fontSize: '0.7rem', color: '#6b6480', textAlign: 'center'
+                }}>
+                    {mode === 'save' 
+                        ? '💡 같은 슬롯에 저장하면 기존 데이터가 덮어씌워집니다.'
+                        : '💡 저장된 시점부터 다시 플레이합니다.'}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function TitleScreen({ onStart, onLoad }) {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-    const [showChapters, setShowChapters] = useState(false);
+    const [showLoad, setShowLoad] = useState(false);
     useEffect(() => { const h=()=>setIsMobile(window.innerWidth<=768); window.addEventListener('resize',h); return()=>window.removeEventListener('resize',h); }, []);
 
     const TitleLogo = () => IMAGES.titleLogo ? <img src={IMAGES.titleLogo} alt="Title" style={{maxWidth:isMobile?'160px':'320px',height:'auto'}}/> : <div style={{padding:isMobile?'12px 18px':'18px 25px',border:'1px dashed #3d3850',borderRadius:'6px'}}><div style={{fontSize:'0.55rem',color:'#6b6480',marginBottom:'4px'}}>[ 타이틀 로고 ]</div><div style={{fontSize:isMobile?'1rem':'1.7rem',fontFamily:"'Noto Serif KR',serif",fontWeight:700,color:'#d8d4e2'}}>제국 최강이 되기까지</div></div>;
     const MenuBtn = ({text,onClick,main}) => (<button onClick={onClick} style={{padding:isMobile?'7px 14px':'12px 28px',fontSize:isMobile?'0.7rem':'0.88rem',fontWeight:main?600:400,background:main?'rgba(157,142,194,0.9)':'rgba(30,28,38,0.6)',border:main?'none':'1px solid rgba(100,90,120,0.3)',color:main?'#0a0810':'rgba(180,170,200,0.9)',borderRadius:'4px',cursor:'pointer',width:'100%',maxWidth:isMobile?'120px':'180px'}}>{main&&<span style={{marginRight:'4px'}}>▶</span>}{text}</button>);
     const CharArea = () => IMAGES.titleCharacter ? <img src={IMAGES.titleCharacter} style={{maxWidth:'62%',maxHeight:'62%',objectFit:'contain'}}/> : <div style={{color:'#2a2836',fontSize:'0.6rem',padding:'25px',border:'1px dashed #2a2836',borderRadius:'6px'}}>[ 캐릭터 이미지 ]</div>;
 
-    const chapters = Object.entries(STORY).filter(([id])=>id.startsWith('chapter')).map(([id,ch],i)=>({id,title:ch.subtitle,num:i+1}));
-
-    if (showChapters) return (
-        <div style={{height:'100vh',background:'#0a0810',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',padding:'20px'}}>
-            <h2 style={{fontSize:isMobile?'1.2rem':'1.5rem',color:'#9d8ec2',marginBottom:'24px',fontFamily:"'Noto Serif KR',serif"}}>Chapter Select</h2>
-            <div style={{display:'grid',gridTemplateColumns:isMobile?'1fr':'repeat(2,1fr)',gap:'10px',maxWidth:'500px',width:'100%'}}>
-                {chapters.map(ch=>(<button key={ch.id} onClick={()=>{playSfx('click');onChapterSelect(ch.id);}} style={{padding:'12px 16px',background:'rgba(30,28,38,0.8)',border:'1px solid #3d3850',borderRadius:'6px',color:'#e8e6ed',cursor:'pointer',textAlign:'left',display:'flex',alignItems:'center',gap:'10px'}}><span style={{color:'#9d8ec2',fontSize:'0.7rem'}}>CH.{ch.num}</span><span style={{fontSize:isMobile?'0.8rem':'0.9rem'}}>{ch.title}</span></button>))}
-            </div>
-            <button onClick={()=>setShowChapters(false)} style={{marginTop:'24px',padding:'8px 24px',background:'transparent',border:'1px solid #3d3850',borderRadius:'4px',color:'#6b6480',cursor:'pointer',fontSize:'0.8rem'}}>뒤로</button>
-        </div>
+    if (showLoad) return (
+        <SaveLoadPanel 
+            mode="load" 
+            onClose={() => setShowLoad(false)}
+            onLoad={onLoad}
+            isMobile={isMobile}
+        />
     );
 
     return (
         <div style={{height:'100vh',position:'relative',overflow:'hidden',background:IMAGES.titleBackground?`url(${IMAGES.titleBackground}) center/cover no-repeat`:'#0a0810'}}>
             <Particles />
-            {isMobile ? (<><div style={{position:'absolute',left:0,top:'50%',transform:'translateY(-50%)',width:'50%',display:'flex',justifyContent:'center',alignItems:'center'}}><CharArea/></div><div style={{position:'absolute',right:0,top:0,bottom:0,width:'50%',background:'linear-gradient(90deg,transparent,rgba(10,8,16,0.85) 15%)',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',zIndex:10}}><div style={{marginBottom:'14px'}}><TitleLogo/></div><div style={{display:'flex',flexDirection:'column',gap:'5px',alignItems:'center'}}><MenuBtn text="GAME START" onClick={()=>{playSfx('click');onStart();}} main/><MenuBtn text="CHAPTER" onClick={()=>{playSfx('click');setShowChapters(true);}}/></div></div></>) : (<><div style={{position:'absolute',left:'-3%',top:'50%',transform:'translateY(-45%)'}}><CharArea/></div><div style={{position:'absolute',right:0,top:0,bottom:0,width:'45%',background:'linear-gradient(90deg,transparent,rgba(10,8,16,0.85) 20%)',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',zIndex:10}}><div style={{marginBottom:'35px'}}><TitleLogo/></div><div style={{display:'flex',flexDirection:'column',gap:'8px',alignItems:'center'}}><MenuBtn text="GAME START" onClick={()=>{playSfx('click');onStart();}} main/><MenuBtn text="CHAPTER SELECT" onClick={()=>{playSfx('click');setShowChapters(true);}}/></div><div style={{position:'absolute',bottom:'16px',fontSize:'0.6rem',color:'#3d3850'}}>made by CowardMole</div></div></>)}
+            {isMobile ? (
+                <>
+                    <div style={{position:'absolute',left:0,top:'50%',transform:'translateY(-50%)',width:'50%',display:'flex',justifyContent:'center',alignItems:'center'}}><CharArea/></div>
+                    <div style={{position:'absolute',right:0,top:0,bottom:0,width:'50%',background:'linear-gradient(90deg,transparent,rgba(10,8,16,0.85) 15%)',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',zIndex:10}}>
+                        <div style={{marginBottom:'14px'}}><TitleLogo/></div>
+                        <div style={{display:'flex',flexDirection:'column',gap:'5px',alignItems:'center'}}>
+                            <MenuBtn text="GAME START" onClick={()=>{playSfx('click');onStart();}} main/>
+                            <MenuBtn text="LOAD" onClick={()=>{playSfx('click');setShowLoad(true);}}/>
+                        </div>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div style={{position:'absolute',left:'-3%',top:'50%',transform:'translateY(-45%)'}}><CharArea/></div>
+                    <div style={{position:'absolute',right:0,top:0,bottom:0,width:'45%',background:'linear-gradient(90deg,transparent,rgba(10,8,16,0.85) 20%)',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',zIndex:10}}>
+                        <div style={{marginBottom:'35px'}}><TitleLogo/></div>
+                        <div style={{display:'flex',flexDirection:'column',gap:'8px',alignItems:'center'}}>
+                            <MenuBtn text="GAME START" onClick={()=>{playSfx('click');onStart();}} main/>
+                            <MenuBtn text="LOAD GAME" onClick={()=>{playSfx('click');setShowLoad(true);}}/>
+                        </div>
+                        <div style={{position:'absolute',bottom:'16px',fontSize:'0.6rem',color:'#3d3850'}}>made by CowardMole</div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }
 
-function GameScreen({ startChapter, onGlitch, affection, setAffection }) {
+function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, onGlitch, onTitle, affection, setAffection }) {
     const [currentChapter, setCurrentChapter] = useState(startChapter || 'chapter1');
-    const [sceneIndex, setSceneIndex] = useState(0);
-    const [dialogIndex, setDialogIndex] = useState(0);
+    const [sceneIndex, setSceneIndex] = useState(startSceneIndex);
+    const [dialogIndex, setDialogIndex] = useState(startDialogIndex);
     const [displayedText, setDisplayedText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [showChoices, setShowChoices] = useState(false);
@@ -606,6 +848,7 @@ function GameScreen({ startChapter, onGlitch, affection, setAffection }) {
     const [showChapterTitle, setShowChapterTitle] = useState(true);
     const [showAffection, setShowAffection] = useState(false);
     const [affectionPopup, setAffectionPopup] = useState(null);
+    const [showSaveLoad, setShowSaveLoad] = useState(null);
 
     useEffect(() => { const h=()=>setIsMobile(window.innerWidth<=768); window.addEventListener('resize',h); return()=>window.removeEventListener('resize',h); }, []);
 
@@ -676,8 +919,30 @@ function GameScreen({ startChapter, onGlitch, affection, setAffection }) {
     };
 
     const handleClick = (e) => {
-        if(showChoices||e.target.closest('button')||showChapterTitle||showAffection)return;
+        if(showChoices||e.target.closest('button')||showChapterTitle||showAffection||showSaveLoad)return;
         if(isTyping){setDisplayedText(dialog.text);setIsTyping(false);setCanProceed(true);}else proceed();
+    };
+
+    // 세이브 함수
+    const handleSave = (slot) => {
+        const gameState = {
+            currentChapter,
+            sceneIndex,
+            dialogIndex,
+            affection
+        };
+        saveGame(slot, gameState);
+        playSfx('decision');
+    };
+
+    // 로드 함수
+    const handleLoadInGame = (saveData) => {
+        setCurrentChapter(saveData.currentChapter);
+        setSceneIndex(saveData.sceneIndex);
+        setDialogIndex(saveData.dialogIndex);
+        setAffection(saveData.affection);
+        setShowSaveLoad(null);
+        setShowChapterTitle(true);
     };
 
     if(!chapter||!scene)return null;
@@ -704,7 +969,9 @@ function GameScreen({ startChapter, onGlitch, affection, setAffection }) {
             {/* 상단 UI */}
             <div style={{position:'absolute',top:0,left:0,right:0,height:'42px',background:'linear-gradient(#0a0810,transparent)',display:'flex',alignItems:'center',padding:'0 16px',gap:'6px',zIndex:60}}>
                 <button onClick={e=>{e.stopPropagation();playSfx('click');setShowAffection(true);}} style={{padding:'4px 12px',fontSize:'0.68rem',background:'rgba(157,142,194,0.2)',border:'1px solid #9d8ec2',color:'#b8aed0',borderRadius:'10px',cursor:'pointer'}}>💕 호감도</button>
-                {!isMobile && ['TITLE'].map(t=>(<button key={t} onClick={e=>{e.stopPropagation();playSfx('click');}} style={{padding:'4px 12px',fontSize:'0.68rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'10px',cursor:'pointer'}}>{t}</button>))}
+                <button onClick={e=>{e.stopPropagation();playSfx('click');setShowSaveLoad('save');}} style={{padding:'4px 10px',fontSize:'0.65rem',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'10px',cursor:'pointer'}}>💾 SAVE</button>
+                <button onClick={e=>{e.stopPropagation();playSfx('click');setShowSaveLoad('load');}} style={{padding:'4px 10px',fontSize:'0.65rem',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'10px',cursor:'pointer'}}>📂 LOAD</button>
+                {!isMobile && <button onClick={e=>{e.stopPropagation();playSfx('click');if(onTitle)onTitle();}} style={{padding:'4px 12px',fontSize:'0.68rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'10px',cursor:'pointer'}}>TITLE</button>}
             </div>
 
             {/* 호감도 변동 팝업 */}
@@ -736,6 +1003,18 @@ function GameScreen({ startChapter, onGlitch, affection, setAffection }) {
 
             {/* 호감도 패널 */}
             {showAffection && <AffectionPanel affection={affection} onClose={()=>setShowAffection(false)} isMobile={isMobile}/>}
+
+            {/* 세이브/로드 패널 */}
+            {showSaveLoad && (
+                <SaveLoadPanel 
+                    mode={showSaveLoad}
+                    onClose={() => setShowSaveLoad(null)}
+                    onSave={handleSave}
+                    onLoad={handleLoadInGame}
+                    currentState={{ currentChapter, sceneIndex, dialogIndex, affection }}
+                    isMobile={isMobile}
+                />
+            )}
         </div>
     );
 }
@@ -776,16 +1055,43 @@ function CharacterSite() {
 function App() {
     const [screen, setScreen] = useState('popup');
     const [startChapter, setStartChapter] = useState('chapter1');
+    const [startSceneIndex, setStartSceneIndex] = useState(0);
+    const [startDialogIndex, setStartDialogIndex] = useState(0);
     const [affection, setAffection] = useState({...DEFAULT_AFFECTION});
 
-    const handleStart = () => { setAffection({...DEFAULT_AFFECTION}); setStartChapter('chapter1'); setScreen('game'); };
-    const handleChapterSelect = (chapterId) => { setStartChapter(chapterId); setScreen('game'); };
+    const handleStart = () => { 
+        setAffection({...DEFAULT_AFFECTION}); 
+        setStartChapter('chapter1'); 
+        setStartSceneIndex(0);
+        setStartDialogIndex(0);
+        setScreen('game'); 
+    };
+    
+    const handleLoadFromTitle = (saveData) => {
+        setStartChapter(saveData.currentChapter);
+        setStartSceneIndex(saveData.sceneIndex);
+        setStartDialogIndex(saveData.dialogIndex);
+        setAffection(saveData.affection);
+        setScreen('game');
+    };
+
+    const handleTitle = () => {
+        setScreen('title');
+    };
 
     return (
         <div id="game-container" style={{minHeight:'100vh'}}>
             {screen === 'popup' && <StartPopup onClose={()=>setScreen('title')}/>}
-            {screen === 'title' && <TitleScreen onStart={handleStart} onChapterSelect={handleChapterSelect}/>}
-            {screen === 'game' && <GameScreen startChapter={startChapter} onGlitch={()=>setScreen('glitch')} affection={affection} setAffection={setAffection}/>}
+            {screen === 'title' && <TitleScreen onStart={handleStart} onLoad={handleLoadFromTitle}/>}
+            {screen === 'game' && <GameScreen 
+                startChapter={startChapter} 
+                startSceneIndex={startSceneIndex}
+                startDialogIndex={startDialogIndex}
+                onGlitch={()=>setScreen('glitch')} 
+                onTitle={handleTitle}
+                affection={affection} 
+                setAffection={setAffection}
+            />}
             {screen === 'glitch' && <GlitchScreen onComplete={()=>setScreen('site')}/>}
             {screen === 'site' && <CharacterSite/>}
         </div>
