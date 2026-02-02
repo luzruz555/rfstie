@@ -791,7 +791,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
 
     const getCharPosition = (chars,idx) => {
         const count=chars.length;
-        if(count===1)return{left:'50%',transform:'translateX(-50%)'};
+        if(count===1)return{left:'30%',transform:'translateX(-50%)'};
         if(count===2)return idx===0?{left:'25%'}:{right:'25%'};
         const positions=[{left:'5%'},{left:'18%'},{left:'31%'},{right:'31%'},{right:'18%'},{right:'5%'}];
         return positions[idx]||positions[0];
@@ -836,8 +836,8 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                     <div key={`${char.id}-${idx}`} style={{
                         position:'absolute',...pos,
                         bottom:isMobile?'80px':'100px',  // 더 아래로
-                        width:isMobile?'180px':'340px',   // 크기 증가
-                        height:isMobile?'280px':'520px',  // 크기 증가
+                        width:isMobile?'180px':'400px',   // 크기 증가
+                        height:isMobile?'280px':'580px',  // 크기 증가
                         display:'flex',justifyContent:'center',alignItems:'flex-end',
                         transition:'filter 0.5s ease,transform 0.5s cubic-bezier(0.34,1.56,0.64,1)',
                         filter:isSpeaking?'brightness(1) drop-shadow(0 0 12px rgba(255,255,255,0.12))':'brightness(0.5)',
