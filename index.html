@@ -35,6 +35,24 @@
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: #16141c; }
     ::-webkit-scrollbar-thumb { background: #6b6480; border-radius: 2px; }
+    @keyframes textShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
+    @keyframes textPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+    @keyframes textGrow { 0%{transform:scale(0.8);opacity:0.5} 100%{transform:scale(1);opacity:1} }
+    @keyframes textShrink { 0%{transform:scale(1.1);opacity:1} 100%{transform:scale(0.95);opacity:0.7} }
+    @keyframes textFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-2px)} }
+    @keyframes textFlicker { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+    .text-shake { animation: textShake 0.3s infinite; display: inline-block; }
+    .text-big { font-size: 1.3em; font-weight: 700; }
+    .text-small { font-size: 0.75em; opacity: 0.7; }
+    .text-whisper { font-size: 0.7em; opacity: 0.6; font-style: italic; }
+    .text-grow { animation: textGrow 0.8s ease-out forwards; display: inline-block; }
+    .text-shrink { animation: textShrink 0.8s ease-out forwards; display: inline-block; }
+    .text-pulse { animation: textPulse 0.5s ease-in-out 3; display: inline-block; }
+    .text-float { animation: textFloat 2s ease-in-out infinite; display: inline-block; }
+    .text-flicker { animation: textFlicker 0.1s infinite; display: inline-block; }
+    .text-emphasis { color: #d4a0a8; font-weight: 600; }
+    .text-thought { color: #8a8898; font-style: italic; }
     </style>
 </head>
 <body>
