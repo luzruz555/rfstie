@@ -339,7 +339,8 @@ const STORY = {
                 { speaker:"narrator", text:"그날 밤, 나는 혼자 펑펑 울었다." },
                 { speaker:"narrator", text:"리제트는 문 밖에서 밤새 기다렸다고, 나중에 들었다." },
             ], choices:[
-                { speaker:"narrator", text:"(조용히 리제트의 손을 꼭 잡는다.)", next:"1-5d", affection:{lizette:+10}},
+                { text:"(조용히 리제트의 손을 꼭 잡는다.)", next:"1-5d", affection:{lizette:+10}},
+            ]},
 
             { id:"1-5d", bgm:"romantic", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
                 { speaker:"narrator", text:"—현재." },
@@ -365,7 +366,7 @@ const STORY = {
             { id:"1-6b", bg:"bgRoom", chars:[], dialogs:[
                 { speaker:"narrator", text:"문을 열자, 본가의 집사가 서 있었다." },
                 { speaker:"narrator", text:"평소에는 나를 거들떠보지도 않던 자가." },
-                { speaker:"집사, text:"카이른 님." },
+                { speaker:"집사", text:"카이른 님." },
                 { speaker:"narrator", text:"...님? 내가 잘못 들었나 싶을정도로 당황스러운 호칭이 나왔다.", effect:"grow" },
             ]},
 
@@ -408,7 +409,7 @@ const STORY = {
                 { speaker:"narrator", text:"황위 계승." },
                 { speaker:"narrator", text:"......미친 거 아냐, 이거?" },
             ], choices:[
-                { text:"잠깐 정리할 시간이 필요해."", next:"1-6g", affection:{lizette:+2} },
+                { text:"잠깐 정리할 시간이 필요해.", next:"1-6g", affection:{lizette:+2} },
                 { text:"...리제트.", next:"1-6h", affection:{lizette:+8} },
                 { text:"(아무 말 없이 멍하니 서 있는다)", next:"1-6i", affection:{lizette:+3} }
             ]},
@@ -506,7 +507,7 @@ const STORY = {
                 { speaker:"narrator", text:"리제트가 두 손을 꽉 쥐었다." },
                 { speaker:"lizette", text:"가, 갈게요...! 어디든 따라갈게요...!", emotion:"happy" },
                 { speaker:"narrator", text:"...왠지 뭔가 불안한 기분이 드는 건 기분 탓이겠지." },
-            ], next:"1-8"a},
+            ], next:"1-8a"},
 
             { id:"1-7f", bg:"bgNight", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
                 { speaker:"you", text:"네가 걱정해주니까, 더 조심할게." },
@@ -546,7 +547,7 @@ const STORY = {
                 { speaker:"narrator", text:"리제트의 눈에 행복함이 가득해보였다." },
                 { speaker:"narrator", text:"새어나오는 웃음을 참으려는 모습이 눈앞에 들어온다." },
                 { speaker:"you", text:"웃어도 돼." },
-                { speaker:"narrator", text:"리제트의 얼굴이 확 붉어진다." }
+                { speaker:"narrator", text:"리제트의 얼굴이 확 붉어진다." },
                 { speaker:"lizette", text:"...?!", emotion:"happy", effect:"shake" },
                 { speaker:"narrator", text:"당황하던 모습은 잠시, 리제트는 환하게 웃어보인다." },
                 { speaker:"lizette", text:"고, 고마워요 도련님!", emotion:"happy", effect:"small" },
@@ -559,7 +560,7 @@ const STORY = {
                 { speaker:"narrator", text:"...드디어 이 곳을 떠나는구나." },
                 { speaker:"narrator", text:"18년 동안 갇혀 살던 곳." },
                 { speaker:"narrator", text:"증오하지만, 동시에 그리워지기도 할 것 같은 곳." },
-            ] next:"1-10" },
+            ], next:"1-10" },
 
             { id:"1-10", bgm:"peaceful", bg:"bgGarden", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
                 { speaker:"narrator", text:"마차에 올랐다." },
