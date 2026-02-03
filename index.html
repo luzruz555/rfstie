@@ -1104,7 +1104,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         else if(sceneIndex<chapter.scenes.length-1){setSceneIndex(s=>s+1);setDialogIndex(0);}
     }, [canProceed, showChoices, dialogIndex, scene, sceneIndex, chapter, currentChapter]);
 
-    // BACK 버튼 함수
+    // BACK 버튼
     const goBack = useCallback(() => {
         if (history.length === 0) return;
         const prev = history[history.length - 1];
