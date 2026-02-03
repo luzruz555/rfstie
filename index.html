@@ -1237,9 +1237,9 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                 return(
                     <div key={`${char.id}-${idx}`} style={{
                         position:'absolute',...pos,
-                        bottom:isMobile?'80px':'100px',  // 더 아래로
-                        width:isMobile?'180px':'450px',   // 크기 증가
-                        height:isMobile?'280px':'630px',  // 크기 증가
+                        bottom:isMobile?'50px':'100px',  // 더 아래로
+                        width:isMobile?'240px':'450px',   // 크기 증가
+                        height:isMobile?'340px':'630px',  // 크기 증가
                         display:'flex',justifyContent:'center',alignItems:'flex-end',
                         transition:'filter 0.5s ease,transform 0.5s cubic-bezier(0.34,1.56,0.64,1)',
                         filter:isSpeaking?'brightness(1) drop-shadow(0 0 12px rgba(255,255,255,0.12))':'brightness(0.5)',
