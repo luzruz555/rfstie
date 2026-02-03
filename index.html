@@ -1302,10 +1302,10 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                             <button onClick={e=>{e.stopPropagation();playSfx('click');if(isTyping){setDisplayedText(dialog.text);setIsTyping(false);setCanProceed(true);}else{proceed();}}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'8px',cursor:'pointer'}}>NEXT</button>
                             <button onClick={e=>{e.stopPropagation();setIsAuto(!isAuto);playSfx('click');}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:isAuto?'rgba(157,142,194,0.2)':'transparent',border:`1px solid ${isAuto?'#9d8ec2':'#252230'}`,color:isAuto?'#b8aed0':'#6b6480',borderRadius:'8px',cursor:'pointer'}}>AUTO</button>
                             <button onClick={e=>{e.stopPropagation();playSfx('click');setShowLog(true);}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'8px',cursor:'pointer'}}>LOG</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        )}
+            )}
 
             {/* 선택지 */}
             {showChoices&&scene.choices&&(
