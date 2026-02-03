@@ -1299,9 +1299,9 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                         </div>
                         <div style={{position:'absolute',bottom:isMobile?'7px':'10px',right:isMobile?'8px':'14px',display:'flex',gap:isMobile?'4px':'6px'}}>
                             <button onClick={e=>{e.stopPropagation();playSfx('click');goBack();}} disabled={history.length===0} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:history.length>0?'rgba(100,80,120,0.3)':'transparent',border:`1px solid ${history.length>0?'#6b5a80':'#252230'}`,color:history.length>0?'#a090b0':'#3d3850',borderRadius:'8px',cursor:history.length>0?'pointer':'not-allowed'}}>◀ BACK</button>
-                            <button onClick={e=>{e.stopPropagation();playSfx('click');if(isTyping){setDisplayedText(dialog.text);setIsTyping(false);setCanProceed(true);}else{proceed();}}} style={{...}}>NEXT</button>
+                            <button onClick={e=>{e.stopPropagation();playSfx('click');if(isTyping){setDisplayedText(dialog.text);setIsTyping(false);setCanProceed(true);}else{proceed();}}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'8px',cursor:'pointer'}}>NEXT</button>
                             <button onClick={e=>{e.stopPropagation();setIsAuto(!isAuto);playSfx('click');}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:isAuto?'rgba(157,142,194,0.2)':'transparent',border:`1px solid ${isAuto?'#9d8ec2':'#252230'}`,color:isAuto?'#b8aed0':'#6b6480',borderRadius:'8px',cursor:'pointer'}}>AUTO</button>
-                            <button onClick={e=>{e.stopPropagation();playSfx('click');setShowLog(true);}} style={{...}}>LOG</button></div>
+                            <button onClick={e=>{e.stopPropagation();playSfx('click');setShowLog(true);}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'8px',cursor:'pointer'}}>LOG</button>
                     </div>
                 </div>
             )}
