@@ -721,9 +721,9 @@ const STORY = {
             { speaker:"you", text:"...목숨을 구해줘서 고마운데, 좀 심하지 않나." },
             { speaker:"elia", text:"뭐? 살려줬으면 감사합니다, 아니야?", emotion:"angry" },
         ], choices:[
-            { text:"감사합니다. 덕분에 살았습니다.", next:"2-6a", affection:{karen:+5}, {elia:+3} },
-            { text:"고맙긴 한데... 말투가 좀 그렇네.", next:"2-6b", affection:{elia:+3}, {karen:+3} },
-            { text:"(무시하고 리제트 상태부터 확인한다)", next:"2-6c", affection:{lizette:+5}, {elia:+3} }
+            { text:"감사합니다. 덕분에 살았습니다.", next:"2-6a", affection:{karen:+5, elia:+3} },
+            { text:"고맙긴 한데... 말투가 좀 그렇네.", next:"2-6b", affection:{elia:+3, karen:+3} },
+            { text:"(무시하고 리제트 상태부터 확인한다)", next:"2-6c", affection:{lizette:+5, elia:+3} }
         ]},
 
         { id:"2-6a", bg:"bgCarriage", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"default"}], dialogs:[
@@ -784,7 +784,7 @@ const STORY = {
         ], choices:[
             { text:"괜찮아. 신경 안 써도 돼.", next:"2-8a", affection:{elia:+5, karen:+3} },
             { text:"일어나. 무릎 꿇을 필요 없어.", next:"2-8b", affection:{karen:+5} },
-            { text:"...꼴 좀 봐.", next:"2-8c", affection:{elia:+8}, {karen:-3} }
+            { text:"...꼴 좀 봐.", next:"2-8c", affection:{elia:+8, karen:-3} }
         ]},
 
         { id:"2-8a", bg:"bgCarriage", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"default"}], dialogs:[
