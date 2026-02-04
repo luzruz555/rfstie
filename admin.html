@@ -51,9 +51,9 @@
             elia: '엘리아',
             luna: '루나'
         };
-        const DEFAULT_AFFECTION = { lizette: 30, selene: 10, adeline: 15, karen: 10, elia: 10, luna: 0 };
 
         let STORY = null;
+        let DEFAULT_AFFECTION = null;
 
         function checkPassword() {
             const pw = document.getElementById('password').value;
@@ -78,7 +78,18 @@
                 const response = await fetch('index.html?t=' + Date.now());
                 const html = await response.text();
                 
-                // STORY 객체 추출 (더 정확한 패턴)
+                // DEFAULT_AFFECTION 추출
+                const affectionMatch = html.match(/const DEFAULT_AFFECTION\s*=\s*\{([^}]+)\}/);
+                if (affectionMatch) {
+                    const affectionCode = 'const DEFAULT_AFFECTION = {' + affectionMatch[1] + '}';
+                    const affFunc = new Function(affectionCode + '\nreturn DEFAULT_AFFECTION;');
+                    DEFAULT_AFFECTION = affFunc();
+                } else {
+                    // 못 찾으면 기본값 사용
+                    DEFAULT_AFFECTION = { lizette: 30, selene: 10, adeline: 15, karen: 10, elia: 10, luna: 0 };
+                }
+                
+                // STORY 객체 추출
                 const storyStart = html.indexOf('const STORY = {');
                 if (storyStart === -1) {
                     throw new Error('STORY 데이터를 찾을 수 없습니다.');
@@ -94,7 +105,6 @@
                     const char = html[i];
                     const prevChar = html[i-1];
                     
-                    // 문자열 처리
                     if ((char === '"' || char === "'" || char === '`') && prevChar !== '\\') {
                         if (!inString) {
                             inString = true;
@@ -118,7 +128,6 @@
                 
                 const storyCode = html.substring(storyStart, storyEnd);
                 
-                // STORY 파싱
                 const func = new Function(storyCode + '\nreturn STORY;');
                 STORY = func();
 
@@ -133,10 +142,10 @@
         function renderData() {
             let html = '';
 
-            // 기본 호감도 표시
+            // 기본 호감도 표시 (index.html에서 읽어온 값)
             html += `<div class="summary">
-                <strong>📌 기본 호감도:</strong> 
-                ${HEROINES.map(h => `${HEROINE_NAMES[h]}(${DEFAULT_AFFECTION[h]})`).join(', ')}
+                <strong>📌 기본 호감도 (index.html에서 읽어옴):</strong><br>
+                ${HEROINES.map(h => `${HEROINE_NAMES[h]}(${DEFAULT_AFFECTION[h] || 0})`).join(', ')}
             </div>`;
 
             // 챕터별 총합 저장
@@ -175,7 +184,6 @@
                             ${HEROINES.map(h => `<th>${HEROINE_NAMES[h]}</th>`).join('')}
                         </tr>`;
 
-                    // 씬별 최대값 추적 (같은 씬의 선택지 중 최대만)
                     const sceneMaxes = {};
                     
                     choices.forEach(c => {
@@ -198,7 +206,6 @@
                             
                             html += `<td class="${cssClass}">${display}</td>`;
 
-                            // 씬별 최대/최소 추적
                             if (!sceneMaxes[c.sceneId]) {
                                 sceneMaxes[c.sceneId] = {};
                                 HEROINES.forEach(hh => sceneMaxes[c.sceneId][hh] = { max: -999, min: 999 });
@@ -212,7 +219,6 @@
 
                     html += `</table>`;
 
-                    // 챕터 요약
                     html += `<h3>${chapter.title} 요약</h3><div class="summary">`;
                     
                     HEROINES.forEach(h => {
@@ -251,7 +257,7 @@
                 </tr>`;
             
             HEROINES.forEach(h => {
-                const start = DEFAULT_AFFECTION[h];
+                const start = DEFAULT_AFFECTION[h] || 0;
                 const minTotal = start + chapterTotals[h].min;
                 const maxTotal = Math.min(100, start + chapterTotals[h].max);
                 const rawMax = start + chapterTotals[h].max;
@@ -273,7 +279,8 @@
                 <strong>⚠️ 자동 밸런스 체크:</strong><br>`;
             
             HEROINES.forEach(h => {
-                const maxTotal = DEFAULT_AFFECTION[h] + chapterTotals[h].max;
+                const start = DEFAULT_AFFECTION[h] || 0;
+                const maxTotal = start + chapterTotals[h].max;
                 if (maxTotal >= 100) {
                     html += `<span class="positive">✓ ${HEROINE_NAMES[h]}: 100 도달 가능 (최대 ${maxTotal})</span><br>`;
                 } else if (maxTotal < 50) {
@@ -285,7 +292,6 @@
             
             html += `</div>`;
 
-            // 마지막 업데이트 시간
             html += `<p class="zero" style="margin-top: 30px; text-align: center;">
                 마지막 업데이트: ${new Date().toLocaleString('ko-KR')}
             </p>`;
