@@ -1446,7 +1446,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
     const getCharPosition = (chars,idx) => {
         const count=chars.length;
         if(count===1)return{left:'30%',transform:'translateX(-50%)'};
-        if(count===2)return idx===0?{left:'25%'}:{right:'25%'};
+        if(count===2)return idx===0?{left:'10%'}:{right:'10%'};
         const positions=[{left:'5%'},{left:'18%'},{left:'31%'},{right:'31%'},{right:'18%'},{right:'5%'}];
         return positions[idx]||positions[0];
     };
