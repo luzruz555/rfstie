@@ -11,7 +11,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+    img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
     html, body { font-family: 'Noto Sans KR', sans-serif; background: #0a0810; color: #e8e6ed; min-height: 100vh; overflow-x: hidden; }
     #root { min-height: 100vh; }
     @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
@@ -1655,7 +1656,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
             let changes = [];
             Object.entries(choice.affection).forEach(([char,delta])=>{
                 newAff[char] = Math.max(0, Math.min(100, (newAff[char]||0)+delta));
-                if(delta>0) changes.push({char,delta});
+                if(delta !== 0) changes.push({char,delta});
             });
             setAffection(newAff);
             if(changes.length>0){
@@ -1739,9 +1740,9 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
             {affectionPopup && (
                 <div style={{position:'absolute',top:'80px',right:'20px',zIndex:100,animation:'slideDown 0.3s'}}>
                     {affectionPopup.map((item,i)=>(
-                        <div key={i} style={{background:'rgba(157,142,194,0.2)',border:'1px solid #9d8ec2',borderRadius:'8px',padding:'8px 16px',marginBottom:'4px',display:'flex',alignItems:'center',gap:'8px',animation:'heartPop 0.5s'}}>
+                        <div key={i} style={{background:item.delta>0?'rgba(157,142,194,0.2)':'rgba(180,80,80,0.2)',border:`1px solid ${item.delta>0?'#9d8ec2':'#b05050'}`,borderRadius:'8px',padding:'8px 16px',marginBottom:'4px',display:'flex',alignItems:'center',gap:'8px',animation:'heartPop 0.5s'}}>
                             <span style={{color:characters[item.char]?.color}}>{characters[item.char]?.name}</span>
-                            <span style={{color:'#d4a0a8'}}>+{item.delta} 💕</span>
+                            <span style={{color:item.delta>0?'#d4a0a8':'#e07070'}}>{item.delta>0?'+':''}{item.delta} {item.delta>0?'💕':'💔'}</span>
                         </div>
                     ))}
                 </div>
