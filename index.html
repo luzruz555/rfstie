@@ -246,9 +246,9 @@ const STORY = {
                 { speaker:"narrator", text:"리제트의 눈가가 서서히  젖어들기 시작한다." },
                 { speaker:"narrator", text:"...어떻게 하지." },
             ], choices:[
-                { text:"괜찮아? 다친 데 없어?", next:"1-3a", affection:{lizette:+10} },
-                { text:"(말없이 옆에 앉아 깨진 그릇 조각들을 줍는다.)", next:"1-3b", affection:{lizette:+7} },
-                { text:"울지 마. 죽은 또 쑤면 되잖아.", next:"1-3c", affection:{lizette:+5} },
+                { text:"괜찮아? 다친 데 없어?", next:"1-3a", affection:{lizette:+7} },
+                { text:"(말없이 옆에 앉아 깨진 그릇 조각들을 줍는다.)", next:"1-3b", affection:{lizette:+5} },
+                { text:"울지 마. 죽은 또 쑤면 되잖아.", next:"1-3c", affection:{lizette:+0} },
                 { text:"...하아. 조심 좀 하지.", next:"1-3d", affection:{lizette:-5} }
             ]},
 
@@ -411,7 +411,7 @@ const STORY = {
                 { speaker:"narrator", text:"......미친 거 아냐, 이거?" },
             ], choices:[
                 { text:"잠깐 정리할 시간이 필요해.", next:"1-6g", affection:{lizette:+2} },
-                { text:"...리제트.", next:"1-6h", affection:{lizette:+8} },
+                { text:"...리제트.", next:"1-6h", affection:{lizette:+5} },
                 { text:"(아무 말 없이 멍하니 서 있는다)", next:"1-6i", affection:{lizette:+3} }
             ]},
 
@@ -478,9 +478,9 @@ const STORY = {
                 { speaker:"narrator", text:"리제트의 눈이 촉촉해졌다." },
                 { speaker:"lizette", text:"도련님이 다치시면... 저... 저는...", emotion:"sad", effect:"shrink" },
             ], choices:[
-                { text:"울지 마. 괜찮을 거야.", next:"1-7d", affection:{lizette:+5} },
-                { text:"..나랑 같이 가자.", next:"1-7e", affection:{lizette:+15} },
-                { text:"네가 걱정해주니까, 더 조심할게.", next:"1-7f", affection:{lizette:+10} }
+                { text:"울지 마. 괜찮을 거야.", next:"1-7d", affection:{lizette:+3} },
+                { text:"..나랑 같이 가자.", next:"1-7e", affection:{lizette:+8} },
+                { text:"네가 걱정해주니까, 더 조심할게.", next:"1-7f", affection:{lizette:+5} }
             ]},
 
         // ─── 선택지 6 분기 ───
@@ -722,7 +722,7 @@ const STORY = {
                 { speaker:"you", text:"...목숨을 구해줘서 고마운데, 좀 심하지 않나." },
                 { speaker:"elia", text:"뭐? 살려줬으면 감사합니다, 아니야?", emotion:"angry" },
             ], choices:[
-                { text:"감사합니다. 덕분에 살았습니다.", next:"2-6a", affection:{karen:+5, elia:+3} },
+                { text:"감사합니다. 덕분에 살았습니다.", next:"2-6a", affection:{karen:+7, elia:+5} },
                 { text:"고맙긴 한데... 말투가 좀 그렇네.", next:"2-6b", affection:{elia:+3, karen:+3} },
                 { text:"(무시하고 리제트 상태부터 확인한다)", next:"2-6c", affection:{lizette:+5, elia:+3} }
             ]},
@@ -783,9 +783,9 @@ const STORY = {
                 { speaker:"elia", text:"............", emotion:"sad" },
                 { speaker:"elia", text:"...엘, 엘리아 폰 베른트입니다. 아까는... 그... 실례했습니다.", emotion:"sad", effect:"shrink" },
             ], choices:[
-                { text:"괜찮아. 신경 안 써도 돼.", next:"2-8a", affection:{elia:+5, karen:+3} },
-                { text:"일어나. 무릎 꿇을 필요 없어.", next:"2-8b", affection:{karen:+5} },
-                { text:"...꼴 좀 봐.", next:"2-8c", affection:{elia:+8, karen:-3} }
+                { text:"괜찮아. 신경 안 써도 돼.", next:"2-8a", affection:{elia:+5, karen:+5} },
+                { text:"일어나. 무릎 꿇을 필요 없어.", next:"2-8b", affection:{karen:+5, elia:+3} },
+                { text:"...꼴 좀 봐.", next:"2-8c", affection:{elia:+8, karen:-5} }
             ]},
 
             { id:"2-8a", bg:"bgCarriage", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"default"}], dialogs:[
@@ -887,7 +887,7 @@ const STORY = {
             ], choices:[
                 { text:"리제트, 조금 떨어져 있어.", next:"3-2a", affection:{lizette:-5} },
                 { text:"(아무 말 없이 앞서 걷는다)", next:"3-2b", affection:{lizette:-3} },
-                { text:"...여기선 말 걸지 마.", next:"3-2c", affection:{lizette:-10} }
+                { text:"...여기선 말 걸지 마.", next:"3-2c", affection:{lizette:-15} }
             ]},
 
         // ─── 선택지 분기 ───
@@ -936,24 +936,24 @@ const STORY = {
             { id:"3-4", bgm:"romantic", bg:"bgThrone", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
                 { speaker:"narrator", text:"알현실 안." },
                 { speaker:"narrator", text:"화려한 샹들리에 아래, 한 여인이 서 있었다." },
-                { speaker:"narrator", text:"보랏빛 머리카락에, 우아한 미소." },
+                { speaker:"narrator", text:"백금발에, 우아한 미소." },
                 { speaker:"selene", text:"어머, 드디어 오셨네요.", emotion:"happy" },
                 { speaker:"narrator", text:"여인이 천천히 다가왔다." },
                 { speaker:"selene", text:"반가워요... 오빠.", emotion:"happy" },
                 { speaker:"you", text:"...오빠?" },
-                { speaker:"selene", text:"후후, 저는 셀레네예요. 제1황녀.", emotion:"happy" },
+                { speaker:"selene", text:"후후, 저는 셀레네예요. 제 1황녀죠.", emotion:"happy" },
                 { speaker:"selene", text:"오빠가 오시길 정말 기다렸어요.", emotion:"happy" },
                 { speaker:"narrator", text:"부드러운 미소. 다정한 목소리." },
                 { speaker:"narrator", text:"하지만 왠지... 뭔가 이상한 느낌이 들었다." },
             ], choices:[
-                { text:"반갑습니다, 셀레네 전하.", next:"3-4a", affection:{selene:+3} },
+                { text:"반갑습니다, 황녀님.", next:"3-4a", affection:{selene:+3} },
                 { text:"...기다렸다고요?", next:"3-4b", affection:{selene:+5} },
-                { text:"(경계하며) 처음 뵙겠습니다.", next:"3-4c", affection:{selene:+0} }
+                { text:"(경계하며) 처음 뵙겠습니다.", next:"3-4c", affection:{selene:+7} }
             ]},
 
             { id:"3-4a", bg:"bgThrone", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"you", text:"반갑습니다, 셀레네 전하." },
-                { speaker:"selene", text:"전하라니, 너무 딱딱해요.", emotion:"happy" },
+                { speaker:"you", text:"반갑습니다, 황녀님." },
+                { speaker:"selene", text:"황녀님이라니, 너무 딱딱해요.", emotion:"happy" },
                 { speaker:"selene", text:"그냥 셀레네라고 불러주세요. 우리 가족이잖아요.", emotion:"happy" },
                 { speaker:"narrator", text:"가족." },
                 { speaker:"narrator", text:"한 번도 들어본 적 없는 단어였다." },
@@ -982,7 +982,7 @@ const STORY = {
         // ─── 3-5: 아델린 등장 ───
             { id:"3-5", bg:"bgThrone", chars:[{id:"selene",pos:"left",emotion:"default"},{id:"adeline",pos:"right",emotion:"angry"}], dialogs:[
                 { speaker:"narrator", text:"그때, 알현실 문이 열렸다." },
-                { speaker:"narrator", text:"금발에 차가운 눈빛. 또 다른 여인이 들어왔다." },
+                { speaker:"narrator", text:"은발에 차가운 눈빛. 또 다른 여인이 들어왔다." },
                 { speaker:"adeline", text:"...이게 그 사생아야?", emotion:"angry" },
                 { speaker:"selene", text:"아델린, 그런 말 하면 안 되지.", emotion:"default" },
                 { speaker:"adeline", text:"사실을 말한 것뿐이야.", emotion:"angry" },
@@ -992,7 +992,7 @@ const STORY = {
                 { speaker:"adeline", text:"갑자기 나타나서 황위를 노린다? 웃기지도 않아.", emotion:"angry" },
             ], choices:[
                 { text:"노리는 게 아닙니다. 불려온 것뿐이에요.", next:"3-5a", affection:{adeline:+3} },
-                { text:"...싫어하시는 건 알겠습니다.", next:"3-5b", affection:{adeline:+5} },
+                { text:"그래도 정당한 경쟁자인걸요.", next:"3-5b", affection:{adeline:+3} },
                 { text:"(침묵)", next:"3-5c", affection:{adeline:+0} }
             ]},
 
@@ -1004,9 +1004,9 @@ const STORY = {
             ], next:"3-6"},
 
             { id:"3-5b", bg:"bgThrone", chars:[{id:"selene",pos:"left",emotion:"default"},{id:"adeline",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"...싫어하시는 건 알겠습니다." },
+                { speaker:"you", text:"그래도 정당한 경쟁자인걸요." },
                 { speaker:"adeline", text:"뭐?", emotion:"default" },
-                { speaker:"you", text:"갑자기 나타난 사람을 좋아할 이유는 없으니까요." },
+                { speaker:"you", text:"맞잖아요. 저에게도 기회는 있는거 아닌가요?" },
                 { speaker:"adeline", text:"............", emotion:"default" },
                 { speaker:"narrator", text:"아델린이 잠시 말을 잃었다." },
                 { speaker:"adeline", text:"...이상한 녀석.", emotion:"default" },
@@ -1028,12 +1028,12 @@ const STORY = {
                 { speaker:"adeline", text:"황위 계승 시험.", emotion:"default" },
                 { speaker:"selene", text:"오빠도 알고 계시죠? 셋 중 한 명이 황제가 된다는 것.", emotion:"default" },
                 { speaker:"you", text:"...들었습니다." },
-                { speaker:"adeline", text:"시험은 세 번. 실패하면 탈락이야.", emotion:"default" },
+                { speaker:"adeline", text:"어쩌피 내가 될건데 뭘 시험을 본다고, 흥.", emotion:"default" },
                 { speaker:"selene", text:"걱정 마세요. 제가 도와드릴게요.", emotion:"happy" },
-                { speaker:"adeline", text:"흥, 난 안 도와.", emotion:"default" },
+                { speaker:"adeline", text:"언니 말을 믿어? 경쟁자인데 도움은 무슨, 다 꿍꿍이가 있는거지.", emotion:"default" },
                 { speaker:"narrator", text:"두 황녀가 서로를 쳐다봤다." },
                 { speaker:"narrator", text:"부드러운 미소와 차가운 눈빛." },
-                { speaker:"narrator", text:"...이 두 사람 사이에 끼어있는 건가." },
+                { speaker:"narrator", text:"...이 두 사람과 경쟁해야하는건가." },
             ]},
 
             { id:"3-6b", bg:"bgThrone", chars:[{id:"selene",pos:"left",emotion:"default"},{id:"adeline",pos:"right",emotion:"default"}], dialogs:[
@@ -1060,16 +1060,16 @@ const STORY = {
                 { speaker:"narrator", text:"아까 한 말이 마음에 걸렸다." },
                 { speaker:"narrator", text:"사과해야 할까." },
             ], choices:[
-                { text:"아까... 미안.", next:"3-7a", affection:{lizette:+8} },
-                { text:"(말없이 옆에 선다)", next:"3-7b", affection:{lizette:+3} },
-                { text:"방으로 가자.", next:"3-7c", affection:{lizette:+0} }
+                { text:"아까... 미안.", next:"3-7a", affection:{lizette:+5} },
+                { text:"(말없이 옆에 선다)", next:"3-7b", affection:{lizette:+0} },
+                { text:"방으로 가자.", next:"3-7c", affection:{lizette:-3} }
             ]},
 
             { id:"3-7a", bg:"bgHall", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
                 { speaker:"you", text:"아까... 미안." },
                 { speaker:"lizette", text:"...!", emotion:"sad" },
                 { speaker:"narrator", text:"리제트가 고개를 들었다." },
-                { speaker:"you", text:"황궁이라서 긴장했어. 근데 그게 핑계가 되진 않지." },
+                { speaker:"you", text:"남들의 시선을 신경쓰느라 너한테 괜히.." },
                 { speaker:"lizette", text:"아니에요... 저야말로 생각이 짧았어요.", emotion:"sad" },
                 { speaker:"lizette", text:"도련님 입장도 생각했어야 했는데...", emotion:"sad" },
                 { speaker:"you", text:"네 잘못 아니야." },
@@ -1107,8 +1107,8 @@ const STORY = {
 
             { id:"3-8b", bg:"bgRoom", chars:[], dialogs:[
                 { speaker:"narrator", text:"황녀들." },
-                { speaker:"narrator", text:"셀레네는 친절했지만, 왠지 불안하다." },
-                { speaker:"narrator", text:"아델린은 대놓고 적대적이다." },
+                { speaker:"narrator", text:"셀레네는 친절했지만, 아델린의 말대로 분명히 댓가없는 친절은 아닐것이다." },
+                { speaker:"narrator", text:"반면, 아델린은 대놓고 적대적이다." },
                 { speaker:"narrator", text:"그리고 일주일 뒤에 시험." },
                 { speaker:"narrator", text:"...정신없는 하루였다." },
                 { speaker:"narrator", text:"침대에 누웠다." },
