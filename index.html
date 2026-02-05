@@ -1585,7 +1585,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         const handleKeyDown = (e) => {
             if (showLog || showSaveLoad || showChoices || !dialog) return;
     
-            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+            if (e.key === 'ArrowRight') {
                 e.preventDefault();
                 if (isTyping) {
                     setDisplayedText(dialog.text);
@@ -1596,7 +1596,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                 }
             }
     
-            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            if (e.key === 'ArrowLeft') {
                 e.preventDefault();
                 goBack();
             }
