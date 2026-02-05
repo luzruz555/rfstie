@@ -2333,6 +2333,9 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
             const ending = determineEnding('a');
             setCurrentChapter(ending);setSceneIndex(0);setDialogIndex(0);return;
         }
+        if(scene?.ending === 'badend1') {
+    // 배드엔딩 화면 표시 (재도전 버튼 포함)
+        }
         if(nextId==='ending_check_b'){
             const ending = determineEnding('b');
             setCurrentChapter(ending);setSceneIndex(0);setDialogIndex(0);return;
@@ -2444,33 +2447,6 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                 </div>
             )}
 
-            {showLog && (
-    <div onClick={()=>setShowLog(false)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.9)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000}}>
-        <div onClick={e=>e.stopPropagation()} style={{width:'90%',maxWidth:'600px',height:'70vh',background:'#14121a',border:'1px solid #3d3850',borderRadius:'12px',display:'flex',flexDirection:'column'}}>
-            {/* 헤더 */}
-            <div style={{padding:'16px',borderBottom:'1px solid #252230',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                <h3 style={{color:'#9d8ec2',fontSize:'1rem'}}>📜 대화 기록</h3>
-                <button onClick={()=>setShowLog(false)} style={{background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',borderRadius:'50%',cursor:'pointer'}}>✕</button>
-            </div>
-            {/* 로그 내용 */}
-            <div style={{flex:1,overflow:'auto',padding:'16px',display:'flex',flexDirection:'column',gap:'12px'}}>
-                {dialogLog.map((log,i) => {
-                    const isNarrator = log.speaker === 'narrator';
-                    const isYou = log.speaker === 'you';
-                    const charData = characters[log.speaker];
-                    const name = isYou ? '당신' : isNarrator ? '' : (charData?.name || log.speaker);
-                    const color = isYou ? '#9d8ec2' : isNarrator ? '#6b6480' : (charData?.color || '#c8c4d4');
-                    return (
-                        <div key={i} style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',borderRadius:'6px',borderLeft:`3px solid ${color}`}}>
-                                    {name && <div style={{color:color,fontSize:'0.75rem',fontWeight:600,marginBottom:'4px'}}>{name}</div>}
-                                    <div style={{color:isNarrator?'#7a7888':'#e8e6ed',fontSize:'0.85rem',fontStyle:isNarrator?'italic':'normal',lineHeight:1.6}}>{log.text}</div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            </div>
-        )}
             {scene?.ending === 'badend1' && (
                 <div style={{
                     position: 'absolute',
@@ -2520,6 +2496,34 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                     </div>
                 </div>
             )}
+
+            {showLog && (
+    <div onClick={()=>setShowLog(false)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.9)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000}}>
+        <div onClick={e=>e.stopPropagation()} style={{width:'90%',maxWidth:'600px',height:'70vh',background:'#14121a',border:'1px solid #3d3850',borderRadius:'12px',display:'flex',flexDirection:'column'}}>
+            {/* 헤더 */}
+            <div style={{padding:'16px',borderBottom:'1px solid #252230',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                <h3 style={{color:'#9d8ec2',fontSize:'1rem'}}>📜 대화 기록</h3>
+                <button onClick={()=>setShowLog(false)} style={{background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',borderRadius:'50%',cursor:'pointer'}}>✕</button>
+            </div>
+            {/* 로그 내용 */}
+            <div style={{flex:1,overflow:'auto',padding:'16px',display:'flex',flexDirection:'column',gap:'12px'}}>
+                {dialogLog.map((log,i) => {
+                    const isNarrator = log.speaker === 'narrator';
+                    const isYou = log.speaker === 'you';
+                    const charData = characters[log.speaker];
+                    const name = isYou ? '당신' : isNarrator ? '' : (charData?.name || log.speaker);
+                    const color = isYou ? '#9d8ec2' : isNarrator ? '#6b6480' : (charData?.color || '#c8c4d4');
+                    return (
+                        <div key={i} style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',borderRadius:'6px',borderLeft:`3px solid ${color}`}}>
+                                    {name && <div style={{color:color,fontSize:'0.75rem',fontWeight:600,marginBottom:'4px'}}>{name}</div>}
+                                    <div style={{color:isNarrator?'#7a7888':'#e8e6ed',fontSize:'0.85rem',fontStyle:isNarrator?'italic':'normal',lineHeight:1.6}}>{log.text}</div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+        )}
 
             {/* 캐릭터들  */}
             {scene.chars.map((char,idx)=>{
