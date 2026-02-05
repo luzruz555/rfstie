@@ -1583,8 +1583,8 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
 
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if (showLog || showSave || showCharacters || showChoices || !dialog) return;
-        
+            if (showLog || showSaveLoad || showChoices || !dialog) return;
+    
             if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
                 e.preventDefault();
                 if (isTyping) {
@@ -1595,16 +1595,16 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                     proceed();
                 }
             }
-        
+    
             if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
                 e.preventDefault();
                 goBack();
             }
         };
-    
+
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [isTyping, canProceed, showLog, showSave, showCharacters, showChoices, dialog]);
+    }, [isTyping, canProceed, showLog, showSaveLoad, showChoices, dialog]);
 
     const determineEnding = useCallback((route) => {
         const values = HEROINES.map(h => affection[h] || 0);
