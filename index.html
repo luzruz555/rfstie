@@ -11,2697 +11,312 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-    img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
-    html, body { font-family: 'Noto Sans KR', sans-serif; background: #0a0810; color: #e8e6ed; min-height: 100vh; overflow-x: hidden; }
-    #root { min-height: 100vh; }
-    @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
-    @keyframes slideUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
-    @keyframes slideDown { 0% { opacity: 0; transform: translateY(-20px); } 100% { opacity: 1; transform: translateY(0); } }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-    @keyframes arrowBounce { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(3px); opacity: 0.4; } }
-    @keyframes glitchText { 0%, 100% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(2px, -2px); } 60% { transform: translate(-2px, -2px); } 80% { transform: translate(2px, 2px); } }
-    @keyframes particleDrift { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: 0.7; } 90% { opacity: 0.7; } 100% { transform: translate(20px, -80px); opacity: 0; } }
-    @keyframes idleBreathing { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-    @keyframes speaking { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-    @keyframes happyBounce { 0%, 100% { transform: translateY(0); } 20% { transform: translateY(-12px); } 40% { transform: translateY(-4px); } 60% { transform: translateY(-8px); } 80% { transform: translateY(-2px); } }
-    @keyframes angryTremble { 0%, 100% { transform: translateX(0) translateY(-2px); } 25% { transform: translateX(-3px) translateY(-2px); } 50% { transform: translateX(3px) translateY(-3px); } 75% { transform: translateX(-2px) translateY(-2px); } }
-    @keyframes sadDroop { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(4px) rotate(-0.5deg); } }
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-    @keyframes heartPop { 0% { transform: scale(0); opacity: 0; } 50% { transform: scale(1.3); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
-    
-    /* 텍스트 효과 애니메이션 */
-    @keyframes textShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
-    @keyframes textPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
-    @keyframes textGrow { 0%{transform:scale(0.8);opacity:0.5} 100%{transform:scale(1);opacity:1} }
-    @keyframes textShrink { 0%{transform:scale(1.1);opacity:1} 100%{transform:scale(0.95);opacity:0.7} }
-    @keyframes textFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
-    @keyframes textFlicker { 0%,100%{opacity:1} 50%{opacity:0.4} }
-    
-    .text-shake { animation: textShake 0.15s infinite; display: inline-block; }
-    .text-big { font-size: 1.3em; font-weight: 700; }
-    .text-small { font-size: 0.8em; opacity: 0.7; }
-    .text-whisper { font-size: 0.75em; opacity: 0.6; font-style: italic; }
-    .text-grow { animation: textGrow 0.8s ease-out forwards; display: inline-block; }
-    .text-shrink { animation: textShrink 0.8s ease-out forwards; display: inline-block; }
-    .text-pulse { animation: textPulse 0.5s ease-in-out 3; display: inline-block; }
-    .text-float { animation: textFloat 2s ease-in-out infinite; display: inline-block; }
-    .text-flicker { animation: textFlicker 0.1s infinite; display: inline-block; }
-    .text-emphasis { color: #d4a0a8; font-weight: 600; }
-    .text-thought { color: #8a8898; font-style: italic; }
-    
-    .rotate-notice { display: none; position: fixed; inset: 0; background: #0a0810; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; color: #9d8ec2; }
-    .rotate-notice .icon { font-size: 3rem; margin-bottom: 1rem; animation: rotateIcon 2s ease-in-out infinite; }
-    @keyframes rotateIcon { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(90deg); } }
-    @media (max-width: 768px) and (orientation: portrait) { .rotate-notice { display: flex; } #game-container { display: none !important; } }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: #16141c; }
-    ::-webkit-scrollbar-thumb { background: #6b6480; border-radius: 2px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; user-select: none; }
+    body { font-family: 'Noto Sans KR', sans-serif; background: #0a0810; color: #e8e6ed; overflow: hidden; }
+    #root { height: 100vh; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+    .text-shake { animation: shake 0.1s infinite; display: inline-block; }
     </style>
 </head>
 <body>
     <div id="root"></div>
-    <div class="rotate-notice"><div class="icon">📱</div><div style="font-size: 1.1rem; margin-bottom: 0.5rem;">화면을 가로로 돌려주세요</div><div style="font-size: 0.8rem; color: #6b6480;">Please rotate your device</div></div>
     
     <script type="text/babel">
 const { useState, useEffect, useCallback, useMemo } = React;
 
 // ════════════════════════════════════════════════════════════════════════════
-// 세이브/로드 시스템
+// 설정 및 데이터
 // ════════════════════════════════════════════════════════════════════════════
 const SAVE_SLOTS = 3;
 
-const saveGame = (slot, gameState) => {
-    const saveData = { ...gameState, timestamp: new Date().toISOString(), version: '1.0' };
-    localStorage.setItem(`visualnovel_save_${slot}`, JSON.stringify(saveData));
-    return true;
-};
-
-const loadGame = (slot) => {
-    const data = localStorage.getItem(`visualnovel_save_${slot}`);
-    return data ? JSON.parse(data) : null;
-};
-
-const getSaveInfo = (slot) => {
-    const data = localStorage.getItem(`visualnovel_save_${slot}`);
-    if (data) {
-        const parsed = JSON.parse(data);
-        return { exists: true, chapter: parsed.currentChapter, timestamp: parsed.timestamp, affection: parsed.affection };
-    }
-    return { exists: false };
-};
-
-const deleteSave = (slot) => { localStorage.removeItem(`visualnovel_save_${slot}`); };
-
-// ════════════════════════════════════════════════════════════════════════════
-// 사운드 설정
-// ════════════════════════════════════════════════════════════════════════════
-const SOUNDS = {
-    bgmDefault: 'audio/default.mp3',
-    bgmTense: 'audio/tense.mp3',
-    bgmRomantic: 'audio/romantic.mp3',
-    bgmPeaceful: 'audio/peaceful.mp3',  // ← 추가됨
-    sfxClick: 'audio/click_sound.mp3',
-    sfxDecision: 'audio/dcs.mp3',
-    sfxSurprise: null,
-    sfxHeartbeat: 'audio/heartbeat.mp3',
-    sfxSword: 'audio/sword.mp3',
-    sfxGlitch: 'audio/glitch.mp3',
-};
-
-let currentBgm = null;
-const playBgm = (type) => { 
-    if(currentBgm){currentBgm.pause();} 
-    const src=SOUNDS[`bgm${type.charAt(0).toUpperCase()+type.slice(1)}`]; 
-    if(src){currentBgm=new Audio(src);currentBgm.loop=true;currentBgm.volume=0.3;currentBgm.play().catch(()=>{});} 
-};
-const stopBgm = () => { if(currentBgm){currentBgm.pause();currentBgm=null;} };
-const playSfx = (type) => { const src=SOUNDS[`sfx${type.charAt(0).toUpperCase()+type.slice(1)}`]; if(src)new Audio(src).play().catch(()=>{}); };
-
-// ════════════════════════════════════════════════════════════════════════════
-// 이미지 설정
-// ════════════════════════════════════════════════════════════════════════════
 const IMAGES = {
-    titleLogo: 'img/tlogo.png',
-    titleBackground: 'img/tbackground.png',
-    titleCharacter: 'img/tchar.png',
-    bgPalace: 'img/bg_palace.png',
-    bgGarden: 'img/bg_garden.png',
-    bgHall: 'img/bg_hall.png',
-    bgRoom: 'img/bg_room.png',
-    bgTraining: 'img/bg_training.png',
-    bgThrone: 'img/bg_throne.png',
-    bgNight: 'img/bg_night.png',
-    bgEnding: 'img/bg_ending.png',
-    bgCarriage: 'img/bg_carriage.png',
-    bgDungeon: 'img/bg_dungeon.png',
-    lizette: { default:'img/l.png', happy:'img/lizette_happy.png', sad:'img/lizette_sad.png', angry:'img/lizette_angry.png' },
-    adeline: { default:'img/a.png', happy:'img/adeline_happy.png', sad:'img/adeline_sad.png', angry:'img/adeline_angry.png' },
-    karen: { default:'img/c.png', happy:'img/karen_happy.png', sad:'img/karen_sad.png', angry:'img/karen_angry.png' },
-    elia: { default:'img/e.png', happy:'img/elia_happy.png', sad:'img/elia_sad.png', angry:'img/elia_angry.png' },
-    selene: { default:'img/s.png', happy:'img/selene_happy.png', sad:'img/selene_sad.png', angry:'img/selene_angry.png' },
-    luna: { default:'img/lu.png', happy:'img/luna_happy.png', sad:'img/luna_sad.png', angry:'img/luna_angry.png' },
-    fullKairen:'img/full_kairen.png', fullLizette:'img/fulll.png', fullAdeline:'img/fulla.png',
-    fullKaren:'img/fullc.png', fullElia:'img/fulle.png', fullSelene:'img/fulls.png', fullLuna:'img/fulllu.png',
+    bgRoom: 'img/bg_room.png', bgGarden: 'img/bg_garden.png', bgHall: 'img/bg_hall.png', 
+    bgThrone: 'img/bg_throne.png', bgCarriage: 'img/bg_carriage.png', bgNight: 'img/bg_night.png',
+    bgBlack: '',
+    lizette: { default:'img/l.png', happy:'img/l_happy.png', sad:'img/l_sad.png', angry:'img/l_angry.png' },
+    adeline: { default:'img/a.png', happy:'img/a_happy.png', sad:'img/a_sad.png', angry:'img/a_angry.png' },
+    selene: { default:'img/s.png', happy:'img/s_happy.png' },
+    karen: { default:'img/c.png' },
+    elia: { default:'img/e.png' },
+    luna: { default:'img/lu.png' }
 };
 
-// ════════════════════════════════════════════════════════════════════════════
-// 캐릭터 정보
-// ═══════════════════════════════════════════════════════════════════════════
 const characters = {
-    kairen: { name:"카이른", fullName:"카이른 폰 레이센", color:"#9d8ec2", description:"숨겨진 황자", tags:["#숨겨진_황자","#먼치킨"], quote:"모두가 내게 소중한 존재야." },
-    lizette: { name:"리제트", fullName:"리제트 밀러", color:"#d4a0a8", personality:"소심·집착", description:"소꿉친구 하녀", tags:["#소꿉친구","#하녀","#집착"], quote:"저는 항상 도련님 편이에요.." },
-    adeline: { name:"아델린", fullName:"아델린 폰 크로이츠", color:"#c4b090", personality:"츤데레", description:"2황녀", tags:["#2황녀","#츤데레"], quote:"착각하지 마세요." },
-    karen: { name:"카렌", fullName:"카렌 폰 슈테른", color:"#8aadc0", personality:"무감정", description:"변경백", tags:["#변경백","#쿨뷰티"], quote:"...명령에 따를 뿐이다." },
-    elia: { name:"엘리아", fullName:"엘리아 폰 베른트", color:"#c49898", personality:"욕데레", description:"하관", tags:["#하관","#욕쟁이"], quote:"너 같은 멍청이는 내가 없으면 안 돼." },
-    selene: { name:"셀레네", fullName:"셀레네 아르카디엔", color:"#a890b8", personality:"소유욕", description:"1황녀", tags:["#1황녀","#소유욕"], quote:"폐하는 제 것이에요." },
-    luna: { name:"루나", fullName:"루나", color:"#c8909c", personality:"메스가키", description:"기사의 동생", tags:["#기사의_동생","#메스가키"], quote:"흥, 쳐다보지 마." }
+    lizette: { name: "리제트", color: "#d4a0a8" },
+    adeline: { name: "아델린", color: "#c4b090" },
+    selene: { name: "셀레네", color: "#a890b8" },
+    karen: { name: "카렌", color: "#8aadc0" },
+    elia: { name: "엘리아", color: "#c49898" },
+    luna: { name: "루나", color: "#c8909c" },
+    narrator: { name: "", color: "#ffffff" },
+    you: { name: "카이른", color: "#9d8ec2" }
 };
 
-// ════════════════════════════════════════════════════════════════════════════
-// 스토리 데이터 
-// ════════════════════════════════════════════════════════════════════════════
 const STORY = {
-    // ═══════════════════════════════════════════════════════════════
-    // 챕터 1
-    // ═══════════════════════════════════════════════════════════════
     chapter1: {
         title: "Chapter 1", subtitle: "사생아의 비밀", bgm: "default",
         scenes: [
             { id:"1-1", bg:"bgRoom", chars:[], dialogs:[
-                { speaker:"narrator", text:"아르카디엔 제국." },
-                { speaker:"narrator", text:"대륙의 절반을 지배하는, 천 년 역사의 강대국." },
-                { speaker:"narrator", text:"그 제국의 변방, 레이센 후작가의 외딴 별채에..." },
-                { speaker:"narrator", text:"공식적으로 존재하지 않는 아이가 살고 있었다." },
-                { speaker:"narrator", text:"바로 나, 카이른." },
-                { speaker:"narrator", text:"성은 있으나 쓸 수 없고, 이름은 있으나 불리지 않는다." },
-                { speaker:"narrator", text:"사생아." },
-                { speaker:"narrator", text:"그것이 18년간 나를 정의한 단어였다." },
-                { speaker:"narrator", text:"어머니가 누구인지는 안다. 10년 전에 돌아가셨으니까." },
-                { speaker:"narrator", text:"하지만 아버지가 누구인지는... 아무도 알려주지 않았다." },
-                { speaker:"narrator", text:"그저 '고귀한 분'이라는 말만 들었을 뿐." },
-                { speaker:"narrator", text:"...솔직히, 알고 싶지도 않았다." },
-                { speaker:"narrator", text:"날 버린 사람이 누구든, 내 인생에 필요 없으니까." },
-                { speaker:"narrator", text:"그래도 버틸 수 있었던 건..." },
-                { speaker:"narrator", text:"단 한 사람, 언제나 내 곁을 지켜준 사람이 있었기 때문이다." },
-            ]},
-
+                { speaker:"narrator", text:"내 이름은 카이른. 제국의 버려진 사생아다." },
+                { speaker:"narrator", text:"하지만 오늘, 모든 것이 바뀌었다." }
+            ], next: "1-2"},
             { id:"1-2", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"똑똑." },
-                { speaker:"narrator", text:"익숙한 노크 소리와 함께, 문이 조심스럽게 열렸다." },
-                { speaker:"lizette", text:"도, 도련님... 아침이에요.", emotion:"default", effect:"small" },
-                { speaker:"narrator", text:"노란 머릿결이 아침 햇살에 반짝인다." },
-                { speaker:"narrator", text:"리제트. 나보다 한 살 어린, 이 별채의 유일한 하녀." },
-                { speaker:"narrator", text:"...라고 쓰고, 내 유일한 친구라고 읽는다." },
-                { speaker:"lizette", text:"어젯밤에 기침하시는 소리가 들렸어요...", emotion:"sad" },
-                { speaker:"lizette", text:"그래서 죽을 쑤어왔어요. 따뜻할 때 드세요.", emotion:"default" },
-                { speaker:"narrator", text:"쟁반을 든 손이 살짝 떨리고 있다." },
-                { speaker:"narrator", text:"저게 긴장인지 추위인지는 모르겠지만..." },
-                { speaker:"narrator", text:"어쨌든, 대답은 해야겠지." },
+                { speaker:"lizette", text:"도련님, 황궁에서 사람이 왔어요!" }
             ], choices:[
-                { text:"고마워, 리제트.", next:"1-2a", affection:{lizette:+3} },
-                { text:"...응. (비몽사몽한 목소리로)", next:"1-2b", affection:{lizette:+3} },
-                { text:"네가 만든 거야? 기대되는걸?", next:"1-2c", affection:{lizette:+5} }
-            ]},
-
-        // ─── 선택지 1 분기 ───
-            { id:"1-2a", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"lizette", text:"다, 다행이에요...!", emotion:"happy", effect:"pulse" },
-                { speaker:"lizette", text:"사실 새벽부터 일어나서 준비했거든요...", emotion:"default" },
-                { speaker:"lizette", text:"아, 이건 자랑하려는 게 아니라...!", emotion:"sad", effect:"shake" },
-                { speaker:"you", text:"알아. 고맙다는 거야, 진짜로." },
-                { speaker:"narrator", text:"리제트의 얼굴이 환하게 빛났다." },
-                { speaker:"narrator", text:"이렇게 작은 말에도 기뻐하다니... 참 긍정적인 애다." },
-            ], next:"1-3"},
-
-            { id:"1-2b", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"lizette", text:"...아직 덜 깨셨구나.", emotion:"default" },
-                { speaker:"lizette", text:"죽 식기 전에 드세요. 여기 놓을게요.", emotion:"default" },
-                { speaker:"narrator", text:"리제트가 조용히 쟁반을 탁자에 내려놓았다." },
-                { speaker:"narrator", text:"...그래도 고생한거 같은데 한마디라도 해줄걸 그랬나." },
-            ], next:"1-3"},
-
-            { id:"1-2c", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"lizette", text:"네?! 기, 기대요...?", emotion:"happy", effect:"shake" },
-                { speaker:"lizette", text:"그, 그냥 평범한 죽인데요 뭘..", emotion:"happy" },
-                { speaker:"you", text:"네가 정성들여 만든건데, 특별한 거지." },
-                { speaker:"lizette", text:"...!!", emotion:"happy", effect:"pulse" },
-                { speaker:"narrator", text:"리제트가 얼굴을 양손으로 가렸다." },
-                { speaker:"narrator", text:"귀까지 빨개진 게 다 보이는데, 귀여운 척인가." },
-                { speaker:"narrator", text:"...귀엽긴 하네." },
-            ], next:"1-3"},
-
-            { id:"1-3", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"lizette", text:"자, 그럼 죽을 테이블로...", emotion:"default" },
-                { speaker:"narrator", text:"리제트가 쟁반을 들고 다가오던 그 순간—" },
-                { speaker:"lizette", text:"앗...!", emotion:"sad" },
-                { speaker:"narrator", text:"쨍그랑!", effect:"shake", sfx:"surprise" },
-                { speaker:"narrator", text:"문턱에 걸린 리제트가 중심을 잃었다." },
-                { speaker:"narrator", text:"쟁반이 기울고, 그릇이 떨어지고, 뜨거운 죽이 바닥에—" },
-                { speaker:"lizette", text:"아...! 아아...!", emotion:"sad", effect:"shake" },
-                { speaker:"narrator", text:"리제트가 바닥에 주저앉았다." },
-                { speaker:"narrator", text:"깨진 그릇 조각들 사이에서, 그녀의 손이 덜덜 떨리고 있다." },
-                { speaker:"lizette", text:"죄, 죄송해요 도련님...!", emotion:"sad" },
-                { speaker:"lizette", text:"새벽부터 준비한 건데... 저, 정말...", emotion:"sad", effect:"shrink" },
-                { speaker:"narrator", text:"리제트의 눈가가 서서히  젖어들기 시작한다." },
-                { speaker:"narrator", text:"...어떻게 하지." },
-            ], choices:[
-                { text:"괜찮아? 다친 데 없어?", next:"1-3a", affection:{lizette:+7} },
-                { text:"(말없이 옆에 앉아 깨진 그릇 조각들을 줍는다.)", next:"1-3b", affection:{lizette:+5} },
-                { text:"울지 마. 죽은 또 쑤면 되잖아.", next:"1-3c", affection:{lizette:+0} },
-                { text:"...하아. 조심 좀 하지.", next:"1-3d", affection:{lizette:-5} }
-            ]},
-
-        // ─── 선택지 2 분기 ───
-            { id:"1-3a", bgm:"romantic", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"리제트, 손 봐봐. 다친 데 없어?" },
-                { speaker:"narrator", text:"파편들 사이에 웅크린 리제트에게 다가갔다." },
-                { speaker:"lizette", text:"저, 저는 괜찮아요...! 도련님이야말로...!", emotion:"sad" },
-                { speaker:"you", text:"나한테 안 튀었어. 근데 너 손—" },
-                { speaker:"narrator", text:"리제트의 손바닥에 작은 상처가 나 있었다." },
-                { speaker:"narrator", text:"파편에 베인 모양이다." },
-                { speaker:"you", text:"...피나잖아." },
-                { speaker:"lizette", text:"이, 이 정도는 괜찮아요! 정말로!", emotion:"sad" },
-                { speaker:"narrator", text:"괜찮지 않은 얼굴로 괜찮다고 말하고 있다." },
-                { speaker:"narrator", text:"...참, 변한 게 없어." },
-            ], next:"1-4"},
-
-            { id:"1-3b", bgm:"romantic", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"narrator", text:"말없이 리제트 옆에 쪼그려 앉았다." },
-                { speaker:"lizette", text:"도, 도련님?! 뭐하세요?!", emotion:"sad", effect:"shake" },
-                { speaker:"narrator", text:"대답 대신, 바닥의 파편을 주워 담기 시작했다." },
-                { speaker:"lizette", text:"안 돼요! 다치시면...!", emotion:"sad" },
-                { speaker:"you", text:"...같이 치우면 빨리 끝나잖아." },
-                { speaker:"lizette", text:"............", emotion:"sad", effect:"whisper" },
-                { speaker:"narrator", text:"리제트가 고개를 숙였다." },
-                { speaker:"narrator", text:"뭔가 중얼거리는 것 같은데... 안 들린다." },
-                { speaker:"lizette", text:"...감사해요.", emotion:"happy", effect:"whisper" },
-                { speaker:"narrator", text:"겨우 들릴 듯 말 듯한 작은 목소리였다." },
-            ], next:"1-4"},
-
-            { id:"1-3c", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"울지 마. 죽은 또 쑤면 되잖아." },
-                { speaker:"lizette", text:"하, 하지만...!", emotion:"sad" },
-                { speaker:"you", text:"그러니까 일단 울음부터 멈춰." },
-                { speaker:"narrator", text:"손등으로 리제트의 눈가를 툭 건드렸다." },
-                { speaker:"lizette", text:"...!", emotion:"default" },
-                { speaker:"you", text:"아까 밤새 준비했다며. 피곤할 텐데 울면 더 지쳐." },
-                { speaker:"lizette", text:"도련님...", emotion:"sad" },
-                { speaker:"narrator", text:"리제트가 손으로 눈을 비볐다." },
-                { speaker:"lizette", text:"...네. 안 울게요.", emotion:"default" },
-            ], next:"1-4"},
-
-            { id:"1-3d", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"....하아..조심 좀 하지." },
-                { speaker:"lizette", text:"......", emotion:"sad", effect:"shrink" },
-                { speaker:"narrator", text:"리제트가 고개를 푹 숙였다." },
-                { speaker:"lizette", text:"죄송해요... 정말 죄송해요...", emotion:"sad" },
-                { speaker:"narrator", text:"목소리가 점점 작아진다." },
-                { speaker:"narrator", text:"...아, 너무 심하게 말했나." },
-                { speaker:"you", text:"......그래도 다친 데 없어?", effect:"whisper" },
-                { speaker:"lizette", text:"...네. 괜찮아요.", emotion:"sad" },
-                { speaker:"narrator", text:"하나도 안 괜찮아보인다." },
-            ], next:"1-4"},
-
-            { id:"1-4", bgm:"romantic", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"파편을 치우고, 리제트의 손을 살폈다." },
-                { speaker:"narrator", text:"다행히 깊은 상처는 아니었다." },
-                { speaker:"you", text:"약 가져올게. 여기 앉아 있어." },
-                { speaker:"lizette", text:"그, 그 정도는 제가...!", emotion:"default" },
-                { speaker:"you", text:"가만히 있어. 내가 할게." },
-                { speaker:"lizette", text:"......네.", emotion:"default" },
-                { speaker:"narrator", text:"서랍에서 연고와 붕대를 꺼내 리제트의 손을 잡고 조심스럽게 약을 발랐다." },
-            ], next:"1-5"},
-
-            { id:"1-5", bgm:"peaceful", bg:"bgGarden", chars:[], dialogs:[
-                { speaker:"narrator", text:"그녀의 손을 붕대로 감으며, 문득 예전 일이 떠올랐다.", effect:"float" },
-                { speaker:"narrator", text:"—10년 전." },
-                { speaker:"narrator", text:"어머니가 돌아가신 직후였다." },
-            ]},
-
-            { id:"1-5b", bg:"bgGarden", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"narrator", text:"그때 나는 8살, 리제트는 7살이었다." },
-                { speaker:"narrator", text:"장례식에 본가 사람은 아무도 오지 않았다." },
-                { speaker:"narrator", text:"'사생아의 어미'를 애도할 이유가 없다고 했다." },
-                { speaker:"lizette", text:"도련님...", emotion:"sad", effect:"small" },
-                { speaker:"narrator", text:"리제트가 내 옆에 서 있었다." },
-                { speaker:"narrator", text:"검은 옷을 입은, 작은 소녀." },
-                { speaker:"lizette", text:"...울어도 돼요.", emotion:"sad" },
-                { speaker:"you", text:"안 울어." },
-                { speaker:"lizette", text:"......", emotion:"sad" },
-            ]},
-
-            { id:"1-5c", bg:"bgGarden", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"narrator", text:"그때, 리제트가 내 손을 잡았다." },
-                { speaker:"narrator", text:"작고, 따뜻한 손이었다." },
-                { speaker:"lizette", text:"저는... 안 가요.", emotion:"sad" },
-                { speaker:"lizette", text:"다른 사람들은 다 가도, 저는 도련님 곁에 있을게요.", emotion:"sad" },
-                { speaker:"lizette", text:"...약속해요.", emotion:"default" },
-                { speaker:"narrator", text:"그날 밤, 나는 혼자 펑펑 울었다." },
-                { speaker:"narrator", text:"리제트는 문 밖에서 밤새 기다렸다고, 나중에 들었다." },
-            ], choices:[
-                { text:"(조용히 리제트의 손을 꼭 잡는다.)", next:"1-5d", affection:{lizette:+10}},
-            ]},
-
-            { id:"1-5d", bgm:"romantic", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"narrator", text:"—현재." },
-                { speaker:"narrator", text:"말없이, 붕대를 감은 리제트의 손을 다시 한 번 잡았다." },
-                { speaker:"lizette", text:"도, 도련님...?", emotion:"happy", effect:"pulse" },
-                { speaker:"narrator", text:"10년 전보다 손이 커졌지만," },
-                { speaker:"narrator", text:"이 따뜻함은 변하지 않았다." },
-                { speaker:"you", text:"......고마워. 항상." },
-                { speaker:"lizette", text:"......!!", emotion:"happy" },
-                { speaker:"narrator", text:"리제트의 얼굴이, 귀까지 빨개졌다." },
-                { speaker:"narrator", text:"리제트의 손이 떨리다가 이내 내 손을 더 꼭 쥐었다." },
-                { speaker:"narrator", text:"...나도 왜 이러는지 모르겠지만, 나쁘지 않아서 그냥 두기로 했다." },
-            ], next:"1-6"},
-
-            { id:"1-6", bgm:"tense", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"그때." },
-                { speaker:"narrator", text:"쿵쿵쿵—!", effect:"shake" },
-                { speaker:"narrator", text:"거친 노크 소리가 문을 때렸다." },
-                { speaker:"lizette", text:"...!", emotion:"default" },
-                { speaker:"narrator", text:"이 별채를 찾아오는 사람은 리제트 외에 거의 없는데." },
-            ]},
-
-            { id:"1-6b", bg:"bgRoom", chars:[], dialogs:[
-                { speaker:"narrator", text:"문을 열자, 본가의 집사가 서 있었다." },
-                { speaker:"narrator", text:"평소에는 나를 거들떠보지도 않던 자가." },
-                { speaker:"집사", text:"카이른 님." },
-                { speaker:"narrator", text:"...님? 내가 잘못 들었나 싶을정도로 당황스러운 호칭이 나왔다.", effect:"grow" },
-            ]},
-
-            { id:"1-6c", bg:"bgRoom", chars:[], dialogs:[
-                { speaker:"집사", text:"본가로 오십시오. 후작님께서 부르십니다." },
-                { speaker:"you", text:"...후작님이?" },
-                { speaker:"narrator", text:"이상하다. 후작은 내 존재 자체를 부정하던 사람인데." },
-                { speaker:"집사", text:"그리고... 전해드릴 소식이 있습니다." },
-                { speaker:"narrator", text:"집사가 잠시 말을 멈췄다." },
-                { speaker:"narrator", text:"다음 말이, 내 인생을 완전히 뒤바꿔놓을 줄은 몰랐다." },
-            ]},
-
-            { id:"1-6d", bg:"bgRoom", chars:[], dialogs:[
-                { speaker:"집사", text:"황제 폐하께서... 붕어하셨습니다.", effect:"grow" },
-                { speaker:"you", text:"......뭐?" },
-                { speaker:"narrator", text:"황제가 죽었다고?" },
-                { speaker:"narrator", text:"그게 나랑 무슨 상관이—" },
-                { speaker:"집사", text:"그리고 카이른 님은..." },
-                { speaker:"narrator", text:"집사가 고개를 숙였다." },
-                { speaker:"집사", text:"돌아가신 황제 폐하의 숨겨진 혈육이십니다.", effect:"big" },
-            ]},
-
-            { id:"1-6e", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"......뭐라고?", effect:"shake" },
-                { speaker:"narrator", text:"그 '고귀한 분'이... 황제였다고?" },
-                { speaker:"narrator", text:"그럼 나는..." },
-                { speaker:"lizette", text:"도, 도련님...?!", emotion:"sad", effect:"small" },
-                { speaker:"narrator", text:"리제트의 목소리가 멀게 느껴졌다." },
-                { speaker:"narrator", text:"머릿속이 하얘진다." },
-            ]},
-
-            { id:"1-6f", bg:"bgRoom", chars:[], dialogs:[
-                { speaker:"집사", text:"현재 황위를 이을 후보는 셋입니다." },
-                { speaker:"집사", text:"제1황녀 셀레네, 제2황녀 아델린, 그리고..." },
-                { speaker:"집사", text:"제1황자, 카이른 님." },
-                { speaker:"집사", text:"황궁에서 계승자 선정이 진행됩니다." },
-                { speaker:"집사", text:"내일 아침, 황궁으로 출발하셔야 합니다." },
-                { speaker:"narrator", text:"집사가 물러났다." },
-                { speaker:"narrator", text:"황궁." },
-                { speaker:"narrator", text:"황위 계승." },
-                { speaker:"narrator", text:"......미친 거 아냐, 이거?" },
-            ], choices:[
-                { text:"잠깐 정리할 시간이 필요해.", next:"1-6g", affection:{lizette:+2} },
-                { text:"...리제트.", next:"1-6h", affection:{lizette:+5} },
-                { text:"(아무 말 없이 멍하니 서 있는다)", next:"1-6i", affection:{lizette:+3} }
-            ]},
-
-        // ─── 선택지 5 분기 ───
-            { id:"1-6g", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"...잠깐. 정리가 필요해." },
-                { speaker:"narrator", text:"심호흡을 했다." },
-                { speaker:"you", text:"내 아버지가 황제였고, 황제가 죽어서 내가 계승 후보라..." },
-                { speaker:"you", text:"그게 말이 돼?" },
-                { speaker:"lizette", text:"도련님...", emotion:"sad" },
-                { speaker:"narrator", text:"리제트가 걱정스러운 눈으로 나를 바라보고 있다." },
-                { speaker:"you", text:"...일단 본가로 가보자. 더 알아봐야 해." },
-            ], next:"1-7"},
-
-            { id:"1-6h", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"......리제트." },
-                { speaker:"lizette", text:"네, 도련님..!", emotion:"sad" },
-                { speaker:"narrator", text:"리제트가 달려왔다." },
-                { speaker:"narrator", text:"어느새 내 손을 잡고 있었다." },
-                { speaker:"lizette", text:"괜찮으세요? 갑작스럽게 이런 말을 들으시면...", emotion:"sad" },
-                { speaker:"you", text:"......솔직히, 모르겠어." },
-                { speaker:"you", text:"근데 네가 있으니까, 좀 나은 것 같아." },
-                { speaker:"lizette", text:"도련님...", emotion:"happy" },
-                { speaker:"narrator", text:"리제트가 내 손을 꽉 쥐었다." },
-            ], next:"1-7"},
-
-            { id:"1-6i", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"narrator", text:"아무 말도 나오지 않았다." },
-                { speaker:"narrator", text:"그저 멍하니 서 있을 뿐이었다." },
-                { speaker:"lizette", text:"도련님...!", emotion:"sad" },
-                { speaker:"narrator", text:"리제트가 내 앞으로 다가왔다." },
-                { speaker:"lizette", text:"저, 저 여기 있어요. 곁에 있을게요.", emotion:"sad" },
-                { speaker:"narrator", text:"그 말에, 조금 정신이 돌아왔다." },
-                { speaker:"you", text:"...응. 고마워." },
-            ], next:"1-7"},
-
-
-            { id:"1-7", bgm:"romantic", bg:"bgNight", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"narrator", text:"그날 밤." },
-                { speaker:"narrator", text:"내일 아침 출발이니, 짐을 쌌어야 했는데." },
-                { speaker:"narrator", text:"...딱히 챙길 것도 없었다." },
-                { speaker:"narrator", text:"똑똑." },
-                { speaker:"lizette", text:"도련님... 안 주무세요?", emotion:"sad" },
-                { speaker:"narrator", text:"리제트가 문 앞에 서 있었다." },
-                { speaker:"you", text:"...너야말로." },
-                { speaker:"lizette", text:"저는... 걱정돼서요.", emotion:"sad" },
-            ]},
-
-            { id:"1-7b", bg:"bgNight", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"lizette", text:"황궁은... 무서운 곳이라고 들었어요.", emotion:"sad" },
-                { speaker:"lizette", text:"권력 싸움, 암투, 독살...", emotion:"sad" },
-                { speaker:"lizette", text:"도련님 같은 분이 가시면...", emotion:"sad", effect:"shrink" },
-                { speaker:"you", text:"나?" },
-                { speaker:"lizette", text:"순수하시고, 착하시고...", emotion:"sad" },
-                { speaker:"you", text:"...그건 칭찬인지 걱정인지 모르겠네." },
-                { speaker:"lizette", text:"걱정이에요...!", emotion:"sad", effect:"shake" },
-            ]}, 
-
-            { id:"1-7c", bg:"bgNight", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"lizette", text:"도련님은... 사람을 너무 쉽게 믿으세요.", emotion:"sad" },
-                { speaker:"lizette", text:"황궁에서 그러시면 안 돼요.", emotion:"sad" },
-                { speaker:"you", text:"...알아." },
-                { speaker:"lizette", text:"정말요? 정말 아세요?", emotion:"sad" },
-                { speaker:"narrator", text:"리제트의 눈이 촉촉해졌다." },
-                { speaker:"lizette", text:"도련님이 다치시면... 저... 저는...", emotion:"sad", effect:"shrink" },
-            ], choices:[
-                { text:"울지 마. 괜찮을 거야.", next:"1-7d", affection:{lizette:+3} },
-                { text:"..나랑 같이 가자.", next:"1-7e", affection:{lizette:+8} },
-                { text:"네가 걱정해주니까, 더 조심할게.", next:"1-7f", affection:{lizette:+5} }
-            ]},
-
-        // ─── 선택지 6 분기 ───
-            { id:"1-7d", bg:"bgNight", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"울지 마. 괜찮을 거야." },
-                { speaker:"lizette", text:"......", emotion:"sad" },
-                { speaker:"you", text:"18년 동안 여기서 버텼는데, 황궁이라고 못 버틸까." },
-                { speaker:"lizette", text:"그래도...", emotion:"sad" },
-                { speaker:"you", text:"그리고..." },
-                { speaker:"you", text:"빨리 끝내고 돌아올 테니까." },
-                { speaker:"lizette", text:"...정말요?", emotion:"default" },
-                { speaker:"you", text:"응. 약속." },
-                { speaker:"narrator", text:"리제트가 고개를 끄덕였다." },
-                { speaker:"narrator", text:"아직 불안해 보이지만, 조금은 안심한 것 같다." },
-            ], next:"1-8"},
-
-            { id:"1-7e", bg:"bgNight", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"you", text:"같이 가자." },
-                { speaker:"lizette", text:"...네?", emotion:"happy", effect:"grow" },
-                { speaker:"you", text:"황궁에서도 하녀는 필요할 거 아냐." },
-                { speaker:"you", text:"낯선 사람보다 네가 낫지." },
-                { speaker:"lizette", text:"저, 저를... 데려가시겠다고요?", emotion:"happy", effect:"pulse" },
-                { speaker:"you", text:"싫으면 말고." },
-                { speaker:"lizette", text:"싫지 않아요!!", emotion:"happy", effect:"shake" },
-                { speaker:"narrator", text:"리제트가 두 손을 꽉 쥐었다." },
-                { speaker:"lizette", text:"가, 갈게요...! 어디든 따라갈게요...!", emotion:"happy" },
-                { speaker:"narrator", text:"...왠지 뭔가 불안한 기분이 드는 건 기분 탓이겠지." },
-            ], next:"1-8a"},
-
-            { id:"1-7f", bg:"bgNight", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"you", text:"네가 걱정해주니까, 더 조심할게." },
-                { speaker:"lizette", text:"......!", emotion:"happy" },
-                { speaker:"you", text:"안심시켜줄게. 내가 무사하다는 거." },
-                { speaker:"lizette", text:"도련님...", emotion:"happy", effect:"pulse" },
-                { speaker:"you", text:"그러니까 울지 마. 눈 붓겠다." },
-                { speaker:"narrator", text:"리제트가 손으로 눈가를 닦았다." },
-                { speaker:"lizette", text:"...네. 안 울게요.", emotion:"happy" },
-                { speaker:"lizette", text:"도련님이 돌아오실 때까지, 꼭...", emotion:"happy" },
-            ], next:"1-8"},
-
-            { id:"1-8", bg:"bgNight", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"lizette", text:"저, 잠깐만요!", emotion:"default" },
-                { speaker:"narrator", text:"리제트가 결연한 표정으로 날 쳐다봤다." },
-                { speaker:"lizette", text:"저, 저도 따라갈래요..!", emotion:"default" },
-                { speaker:"you", text:"...뭐?" },
-                { speaker:"lizette", text:"저.. 제, 제가 도련님 곁에서 지켜드릴게요..!", emotion:"default" },
-                { speaker:"lizette", text:"제, 제발 따라가게 해주세요..!", emotion:"sad" },
-            ], choices:[
-                { text:"그래, 따라와도 좋아.", next:"1-8a", affection:{lizette:+10} },
-                { text:"너가 따라온다면 나도 안심이지..!", next:"1-8b", affection:{lizette:+15} },
-            ]},
-
-        // ─── 선택지 7 분기 ───
-            { id:"1-8a", bg:"bgNight", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"you", text:"그래, 따라와도 좋아" },
-                { speaker:"narrator", text:"리제트를 바라보며 웃어보였다." },
-                { speaker:"lizette", text:"......!", emotion:"happy", effect:"pulse" },
-                { speaker:"narrator", text:"리제트의 얼굴이 환해졌다." },
-                { speaker:"lizette", text:"감사해요... 정말로...", emotion:"happy" },
-            ], next:"1-9"},
-
-            { id:"1-8b", bg:"bgNight", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"you", text:"너가 따라온다면 나도 안심이지..!" },
-                { speaker:"lizette", text:"저.. 정말요..?", emotion:"happy" },
-                { speaker:"narrator", text:"리제트의 눈에 행복함이 가득해보였다." },
-                { speaker:"narrator", text:"새어나오는 웃음을 참으려는 모습이 눈앞에 들어온다." },
-                { speaker:"you", text:"웃어도 돼." },
-                { speaker:"narrator", text:"리제트의 얼굴이 확 붉어진다." },
-                { speaker:"lizette", text:"...?!", emotion:"happy", effect:"shake" },
-                { speaker:"narrator", text:"당황하던 모습은 잠시, 리제트는 환하게 웃어보인다." },
-                { speaker:"lizette", text:"고, 고마워요 도련님!", emotion:"happy", effect:"small" },
-            ], next:"1-9"},
-
-        
-            { id:"1-9", bgm:"peaceful", bg:"bgGarden", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"다음 날 아침." },
-                { speaker:"narrator", text:"별채 앞에 마차 한 대가 서 있었다." },
-                { speaker:"narrator", text:"...드디어 이 곳을 떠나는구나." },
-                { speaker:"narrator", text:"18년 동안 갇혀 살던 곳." },
-                { speaker:"narrator", text:"증오하지만, 동시에 그리워지기도 할 것 같은 곳." },
-            ], next:"1-10" },
-
-            { id:"1-10", bg:"bgGarden", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"narrator", text:"마차에 올랐다." },
-                { speaker:"narrator", text:"옆에는 리제트가 앉아 있다." },
-                { speaker:"narrator", text:"불안하지만... 혼자가 아니라서 다행이다." },
-                { speaker:"lizette", text:"도련님, 긴장되세요?", emotion:"default" },
-                { speaker:"you", text:"...조금?" },
-                { speaker:"lizette", text:"괜찮아요. 제가 곁에 있잖아요.", emotion:"happy" },
-                { speaker:"narrator", text:"리제트가 조심스럽게 내 손을 잡았다." },
-                { speaker:"narrator", text:"10년 전과 같은, 따뜻한 손이었다." },
-                { speaker:"narrator", text:"마차가 천천히 움직이기 시작했다." },
-                { speaker:"narrator", text:"황궁으로." },
-                { speaker:"narrator", text:"미지의 세계로." },
-                { speaker:"narrator", text:"...내 운명이 기다리는 곳으로." },
-            ], next:"chapter2"},
-        ],
+                { text:"가자, 황궁으로.", next:"chapter4" }, // 테스트를 위해 챕터4로 바로가기 가능하게 설정
+                { text:"조금 더 준비가 필요해.", next:"1-1" }
+            ]}
+        ]
     },
-
-    // ═══════════════════════════════════════════════════════════════
-    // 챕터 2
-    // ═══════════════════════════════════════════════════════════════
-    chapter2: {
-        title: "Chapter 2", subtitle: "황궁으로", bgm: "peaceful",
-        scenes: [
-            { id:"2-1", bg:"bgCarriage", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"황궁으로 향하는 마차 안." },
-                { speaker:"narrator", text:"창밖으로 낯선 풍경이 스쳐 지나간다." },
-                { speaker:"narrator", text:"태어나서 처음 보는 세상이었다." },
-                { speaker:"lizette", text:"도련님, 바깥 풍경이 정말 예쁘죠?", emotion:"happy" },
-                { speaker:"you", text:"...응. 별채 밖은 처음이라." },
-                { speaker:"lizette", text:"저도요. 같이 처음 보는 거네요.", emotion:"happy" },
-                { speaker:"narrator", text:"리제트가 창가에 바짝 붙어 밖을 구경하고 있다." },
-                { speaker:"narrator", text:"...평화롭다." },
-                { speaker:"narrator", text:"황궁에 가면 이런 시간은 없을지도 모른다." },
-            ]},
-            { id:"2-2", bg:"bgCarriage", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"한참을 달리자, 리제트가 슬슬 지쳐 보였다." },
-                { speaker:"narrator", text:"눈이 스르륵 감기는 걸 억지로 참고 있다." },
-                { speaker:"lizette", text:".......", emotion:"default" },
-                { speaker:"narrator", text:"고개가 꾸벅꾸벅.." },
-                { speaker:"narrator", text:"...졸린 거 티 안 난다고 생각하는 건가." },
-            ], choices:[
-                { text:"긴장돼서 못 잤지? 좀 자.", next:"2-2a", affection:{lizette:+3} },
-                { text:"내 어깨에 기대서 자도 돼.", next:"2-2b", affection:{lizette:+5} },
-                { text:"(말없이 어깨를 내어준다)", next:"2-2c", affection:{lizette:+8} }
-            ]},
-
-        // ─── 선택지 분기 ───
-            { id:"2-2a", bg:"bgCarriage", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"긴장돼서 못 잤지? 좀 자." },
-                { speaker:"lizette", text:"아, 아니에요! 안 졸려요!", emotion:"sad", effect:"shake" },
-                { speaker:"you", text:"눈 감기는 거 다 봤어." },
-                { speaker:"lizette", text:"............", emotion:"sad" },
-                { speaker:"lizette", text:"그, 그럼 잠시 눈좀 붙일게요..", emotion:"default" },
-                { speaker:"narrator", text:"리제트가 구석에 기대어 눈을 감았다." },
-            ], next:"2-3"},
-
-            { id:"2-2b", bg:"bgCarriage", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"you", text:"내 어깨에 기대서 자도 돼." },
-                { speaker:"lizette", text:"네?! 그, 그건...!", emotion:"happy", effect:"shake" },
-                { speaker:"you", text:"싫으면 말고." },
-                { speaker:"lizette", text:"싫은 게 아니라...!", emotion:"happy" },
-                { speaker:"narrator", text:"리제트가 머뭇거리다가, 조심스럽게 다가왔다." },
-                { speaker:"narrator", text:"어깨에 닿은 온기가 느껴진다." },
-                { speaker:"lizette", text:"...감사해요.", emotion:"happy", effect:"whisper" },
-                { speaker:"narrator", text:"금방 잔잔한 숨소리가 들려왔다." },
-            ], next:"2-3"},
-
-            { id:"2-2c", bgm:"romantic", bg:"bgCarriage", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"narrator", text:"말없이 리제트 쪽으로 어깨를 기울였다." },
-                { speaker:"lizette", text:"...?", emotion:"default" },
-                { speaker:"narrator", text:"리제트가 잠시 멍하니 나를 바라보다가—" },
-                { speaker:"narrator", text:"얼굴이 빨갛게 물들었다." },
-                { speaker:"lizette", text:"......!", emotion:"happy" },
-                { speaker:"narrator", text:"아무 말 없이, 조심스럽게 어깨에 머리를 기댔다." },
-                { speaker:"narrator", text:"심장 소리가 들릴 것 같아서 걱정했는데," },
-                { speaker:"narrator", text:"...들리는 건 리제트의 심장 소리였다." },
-                { speaker:"narrator", text:"쿵쾅쿵쾅." },
-            ], next:"2-3"},
-
-            { id:"2-3", bgm:"tense", bg:"bgCarriage", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"얼마나 지났을까." },
-                { speaker:"narrator", text:"평화로운 시간은 오래가지 않았다." },
-                { speaker:"narrator", text:"갑자기—" },
-                { speaker:"narrator", text:"끼이이익—!!", effect:"shake" },
-                { speaker:"narrator", text:"마차가 급정거했다." },
-                { speaker:"lizette", text:"...?! 도, 도련님?!", emotion:"sad" },
-                { speaker:"narrator", text:"창밖에서 비명 소리가 들렸다." },
-                { speaker:"narrator", text:"그리고 금속이 부딪치는 소리." },
-                { speaker:"you", text:"...자객?" },
-            ]},
-
-            { id:"2-4", bg:"bgCarriage", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"narrator", text:"마차 문이 거칠게 열렸다." },
-                { speaker:"narrator", text:"검은 복면을 쓴 자들이 보였다." },
-                { speaker:"자객", text:"안에 있다. 죽여라." },
-                { speaker:"lizette", text:"도련님...!", emotion:"sad", effect:"shake" },
-                { speaker:"narrator", text:"리제트가 공포에 질린 얼굴로 내 옷을 움켜쥐었다." },
-                { speaker:"narrator", text:"무기도 없다. 싸울 수단도 없다." },
-                { speaker:"narrator", text:"그래도—" },
-            ], choices:[
-                { text:"리제트, 내 뒤에 있어!", next:"2-4a", affection:{lizette:+7} },
-                { text:"(리제트를 등 뒤에 숨기고 몸으로 막는다.)", next:"2-4b", affection:{lizette:+10} }
-            ]},
-
-            { id:"2-4a", bg:"bgCarriage", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"리제트, 내 뒤에 있어!" },
-                { speaker:"narrator", text:"리제트를 등 뒤로 밀어넣었다." },
-                { speaker:"lizette", text:"도련님, 안 돼요...!", emotion:"sad" },
-                { speaker:"you", text:"괜찮아. 가만히 있어." },
-                { speaker:"narrator", text:"괜찮지 않다. 전혀." },
-                { speaker:"narrator", text:"하지만 리제트만은 지켜야 했다." },
-                { speaker:"자객", text:"훗, 영웅이라도 되려고? 어차피 둘 다 죽는다." },
-                { speaker:"narrator", text:"자객이 검을 치켜들었다." },
-                { speaker:"narrator", text:"그 순간—" },
-            ], next:"2-5"},
-
-            { id:"2-4b", bg:"bgCarriage", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"narrator", text:"생각보다 몸이 먼저 움직였다." },
-                { speaker:"narrator", text:"리제트를 등 뒤에 숨기고, 엉거주춤하게 전투 태세를 갖췄다." },
-                { speaker:"lizette", text:"...?! 도, 도련님?!", emotion:"sad", effect:"shake" },
-                { speaker:"you", text:"고개 숙이고 있어." },
-                { speaker:"lizette", text:"하지만 도련님이...!", emotion:"sad" },
-                { speaker:"you", text:"...상관없어. 네가 다치는 것보단." },
-                { speaker:"lizette", text:"......!!", emotion:"sad" },
-                { speaker:"narrator", text:"자객이 비웃으며 검을 치켜들었다." },
-                { speaker:"자객", text:"감동적이군. 같이 죽어라." },
-                { speaker:"narrator", text:"눈을 질끈 감았다." },
-                { speaker:"narrator", text:"그 순간—" },
-            ], next:"2-5"},
-
-            { id:"2-5", bg:"bgCarriage", chars:[], dialogs:[
-                { speaker:"narrator", text:"챙-!!", effect:"shake", sfx:"sword" },
-                { speaker:"narrator", text:"금속 소리와 함께, 자객의 움직임이 멈췄다." },
-                { speaker:"자객", text:"...크윽...!" },
-                { speaker:"narrator", text:"쓰러지는 소리." },
-                { speaker:"narrator", text:"눈을 떠보니, 검은 복면의 자객이 쓰러져 있었다." },
-                { speaker:"narrator", text:"그리고 그 앞에—" },
-            ]},
-
-            { id:"2-5b", bg:"bgCarriage", chars:[{id:"karen",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"금발의 여인이 서 있었다." },
-                { speaker:"narrator", text:"피 한 방울 묻지 않은 검을 들고." },
-                { speaker:"karen", text:"...무사한가.", emotion:"default" },
-                { speaker:"narrator", text:"감정 없는 목소리." },
-                { speaker:"narrator", text:"그녀는 나를 한 번 훑어보더니, 밖으로 시선을 돌렸다." },
-                { speaker:"karen", text:"나머지는.", emotion:"default" },
-            ]},
-
-            { id:"2-6", bg:"bgCarriage", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"elia", text:"다 처리했어. 별 거 아니더라.", emotion:"default" },
-                { speaker:"narrator", text:"또 다른 여인이 마차로 다가왔다." },
-                { speaker:"narrator", text:"주홍색 머리카락에, 날카로운 눈매." },
-                { speaker:"elia", text:"...뭐야, 이게 습격당한 애들이야?", emotion:"default" },
-                { speaker:"narrator", text:"그녀가 나와 리제트를 번갈아 보더니 한숨을 쉬었다." },
-                { speaker:"elia", text:"하, 꼴 좀 봐. 벌벌 떨고 있네.", emotion:"angry" },
-                { speaker:"lizette", text:"......", emotion:"sad" },
-                { speaker:"you", text:"...목숨을 구해줘서 고마운데, 좀 심하지 않나." },
-                { speaker:"elia", text:"뭐? 살려줬으면 감사합니다, 아니야?", emotion:"angry" },
-            ], choices:[
-                { text:"감사합니다. 덕분에 살았습니다.", next:"2-6a", affection:{karen:+7, elia:+5} },
-                { text:"고맙긴 한데... 말투가 좀 그렇네.", next:"2-6b", affection:{elia:+3, karen:+3} },
-                { text:"(무시하고 리제트 상태부터 확인한다)", next:"2-6c", affection:{lizette:+5, elia:+3} }
-            ]},
- 
-            { id:"2-6a", bg:"bgCarriage", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"감사합니다. 덕분에 살았습니다." },
-                { speaker:"karen", text:"...당연한 일을 했을 뿐이다.", emotion:"default" },
-                { speaker:"elia", text:"흥, 그래 그 정도 예의는 있네.", emotion:"default" },
-                { speaker:"narrator", text:"금발의 여인이 살짝 고개를 끄덕였다." },
-            ], next:"2-7"},
-
-            { id:"2-6b", bg:"bgCarriage", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"angry"}], dialogs:[
-                { speaker:"you", text:"고맙긴 한데... 말투가 좀 그렇네." },
-                { speaker:"elia", text:"...뭐?", emotion:"angry" },
-                { speaker:"you", text:"방금 죽을 뻔한 사람한테 '꼴 좀 봐'는 아니지 않나." },
-                { speaker:"elia", text:"......", emotion:"angry" },
-                { speaker:"narrator", text:"주홍색 머리 여인이 잠시 할 말을 잃은 표정이었다." },
-                { speaker:"elia", text:"...흥. 배짱은 있네.", emotion:"default" },
-                { speaker:"narrator", text:"왠지 모르게 입꼬리가 살짝 올라간 것 같았다." },
-            ], next:"2-7"},
-
-            { id:"2-6c", bg:"bgCarriage", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"narrator", text:"그들의 말을 무시하고 리제트에게로 돌아섰다." },
-                { speaker:"you", text:"리제트, 괜찮아? 다친 데 없어?" },
-                { speaker:"lizette", text:"저, 저는 괜찮아요... 도련님이야말로...!", emotion:"sad" },
-                { speaker:"you", text:"나도 괜찮아." },
-                { speaker:"elia", text:"...야, 무시하는 거야?", emotion:"angry" },
-                { speaker:"karen", text:"...그만해, 엘리아.", emotion:"default" },
-                { speaker:"narrator", text:"금발의 여인이 주홍색 머리 여인을 제지했다." },
-            ], next:"2-7"},
-
-            { id:"2-7", bg:"bgCarriage", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"karen", text:"그래서, 너희는 누구지. 이 근처에서 귀족 마차가 습격당했다는 소식을 듣고 왔는데.", emotion:"default" },
-                { speaker:"you", text:"그냥... 지나가던 사람이야." },
-                { speaker:"elia", text:"지나가던 사람이 이런 마차를 타고 다녀? 거짓말 치지 마.", emotion:"default" },
-                { speaker:"narrator", text:"그때, 마차 뒤에서 숨어있던 마부가 기어 나왔다." },
-                { speaker:"마부", text:"사, 살았다...! 황자 전하, 무사하십니까?!", effect:"big" },
-            ]},
-
-            { id:"2-7b", bg:"bgCarriage", chars:[{id:"karen",pos:"left",emotion:"sad"},{id:"elia",pos:"right",emotion:"sad"}], dialogs:[
-                { speaker:"narrator", text:"순간, 정적이 흘렀다." },
-                { speaker:"karen", text:"...황자?", emotion:"sad" },
-                { speaker:"elia", text:"...뭐라고?", emotion:"sad" },
-                { speaker:"narrator", text:"두 여인의 얼굴이 동시에 굳어졌다." },
-                { speaker:"마부", text:"예, 이분은 돌아가신 황제 폐하의 숨겨진 혈육... 카이른 전하이십니다." },
-                { speaker:"elia", text:"잠깐, 그 카이른? 갑자기 나타났다는 황자?", emotion:"sad", effect:"shake" },
-                { speaker:"karen", text:"............", emotion:"sad" },
-            ]},
-
-            { id:"2-8", bg:"bgCarriage", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"sad"}], dialogs:[
-                { speaker:"narrator", text:"금발의 여인이 갑자기 무릎을 꿇었다." },
-                { speaker:"karen", text:"...무례를 용서하십시오, 전하. 변경백 카렌 폰 슈테른입니다.", emotion:"default" },
-                { speaker:"narrator", text:"변경백? 저 나이에?" },
-                { speaker:"elia", text:"어, 어어...?!", emotion:"sad", effect:"shake" },
-                { speaker:"narrator", text:"주홍색 머리 여인이 당황한 얼굴로 카렌을 쳐다봤다." },
-                { speaker:"elia", text:"야, 잠깐, 카렌! 그럼 아까 내가 한 말...!", emotion:"sad" },
-                { speaker:"karen", text:"(차가운 눈빛)", emotion:"default" },
-                { speaker:"elia", text:"............", emotion:"sad" },
-                { speaker:"elia", text:"...엘, 엘리아 폰 베른트입니다. 아까는... 그... 실례했습니다.", emotion:"sad", effect:"shrink" },
-            ], choices:[
-                { text:"괜찮아. 신경 안 써도 돼.", next:"2-8a", affection:{elia:+5, karen:+5} },
-                { text:"일어나. 무릎 꿇을 필요 없어.", next:"2-8b", affection:{karen:+5, elia:+3} },
-                { text:"...꼴 좀 봐.", next:"2-8c", affection:{elia:+8, karen:-5} }
-            ]},
-
-            { id:"2-8a", bg:"bgCarriage", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"괜찮아. 신경 안 써도 돼." },
-                { speaker:"elia", text:"...저, 정말요..?", emotion:"default" },
-                { speaker:"karen", text:"...관대하시군요.", emotion:"default" },
-                { speaker:"narrator", text:"두 사람의 표정이 조금 풀어졌다." },
-            ], next:"2-9"},
-
-            { id:"2-8b", bg:"bgCarriage", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"일어나. 무릎 꿇을 필요 없어." },
-                { speaker:"karen", text:"하지만...", emotion:"default" },
-                { speaker:"you", text:"방금 목숨을 구해준 사람한테 무릎 꿇으라고 하면 내가 이상한 사람이 되잖아." },
-                { speaker:"karen", text:"............", emotion:"default" },
-                { speaker:"narrator", text:"카렌이 천천히 일어났다." },
-                { speaker:"narrator", text:"표정은 여전히 무감정하지만, 뭔가 달라진 느낌이었다." },
-            ], next:"2-9"},
-
-            { id:"2-8c", bg:"bgCarriage", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"angry"}], dialogs:[
-                { speaker:"you", text:"...꼴 좀 봐." },
-                { speaker:"elia", text:"......!!", emotion:"angry", effect:"shake" },
-                { speaker:"narrator", text:"아까 엘리아가 한 말을 그대로 돌려줬다." },
-                { speaker:"elia", text:"너, 방금 일부러 그런 거지?!", emotion:"angry" },
-                { speaker:"you", text:"뭘?" },
-                { speaker:"elia", text:"알면서! 일부러...!", emotion:"angry" },
-                { speaker:"karen", text:"...엘리아, 전하께 그 태도는.", emotion:"default" },
-                { speaker:"elia", text:"그, 그래도...!", emotion:"sad" },
-                { speaker:"narrator", text:"얼굴이 빨개진 게 화난 건지 부끄러운 건지 모르겠다." },
-                { speaker:"narrator", text:"...의외로 놀리기 쉬운 타입인가." },
-            ], next:"2-9"},
-
-            { id:"2-9", bgm:"peaceful", bg:"bgCarriage", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"karen", text:"...전하, 황궁까지 호위하겠습니다.", emotion:"default" },
-                { speaker:"elia", text:"어차피 우리도 황궁으로 가는 길이었으니까.", emotion:"default" },
-                { speaker:"you", text:"고마워. 그런데... 왜 이 근처에?" },
-                { speaker:"karen", text:"...황녀 전하의 명령입니다. 새로운 황자가 온다는 소식에, 확인하러.", emotion:"default" },
-                { speaker:"elia", text:"솔직히 말하면 감시하러 온 거지.", emotion:"default" },
-                { speaker:"karen", text:"...엘리아.", emotion:"default" },
-                { speaker:"elia", text:"뭐, 사실이잖아.", emotion:"default" },
-                { speaker:"narrator", text:"황녀의 명령.. 역시 황궁은 만만치 않을 것 같다." },
-                { speaker:"narrator", text:"그래도... 나쁜 사람들은 아닌 것 같았다." },
-            ]},
-
-            { id:"2-10", bg:"bgCarriage", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"마차가 다시 움직이기 시작했다." },
-                { speaker:"narrator", text:"이번엔 카렌과 엘리아가 호위를 맡았다." },
-                { speaker:"lizette", text:"도련님... 아까 정말 무서웠어요.", emotion:"sad" },
-                { speaker:"you", text:"...나도." },
-                { speaker:"lizette", text:"하지만... 도련님이 지켜주셔서 괜찮았어요.", emotion:"happy" },
-                { speaker:"narrator", text:"리제트가 작게 미소 지었다." },
-                { speaker:"narrator", text:"그 미소를 보니, 조금 안심이 됐다." },
-                { speaker:"narrator", text:"저 멀리, 거대한 성이 보이기 시작했다." },
-                { speaker:"narrator", text:"황궁." },
-                { speaker:"narrator", text:"내 운명이 기다리는 곳." },
-                { speaker:"narrator", text:"...드디어 도착이다." },
-            ], next:"chapter3"},
-        ],
-    },
-
-    // ═══════════════════════════════════════════════════════════════
-    // 챕터 3
-    // ═══════════════════════════════════════════════════════════════
-    chapter3: {
-        title: "Chapter 3", subtitle: "황녀들과의 만남", bgm: "default",
-        scenes: [
-        // ─── 3-1: 황궁 도착 ───
-            { id:"3-1", bg:"bgPalace", chars:[], dialogs:[
-                { speaker:"narrator", text:"황궁." },
-                { speaker:"narrator", text:"거대한 성문이 눈앞에 펼쳐졌다." },
-                { speaker:"narrator", text:"별채에서 보던 세상과는 차원이 달랐다." },
-                { speaker:"narrator", text:"하늘을 찌를 듯한 첨탑, 끝이 보이지 않는 성벽." },
-                { speaker:"narrator", text:"이곳이... 내가 앞으로 살아야 할 곳인가." },
-                { speaker:"lizette", text:"와아... 정말 크네요.", emotion:"default" },
-                { speaker:"narrator", text:"리제트가 입을 벌린 채 성을 올려다보고 있다." },
-                { speaker:"narrator", text:"...솔직히 나도 비슷한 심정이다." },
-            ]},
-
-            { id:"3-1b", bg:"bgPalace", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"karen", text:"도착했습니다, 전하.", emotion:"default" },
-                { speaker:"elia", text:"여기서부터는 우리가 안내할게요.", emotion:"default" },
-                { speaker:"you", text:"...고마워. 여기까지 호위해줘서." },
-                { speaker:"karen", text:"당연한 일입니다.", emotion:"default" },
-                { speaker:"elia", text:"흥, 고마워할 거 있으면 나중에 갚아요.", emotion:"default" },
-                { speaker:"narrator", text:"엘리아가 툭 던지듯 말했지만, 표정은 나쁘지 않았다." },
-            ]},
-
-        // ─── 3-2: 복도 - 수군거림 ───
-            { id:"3-2", bgm:"tense", bg:"bgHall", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"황궁 안으로 들어섰다." },
-                { speaker:"narrator", text:"복도를 지나가는데, 시선이 느껴졌다." },
-                { speaker:"귀족1", text:"저게 그 사생아래." },
-                { speaker:"귀족2", text:"갑자기 황자라니... 웃기지 않아?" },
-                { speaker:"narrator", text:"수군거리는 소리가 들려왔다." },
-                { speaker:"귀족1", text:"저 옆에 하녀 좀 봐. 황자 옆에 딱 붙어있네." },
-                { speaker:"귀족2", text:"주제도 모르고. 쯧쯧." },
-                { speaker:"lizette", text:"............", emotion:"sad" },
-                { speaker:"narrator", text:"리제트의 어깨가 움츠러들었다." },
-                { speaker:"narrator", text:"...어떻게 해야 하지." },
-            ], choices:[
-                { text:"리제트, 조금 떨어져 있어.", next:"3-2a", affection:{lizette:-5} },
-                { text:"(아무 말 없이 앞서 걷는다)", next:"3-2b", affection:{lizette:-3} },
-                { text:"...여기선 말 걸지 마.", next:"3-2c", affection:{lizette:-15} }
-            ]},
-
-        // ─── 선택지 분기 ───
-            { id:"3-2a", bg:"bgHall", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"리제트, 조금 떨어져 있어." },
-                { speaker:"lizette", text:"...네.", emotion:"sad" },
-                { speaker:"narrator", text:"리제트가 고개를 숙이며 한 발 뒤로 물러났다." },
-                { speaker:"narrator", text:"표정이 보이지 않는다." },
-                { speaker:"narrator", text:"...어쩔 수 없는 선택이었다." },
-                { speaker:"narrator", text:"그렇게 믿고 싶었다." },
-            ], next:"3-3"},
-
-            { id:"3-2b", bg:"bgHall", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"narrator", text:"대답 대신, 발걸음을 빠르게 했다." },
-                { speaker:"lizette", text:"도, 도련님...?", emotion:"sad" },
-                { speaker:"narrator", text:"뒤에서 따라오는 발소리가 들렸다." },
-                { speaker:"narrator", text:"점점 멀어지는 것 같았다." },
-                { speaker:"narrator", text:"...미안하다는 말은 하지 못했다." },
-            ], next:"3-3"},
-
-            { id:"3-2c", bg:"bgHall", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"...여기선 말 걸지 마." },
-                { speaker:"lizette", text:"......!", emotion:"sad", effect:"shake" },
-                { speaker:"narrator", text:"리제트가 멈칫했다." },
-                { speaker:"narrator", text:"고개를 푹 숙인 채, 아무 말도 하지 않았다." },
-                { speaker:"narrator", text:"어깨가 작게 떨리는 게 보였다." },
-                { speaker:"narrator", text:"...너무 심했나." },
-                { speaker:"narrator", text:"하지만 이미 뱉은 말이었다." },
-            ], next:"3-3"},
-
-        // ─── 3-3: 알현실 앞 ───
-            { id:"3-3", bg:"bgHall", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"알현실 앞에 도착했다." },
-                { speaker:"karen", text:"여기서부터는 전하 혼자 들어가셔야 합니다.", emotion:"default" },
-                { speaker:"elia", text:"황녀 전하들이 기다리고 계세요.", emotion:"default" },
-                { speaker:"you", text:"...둘은 안 들어가?" },
-                { speaker:"karen", text:"저희는 밖에서 대기합니다.", emotion:"default" },
-                { speaker:"elia", text:"걱정 마요. 잡아먹히진 않을 거예요.", emotion:"default" },
-                { speaker:"elia", text:"...아마도.", emotion:"default" },
-                { speaker:"you", text:"위로가 안 되는데." },
-                { speaker:"narrator", text:"엘리아가 씩 웃었다." },
-                { speaker:"narrator", text:"심호흡을 하고, 문을 열었다." },
-            ]},
-
-        // ─── 3-4: 셀레네 등장 ───
-            { id:"3-4", bgm:"romantic", bg:"bgThrone", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"narrator", text:"알현실 안." },
-                { speaker:"narrator", text:"화려한 샹들리에 아래, 한 여인이 서 있었다." },
-                { speaker:"narrator", text:"백금발에, 우아한 미소." },
-                { speaker:"selene", text:"어머, 드디어 오셨네요.", emotion:"happy" },
-                { speaker:"narrator", text:"여인이 천천히 다가왔다." },
-                { speaker:"selene", text:"반가워요... 오빠.", emotion:"happy" },
-                { speaker:"you", text:"...오빠?" },
-                { speaker:"selene", text:"후후, 저는 셀레네예요. 제 1황녀죠.", emotion:"happy" },
-                { speaker:"selene", text:"오빠가 오시길 정말 기다렸어요.", emotion:"happy" },
-                { speaker:"narrator", text:"부드러운 미소. 다정한 목소리." },
-                { speaker:"narrator", text:"하지만 왠지... 뭔가 이상한 느낌이 들었다." },
-            ], choices:[
-                { text:"반갑습니다, 황녀님.", next:"3-4a", affection:{selene:+3} },
-                { text:"...기다렸다고요?", next:"3-4b", affection:{selene:+5} },
-                { text:"(경계하며) 처음 뵙겠습니다.", next:"3-4c", affection:{selene:+7} }
-            ]},
-
-            { id:"3-4a", bg:"bgThrone", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"you", text:"반갑습니다, 황녀님." },
-                { speaker:"selene", text:"황녀님이라니, 너무 딱딱해요.", emotion:"happy" },
-                { speaker:"selene", text:"그냥 셀레네라고 불러주세요. 우리 가족이잖아요.", emotion:"happy" },
-                { speaker:"narrator", text:"가족." },
-                { speaker:"narrator", text:"한 번도 들어본 적 없는 단어였다." },
-                { speaker:"selene", text:"앞으로 잘 지내요, 오빠.", emotion:"happy" },
-            ], next:"3-5"},
-
-            { id:"3-4b", bg:"bgThrone", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"you", text:"...기다렸다고요?" },
-                { speaker:"selene", text:"그럼요. 오빠가 있다는 소식을 듣고 얼마나 기뻤는지 몰라요.", emotion:"happy" },
-                { speaker:"selene", text:"혼자가 아니라는 게... 정말 좋았어요.", emotion:"happy" },
-                { speaker:"narrator", text:"진심인 것 같기도 하고, 아닌 것 같기도 하고." },
-                { speaker:"narrator", text:"알 수가 없다." },
-                { speaker:"selene", text:"앞으로 자주 봐요. 오빠.", emotion:"happy" },
-            ], next:"3-5"},
-
-            { id:"3-4c", bg:"bgThrone", chars:[{id:"selene",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"처음 뵙겠습니다." },
-                { speaker:"selene", text:"...", emotion:"default" },
-                { speaker:"narrator", text:"잠깐 셀레네의 미소가 멈췄다." },
-                { speaker:"selene", text:"...후후, 긴장하셨구나.", emotion:"happy" },
-                { speaker:"selene", text:"괜찮아요. 천천히 친해지면 되죠.", emotion:"happy" },
-                { speaker:"narrator", text:"다시 미소를 지었지만," },
-                { speaker:"narrator", text:"방금 그 순간이 신경 쓰였다." },
-            ], next:"3-5"},
-
-        // ─── 3-5: 아델린 등장 ───
-            { id:"3-5", bg:"bgThrone", chars:[{id:"selene",pos:"left",emotion:"default"},{id:"adeline",pos:"right",emotion:"angry"}], dialogs:[
-                { speaker:"narrator", text:"그때, 알현실 문이 열렸다." },
-                { speaker:"narrator", text:"은발에 차가운 눈빛. 또 다른 여인이 들어왔다." },
-                { speaker:"adeline", text:"...이게 그 사생아야?", emotion:"angry" },
-                { speaker:"selene", text:"아델린, 그런 말 하면 안 되지.", emotion:"default" },
-                { speaker:"adeline", text:"사실을 말한 것뿐이야.", emotion:"angry" },
-                { speaker:"narrator", text:"제2황녀 아델린." },
-                { speaker:"narrator", text:"나를 쳐다보는 눈빛이 차갑다." },
-                { speaker:"adeline", text:"착각하지 마. 네가 황자라고 환영받는 거 아니야.", emotion:"angry" },
-                { speaker:"adeline", text:"갑자기 나타나서 황위를 노린다? 웃기지도 않아.", emotion:"angry" },
-            ], choices:[
-                { text:"노리는 게 아닙니다. 불려온 것뿐이에요.", next:"3-5a", affection:{adeline:+3} },
-                { text:"그래도 정당한 경쟁자인걸요.", next:"3-5b", affection:{adeline:+3} },
-                { text:"(침묵)", next:"3-5c", affection:{adeline:+0} }
-            ]},
-
-            { id:"3-5a", bg:"bgThrone", chars:[{id:"selene",pos:"left",emotion:"default"},{id:"adeline",pos:"right",emotion:"angry"}], dialogs:[
-                { speaker:"you", text:"노리는 게 아닙니다. 불려온 것뿐이에요." },
-                { speaker:"adeline", text:"...흥.", emotion:"angry" },
-                { speaker:"adeline", text:"그 말이 진심인지 아닌지, 지켜볼 거야.", emotion:"default" },
-                { speaker:"narrator", text:"여전히 차갑지만, 조금은 누그러진 것 같았다." },
-            ], next:"3-6"},
-
-            { id:"3-5b", bg:"bgThrone", chars:[{id:"selene",pos:"left",emotion:"default"},{id:"adeline",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"그래도 정당한 경쟁자인걸요." },
-                { speaker:"adeline", text:"뭐?", emotion:"default" },
-                { speaker:"you", text:"맞잖아요. 저에게도 기회는 있는거 아닌가요?" },
-                { speaker:"adeline", text:"............", emotion:"default" },
-                { speaker:"narrator", text:"아델린이 잠시 말을 잃었다." },
-                { speaker:"adeline", text:"...이상한 녀석.", emotion:"default" },
-                { speaker:"narrator", text:"뭔가 예상과 다르다는 표정이었다." },
-            ], next:"3-6"},
-
-            { id:"3-5c", bg:"bgThrone", chars:[{id:"selene",pos:"left",emotion:"default"},{id:"adeline",pos:"right",emotion:"angry"}], dialogs:[
-                { speaker:"narrator", text:"아무 말도 하지 않았다." },
-                { speaker:"narrator", text:"변명해봤자 소용없을 것 같았다." },
-                { speaker:"adeline", text:"...말도 못 해? 한심하네.", emotion:"angry" },
-                { speaker:"selene", text:"아델린.", emotion:"default" },
-                { speaker:"adeline", text:"알았어, 그만할게.", emotion:"angry" },
-                { speaker:"narrator", text:"아델린이 고개를 돌렸다." },
-            ], next:"3-6"},
-
-        // ─── 3-6: 황녀들 신경전 + 시험 언급 ───
-            { id:"3-6", bgm:"tense", bg:"bgThrone", chars:[{id:"selene",pos:"left",emotion:"default"},{id:"adeline",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"selene", text:"자, 이제 중요한 이야기를 해야겠네요.", emotion:"default" },
-                { speaker:"adeline", text:"황위 계승 시험.", emotion:"default" },
-                { speaker:"selene", text:"오빠도 알고 계시죠? 셋 중 한 명이 황제가 된다는 것.", emotion:"default" },
-                { speaker:"you", text:"...들었습니다." },
-                { speaker:"adeline", text:"어쩌피 내가 될건데 뭘 시험을 본다고, 흥.", emotion:"default" },
-                { speaker:"selene", text:"걱정 마세요. 제가 도와드릴게요.", emotion:"happy" },
-                { speaker:"adeline", text:"언니 말을 믿어? 경쟁자인데 도움은 무슨, 다 꿍꿍이가 있는거지.", emotion:"default" },
-                { speaker:"narrator", text:"두 황녀가 서로를 쳐다봤다." },
-                { speaker:"narrator", text:"부드러운 미소와 차가운 눈빛." },
-                { speaker:"narrator", text:"...이 두 사람과 경쟁해야하는건가." },
-            ]},
-
-            { id:"3-6b", bg:"bgThrone", chars:[{id:"selene",pos:"left",emotion:"default"},{id:"adeline",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"selene", text:"오빠 방은 동쪽 별관에 준비해뒀어요.", emotion:"default" },
-                { speaker:"selene", text:"하녀분도 같이 지내실 수 있게요.", emotion:"happy" },
-                { speaker:"adeline", text:"...하녀까지 챙기네.", emotion:"default" },
-                { speaker:"selene", text:"가족이 데려온 사람인데, 당연하죠.", emotion:"default" },
-                { speaker:"narrator", text:"셀레네가 미소 지었다." },
-                { speaker:"narrator", text:"친절한 건 고맙지만... 뭔가 불안하다." },
-                { speaker:"adeline", text:"첫 번째 시험은 일주일 뒤야. 준비해.", emotion:"default" },
-                { speaker:"narrator", text:"아델린이 그 말만 남기고 알현실을 나갔다." },
-            ]},
-
-        // ─── 3-7: 복도 - 리제트와 대화 ───
-            { id:"3-7", bgm:"romantic", bg:"bgHall", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"narrator", text:"알현실을 나왔다." },
-                { speaker:"narrator", text:"리제트가 복도에서 기다리고 있었다." },
-                { speaker:"narrator", text:"...아까 일이 떠올랐다." },
-                { speaker:"lizette", text:"도련님... 끝나셨어요?", emotion:"sad" },
-                { speaker:"narrator", text:"리제트의 목소리가 평소보다 작았다." },
-                { speaker:"narrator", text:"눈도 제대로 못 마주친다." },
-                { speaker:"you", text:"...리제트." },
-                { speaker:"lizette", text:"네.", emotion:"sad" },
-                { speaker:"narrator", text:"아까 일이 마음에 걸렸다." },
-                { speaker:"narrator", text:"사과해야 할까." },
-            ], choices:[
-                { text:"아까... 미안.", next:"3-7a", affection:{lizette:+5} },
-                { text:"(말없이 옆에 선다)", next:"3-7b", affection:{lizette:+1} },
-                { text:"방으로 가자.", next:"3-7c", affection:{lizette:-3} }
-            ]},
-
-            { id:"3-7a", bg:"bgHall", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"아까... 미안." },
-                { speaker:"lizette", text:"...!", emotion:"sad" },
-                { speaker:"narrator", text:"리제트가 고개를 들었다." },
-                { speaker:"you", text:"남들의 시선을 신경쓰느라 너한테 괜히.." },
-                { speaker:"lizette", text:"아니에요... 저야말로 생각이 짧았어요.", emotion:"sad" },
-                { speaker:"lizette", text:"도련님 입장도 생각했어야 했는데...", emotion:"sad" },
-                { speaker:"you", text:"네 잘못 아니야." },
-                { speaker:"lizette", text:"............", emotion:"default" },
-                { speaker:"narrator", text:"리제트의 표정이 조금 풀어졌다." },
-                { speaker:"lizette", text:"...감사해요, 도련님.", emotion:"happy" },
-            ], next:"3-8"},
-
-            { id:"3-7b", bg:"bgHall", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"말없이 리제트 옆에 섰다." },
-                { speaker:"lizette", text:"...도련님?", emotion:"default" },
-                { speaker:"narrator", text:"그냥 같이 있고 싶었다." },
-                { speaker:"narrator", text:"말로 사과하긴 어렵지만, 이 정도는." },
-                { speaker:"lizette", text:"............", emotion:"default" },
-                { speaker:"narrator", text:"리제트가 작게 고개를 끄덕였다." },
-                { speaker:"narrator", text:"무슨 의미인지는 모르겠지만, 분위기가 조금 나아진 것 같았다." },
-            ], next:"3-8"},
-
-            { id:"3-7c", bg:"bgHall", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"방으로 가자." },
-                { speaker:"lizette", text:"...네.", emotion:"sad" },
-                { speaker:"narrator", text:"리제트가 고개를 숙인 채 뒤따랐다." },
-                { speaker:"narrator", text:"사과해야 하는 건 알지만..." },
-                { speaker:"narrator", text:"지금은 너무 지쳤다." },
-            ], next:"3-8"},
-
-        // ─── 3-8: 카이른 방 - 마무리 ───
-            { id:"3-8", bgm:"peaceful", bg:"bgRoom", chars:[], dialogs:[
-                { speaker:"narrator", text:"동쪽 별관에 도착했다." },
-                { speaker:"narrator", text:"생각보다 넓고 깨끗한 방이었다." },
-                { speaker:"narrator", text:"별채와는 비교도 안 될 정도로." },
-                { speaker:"narrator", text:"...그래도 어색하다." },
-                { speaker:"narrator", text:"창밖으로 황궁의 정원이 보였다." },
-            ]},
-
-            { id:"3-8b", bg:"bgRoom", chars:[], dialogs:[
-                { speaker:"narrator", text:"황녀들." },
-                { speaker:"narrator", text:"셀레네는 친절했지만, 아델린의 말대로 분명히 댓가없는 친절은 아닐것이다." },
-                { speaker:"narrator", text:"반면, 아델린은 대놓고 적대적이다." },
-                { speaker:"narrator", text:"그리고 일주일 뒤에 시험." },
-                { speaker:"narrator", text:"...정신없는 하루였다." },
-                { speaker:"narrator", text:"침대에 누웠다." },
-                { speaker:"narrator", text:"내일부터가 진짜 시작이다." },
-                { speaker:"narrator", text:"살아남아야 한다." },
-                { speaker:"narrator", text:"이 황궁에서." },
-            ], next:"chapter4"},
-        ],
-    },
-
-    // ═══════════════════════════════════════════════════════════════
-    // 챕터 4
-    // ═══════════════════════════════════════════════════════════════
     chapter4: {
-        title: "Chapter 4", subtitle: "첫 번째 시험", bgm: "default",
+        title: "Chapter 4", subtitle: "첫 번째 시험", bgm: "tense",
         scenes: [
-        // ═══════════════════════════════════════
-        // 파트 A: 황궁 첫날 아침
-        // ═══════════════════════════════════════
-            { id:"4-1", bg:"bgRoom", chars:[], dialogs:[
-                { speaker:"narrator", text:"황궁에서의 첫 아침." },
-                { speaker:"narrator", text:"낯선 천장을 바라보며 눈을 떴다." },
-                { speaker:"narrator", text:"여긴... 아, 맞다. 황궁이었지." },
-                { speaker:"narrator", text:"별채의 낡은 침대와는 비교도 안 되게 푹신했지만," },
-                { speaker:"narrator", text:"오히려 그게 더 불편하게 느껴졌다." },
-            ]},
-
-            { id:"4-2", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"lizette", text:"도련님, 일어나셨어요?", emotion:"default" },
-                { speaker:"you", text:"...응. 얼마나 잤지?" },
-                { speaker:"lizette", text:"해가 벌써 높이 떴어요. 많이 피곤하셨나 봐요.", emotion:"default" },
-                { speaker:"narrator", text:"리제트가 조용히 커튼을 열었다." },
-                { speaker:"narrator", text:"눈부신 햇살이 쏟아져 들어왔다." },
-                { speaker:"lizette", text:"오늘부터 시험 준비 기간이래요.", emotion:"default" },
-                { speaker:"lizette", text:"일주일 동안 자유롭게 황궁을 둘러볼 수 있다고...", emotion:"default" },
-                { speaker:"you", text:"자유롭게, 라..." },
-                { speaker:"narrator", text:"자유라기보단 '알아서 준비해라'는 느낌이었다." },
-            ]},
-
-            { id:"4-3", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"lizette", text:"그리고... 저는 도련님과 따로 지내게 됐어요.", emotion:"sad" },
-                { speaker:"you", text:"뭐?" },
-                { speaker:"lizette", text:"하인 숙소에서 지내래요. 황자 전하의 방에 하녀가 드나드는 건 적절치 않다고...", emotion:"sad" },
-                { speaker:"narrator", text:"리제트가 고개를 숙였다." },
-                { speaker:"lizette", text:"하지만 낮에는 도련님 곁에 있을 수 있어요!", emotion:"default" },
-                { speaker:"lizette", text:"그러니까... 너무 걱정 마세요.", emotion:"default" },
-                { speaker:"narrator", text:"억지로 웃는 게 보였다." },
-                { speaker:"narrator", text:"황궁이란 곳이 벌써부터 우리 사이에 선을 긋고 있었다." },
-            ]},
-
-        // ═══════════════════════════════════════
-        // 파트 B: 셀레네의 접근
-        // ═══════════════════════════════════════
-            { id:"4-4", bgm:"romantic", bg:"bgHall", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"narrator", text:"복도를 걷는데, 익숙한 목소리가 들려왔다." },
-                { speaker:"selene", text:"오빠~", emotion:"happy" },
-                { speaker:"narrator", text:"셀레네였다." },
-                { speaker:"narrator", text:"우아한 드레스를 입고, 환한 미소를 지으며 다가왔다." },
-                { speaker:"selene", text:"아침은 드셨어요? 저랑 같이 하실래요?", emotion:"happy" },
-                { speaker:"you", text:"...같이?" },
-                { speaker:"selene", text:"네! 오빠랑 더 친해지고 싶거든요.", emotion:"happy" },
-                { speaker:"selene", text:"그리고... 시험에 대해서도 알려드릴 게 있어요.", emotion:"default" },
-            ], choices:[
-                { text:"좋아. 같이 먹자.", next:"4-4a", affection:{selene:+10} },
-                { text:"시험 정보? 그거 먼저 들을게.", next:"4-4b", affection:{selene:+5} },
-                { text:"혼자 먹을게. 고마워.", next:"4-4c", affection:{selene:+0} }
-            ]},
-
-            { id:"4-4a", bg:"bgHall", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"you", text:"좋아. 같이 먹자." },
-                { speaker:"selene", text:"정말요? 기뻐요!", emotion:"happy" },
-                { speaker:"narrator", text:"셀레네가 내 팔을 자연스럽게 잡았다." },
-                { speaker:"narrator", text:"...좀 가깝지 않나?" },
-                { speaker:"selene", text:"이쪽으로 와요. 제 정원이 있거든요.", emotion:"happy" },
-            ], next:"4-5"},
-
-            { id:"4-4b", bg:"bgHall", chars:[{id:"selene",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"시험 정보? 그거 먼저 들을게." },
-                { speaker:"selene", text:"후후, 급하시네요.", emotion:"default" },
-                { speaker:"selene", text:"좋아요. 밥 먹으면서 얘기해요.", emotion:"happy" },
-                { speaker:"narrator", text:"셀레네가 앞장서서 걸었다." },
-            ], next:"4-5"},
-
-            { id:"4-4c", bg:"bgHall", chars:[{id:"selene",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"혼자 먹을게. 고마워." },
-                { speaker:"selene", text:"...", emotion:"default" },
-                { speaker:"narrator", text:"셀레네의 미소가 잠깐 굳었다." },
-                { speaker:"selene", text:"...그래요. 그럼 나중에 봐요.", emotion:"default" },
-                { speaker:"narrator", text:"살짝 실망한 것 같았다." },
-                { speaker:"narrator", text:"하지만 금방 미소를 되찾더니 돌아섰다." },
-                { speaker:"selene", text:"시험 정보가 필요하면 언제든 찾아와요, 오빠.", emotion:"happy" },
-            ], next:"4-6"},
-
-            { id:"4-5", bg:"bgGarden", chars:[{id:"selene",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"셀레네의 정원은 아름다웠다." },
-                { speaker:"narrator", text:"알록달록한 꽃들이 가득했고, 작은 테이블이 놓여 있었다." },
-                { speaker:"selene", text:"여기서 자주 차를 마셔요. 조용하고 좋거든요.", emotion:"default" },
-                { speaker:"narrator", text:"시종들이 음식을 가져왔다." },
-                { speaker:"selene", text:"자, 드세요. 그리고 시험 얘기인데요...", emotion:"default" },
-                { speaker:"selene", text:"첫 번째 시험은 '지략'을 보는 거예요.", emotion:"default" },
-                { speaker:"you", text:"지략?" },
-                { speaker:"selene", text:"네. 패턴을 읽고, 기억하고, 판단하는 능력.", emotion:"default" },
-                { speaker:"selene", text:"황제는 머리가 좋아야 하니까요.", emotion:"happy" },
-            ]},
-
-            { id:"4-5b", bg:"bgGarden", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"selene", text:"제가 도와드릴게요, 오빠.", emotion:"happy" },
-                { speaker:"you", text:"도와준다고? 우리 경쟁 상대잖아." },
-                { speaker:"selene", text:"후후, 그건 그렇지만...", emotion:"happy" },
-                { speaker:"selene", text:"저는 오빠가 떨어지는 게 더 싫어요.", emotion:"default" },
-                { speaker:"narrator", text:"무슨 의미일까." },
-                { speaker:"narrator", text:"단순한 가족애인지, 아니면..." },
-                { speaker:"selene", text:"오빠가 황궁에 남아야 저도 자주 볼 수 있잖아요.", emotion:"happy" },
-                { speaker:"narrator", text:"셀레네가 의미심장하게 웃었다." },
-            ], choices:[
-                { text:"고마워. 네 도움이 필요할 것 같아.", next:"4-5c", affection:{selene:+15} },
-                { text:"왜 이렇게까지 해주는 거야?", next:"4-5d", affection:{selene:+10} },
-                { text:"혼자 해볼게. 그래도 고마워.", next:"4-5e", affection:{selene:+5} }
-            ]},
-
-            { id:"4-5c", bg:"bgGarden", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"you", text:"고마워. 네 도움이 필요할 것 같아." },
-                { speaker:"selene", text:"정말요?!", emotion:"happy" },
-                { speaker:"narrator", text:"셀레네의 눈이 반짝였다." },
-                { speaker:"selene", text:"기뻐요! 열심히 도와드릴게요!", emotion:"happy" },
-                { speaker:"selene", text:"매일 이 시간에 여기서 만나요. 제가 특훈시켜 드릴게요.", emotion:"happy" },
-                { speaker:"narrator", text:"...왠지 의욕이 넘쳐 보인다." },
-            ], next:"4-6"},
-
-            { id:"4-5d", bg:"bgGarden", chars:[{id:"selene",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"왜 이렇게까지 해주는 거야?" },
-                { speaker:"selene", text:"...", emotion:"default" },
-                { speaker:"narrator", text:"셀레네가 잠시 말을 멈췄다." },
-                { speaker:"selene", text:"...이유가 필요한가요?", emotion:"default" },
-                { speaker:"selene", text:"그냥 오빠니까요. 가족이잖아요.", emotion:"happy" },
-                { speaker:"narrator", text:"밝게 웃었지만, 뭔가 숨기는 느낌이 들었다." },
-                { speaker:"narrator", text:"하지만 더 캐묻진 않았다." },
-            ], next:"4-6"},
-
-            { id:"4-5e", bg:"bgGarden", chars:[{id:"selene",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"혼자 해볼게. 그래도 고마워." },
-                { speaker:"selene", text:"...그래요?", emotion:"default" },
-                { speaker:"narrator", text:"살짝 아쉬운 표정이었다." },
-                { speaker:"selene", text:"그럼 힘들면 말해요. 언제든 도와줄게요.", emotion:"default" },
-            ], next:"4-6"},
-
-        // ═══════════════════════════════════════
-        // 파트 C: 아델린과 마주침
-        // ═══════════════════════════════════════
-            { id:"4-6", bgm:"tense", bg:"bgHall", chars:[{id:"adeline",pos:"center",emotion:"angry"}], dialogs:[
-                { speaker:"narrator", text:"식사를 마치고 복도를 걷는데—" },
-                { speaker:"adeline", text:"거기 서.", emotion:"angry" },
-                { speaker:"narrator", text:"아델린이 앞을 막아섰다." },
-                { speaker:"narrator", text:"차가운 눈빛이 나를 꿰뚫었다." },
-                { speaker:"adeline", text:"셀레네랑 밥 먹었다며?", emotion:"angry" },
-                { speaker:"you", text:"...그게?" },
-                { speaker:"adeline", text:"경고하는데, 저 여자 믿지 마.", emotion:"default" },
-                { speaker:"you", text:"뭐?" },
-                { speaker:"adeline", text:"셀레네가 친절한 건 다 이유가 있어. 순수한 호의 같은 거 없어.", emotion:"default" },
-            ]},
-
-            { id:"4-6b", bg:"bgHall", chars:[{id:"adeline",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"넌 왜 이런 얘기를 해주는 건데?" },
-                { speaker:"adeline", text:"...착각하지 마. 널 위해서가 아니야.", emotion:"default" },
-                { speaker:"adeline", text:"그냥 셀레네가 유리해지는 게 싫을 뿐이야.", emotion:"angry" },
-                { speaker:"narrator", text:"아델린이 고개를 돌렸다." },
-                { speaker:"narrator", text:"하지만..." },
-                { speaker:"adeline", text:"...시험. 첫 번째는 기억력이야.", emotion:"default", effect:"whisper" },
-                { speaker:"you", text:"...?" },
-                { speaker:"adeline", text:"듣지 못한 척 해.", emotion:"default" },
-                { speaker:"narrator", text:"그리고 빠르게 지나갔다." },
-            ], choices:[
-                { text:"잠깐, 고마워.", next:"4-6c", affection:{adeline:+15} },
-                { text:"(뒤에 대고) 넌 생각보다 착하네.", next:"4-6d", affection:{adeline:+10} },
-                { text:"(그냥 보내준다)", next:"4-6e", affection:{adeline:+5} }
-            ]},
-
-            { id:"4-6c", bg:"bgHall", chars:[{id:"adeline",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"잠깐, 고마워." },
-                { speaker:"narrator", text:"아델린이 멈칫했다." },
-                { speaker:"adeline", text:"...뭐?", emotion:"sad" },
-                { speaker:"you", text:"힌트 줘서. 고맙다고." },
-                { speaker:"adeline", text:"......", emotion:"sad" },
-                { speaker:"narrator", text:"귀가 살짝 붉어진 것 같았다." },
-                { speaker:"adeline", text:"...닥쳐. 고마워할 거 없어.", emotion:"angry" },
-                { speaker:"narrator", text:"그리고 빠르게 사라졌다." },
-                { speaker:"narrator", text:"...츤데레인가." },
-            ], next:"4-7"},
-
-            { id:"4-6d", bg:"bgHall", chars:[], dialogs:[
-                { speaker:"narrator", text:"아델린의 뒷모습에 대고 말했다." },
-                { speaker:"you", text:"넌 생각보다 착하네." },
-                { speaker:"narrator", text:"멀리서 아델린이 걸음을 멈추는 게 보였다." },
-                { speaker:"adeline", text:"...뭐라고?!", emotion:"angry" },
-                { speaker:"narrator", text:"하지만 돌아오진 않았다." },
-                { speaker:"narrator", text:"씩씩거리며 가는 뒷모습이 보였다." },
-            ], next:"4-7"},
-
-            { id:"4-6e", bg:"bgHall", chars:[], dialogs:[
-                { speaker:"narrator", text:"아델린을 그냥 보내줬다." },
-                { speaker:"narrator", text:"...경고와 힌트. 둘 다 신경 쓰였다." },
-                { speaker:"narrator", text:"셀레네를 조심하라는 건 무슨 의미일까." },
-            ], next:"4-7"},
-
-        // ═══════════════════════════════════════
-        // 파트 D: 카렌의 검술 훈련
-        // ═══════════════════════════════════════
-            { id:"4-7", bgm:"default", bg:"bgGarden", chars:[{id:"karen",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"오후가 되자, 카렌이 찾아왔다." },
-                { speaker:"karen", text:"전하, 시간 되십니까.", emotion:"default" },
-                { speaker:"you", text:"카렌? 무슨 일이야?" },
-                { speaker:"karen", text:"첫 번째 시험은 지략이지만... 두 번째는 무력입니다.", emotion:"default" },
-                { speaker:"karen", text:"미리 준비해두시는 게 좋을 것 같아 찾아왔습니다.", emotion:"default" },
-                { speaker:"you", text:"검술을 가르쳐주겠다는 거야?" },
-                { speaker:"karen", text:"...제가 감히 가르치는 건 아니고. 기초만.", emotion:"default" },
-                { speaker:"narrator", text:"카렌이 목검 두 자루를 꺼냈다." },
-            ]},
-
-            { id:"4-7b", bg:"bgGarden", chars:[{id:"karen",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"기초 자세부터 배웠다." },
-                { speaker:"narrator", text:"검을 잡는 법, 발 딛는 법, 시선 처리." },
-                { speaker:"karen", text:"자세가... 생각보다 좋습니다.", emotion:"default" },
-                { speaker:"you", text:"그래?" },
-                { speaker:"karen", text:"처음 잡는 것 치고는 안정적입니다. 재능이 있으신 것 같습니다.", emotion:"default" },
-                { speaker:"narrator", text:"카렌이 살짝 놀란 표정을 지었다." },
-                { speaker:"narrator", text:"칭찬인 것 같은데, 표정 변화가 거의 없어서 모르겠다." },
-            ]},
-
-            { id:"4-7c", bg:"bgGarden", chars:[{id:"karen",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"karen", text:"오늘은 여기까지.", emotion:"default" },
-                { speaker:"karen", text:"내일도 시간 되시면 찾아오겠습니다.", emotion:"default" },
-                { speaker:"you", text:"고마워, 카렌. 바쁠 텐데 시간 내줘서." },
-                { speaker:"karen", text:"...당연한 일입니다.", emotion:"default" },
-                { speaker:"narrator", text:"카렌이 고개를 살짝 숙였다." },
-            ], choices:[
-                { text:"넌 왜 나를 도와주는 거야?", next:"4-7d", affection:{karen:+10} },
-                { text:"다음에도 잘 부탁해.", next:"4-7e", affection:{karen:+5} }
-            ]},
-
-            { id:"4-7d", bg:"bgGarden", chars:[{id:"karen",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"넌 왜 나를 도와주는 거야? 황녀 휘하잖아." },
-                { speaker:"karen", text:"...", emotion:"default" },
-                { speaker:"narrator", text:"카렌이 잠시 침묵했다." },
-                { speaker:"karen", text:"...저는 황녀 전하의 명령으로 움직입니다.", emotion:"default" },
-                { speaker:"karen", text:"하지만...", emotion:"default" },
-                { speaker:"narrator", text:"카렌이 나를 바라봤다." },
-                { speaker:"karen", text:"전하를 돕고 싶다는 마음도 있습니다.", emotion:"default" },
-                { speaker:"you", text:"...그래?" },
-                { speaker:"karen", text:"습격 때 보았습니다. 무기도 없이 하녀분을 지키려 했던 것.", emotion:"default" },
-                { speaker:"karen", text:"그런 분이라면... 모시고 싶다고 생각했습니다.", emotion:"default" },
-                { speaker:"narrator", text:"카렌의 눈이 진지했다." },
-                { speaker:"narrator", text:"무표정하지만, 진심인 것 같았다." },
-            ], next:"4-8"},
-
-            { id:"4-7e", bg:"bgGarden", chars:[{id:"karen",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"다음에도 잘 부탁해." },
-                { speaker:"karen", text:"네. 열심히 하겠습니다.", emotion:"default" },
-                { speaker:"narrator", text:"카렌이 고개를 숙이고 떠났다." },
-            ], next:"4-8"},
-
-        // ═══════════════════════════════════════
-        // 파트 E: 엘리아의 정보
-        // ═══════════════════════════════════════
-            { id:"4-8", bg:"bgRoom", chars:[{id:"elia",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"저녁, 방에서 쉬고 있는데 노크 소리가 들렸다." },
-                { speaker:"narrator", text:"문을 열자 엘리아가 서 있었다." },
-                { speaker:"elia", text:"...들어가도 돼?", emotion:"default" },
-                { speaker:"you", text:"엘리아? 무슨 일이야?" },
-                { speaker:"elia", text:"잠깐이면 돼.", emotion:"default" },
-                { speaker:"narrator", text:"엘리아가 주위를 살피더니 안으로 들어왔다." },
-                { speaker:"elia", text:"시험 얘기 하러 왔어.", emotion:"default" },
-                { speaker:"you", text:"...너도?" },
-                { speaker:"elia", text:"'너도'라니, 누가 또 왔어?", emotion:"angry" },
-                { speaker:"you", text:"셀레네랑 아델린." },
-                { speaker:"elia", text:"...흥, 다들 발이 빠르네.", emotion:"default" },
-            ]},
-
-            { id:"4-8b", bg:"bgRoom", chars:[{id:"elia",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"elia", text:"난 더 구체적인 거 알려줄게.", emotion:"default" },
-                { speaker:"you", text:"뭔데?" },
-                { speaker:"elia", text:"시험은 '빛의 순서'를 맞추는 거야.", emotion:"default" },
-                { speaker:"elia", text:"화면에 빛이 순서대로 나타나면 그걸 기억해서 따라하는 거지.", emotion:"default" },
-                { speaker:"you", text:"기억력 테스트네." },
-                { speaker:"elia", text:"맞아. 한 번이라도 틀리면 탈락.", emotion:"default" },
-                { speaker:"elia", text:"...바보처럼 굴지 마. 집중해.", emotion:"default" },
-            ], choices:[
-                { text:"왜 이런 정보까지 알려주는 거야?", next:"4-8c", affection:{elia:+10} },
-                { text:"고마워, 도움이 됐어.", next:"4-8d", affection:{elia:+5} }
-            ]},
-
-            { id:"4-8c", bg:"bgRoom", chars:[{id:"elia",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"왜 이런 정보까지 알려주는 거야?" },
-                { speaker:"elia", text:"...", emotion:"sad" },
-                { speaker:"narrator", text:"엘리아가 잠시 말을 멈췄다." },
-                { speaker:"elia", text:"...몰라. 그냥.", emotion:"sad" },
-                { speaker:"elia", text:"네가 떨어지면 재미없을 것 같아서.", emotion:"default" },
-                { speaker:"you", text:"재미?" },
-                { speaker:"elia", text:"놀릴 상대가 없어지잖아.", emotion:"default" },
-                { speaker:"narrator", text:"건방지게 말했지만, 표정은 어딘가 쑥스러워 보였다." },
-                { speaker:"elia", text:"어, 어쨌든! 떨어지지 마!", emotion:"angry" },
-                { speaker:"narrator", text:"그리고 빠르게 나가버렸다." },
-            ], next:"4-9"},
-
-            { id:"4-8d", bg:"bgRoom", chars:[{id:"elia",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"고마워, 도움이 됐어." },
-                { speaker:"elia", text:"흥, 당연하지.", emotion:"default" },
-                { speaker:"elia", text:"...떨어지지 마.", emotion:"default" },
-                { speaker:"narrator", text:"엘리아가 문을 열고 나갔다." },
-            ], next:"4-9"},
-
-        // ═══════════════════════════════════════
-        // 파트 F: 루나 첫 등장
-        // ═══════════════════════════════════════
-            { id:"4-9", bgm:"peaceful", bg:"bgGarden", chars:[], dialogs:[
-                { speaker:"narrator", text:"다음 날, 정원을 산책하고 있었다." },
-                { speaker:"narrator", text:"머리를 식힐 겸 걷다 보니 외진 곳까지 왔다." },
-                { speaker:"narrator", text:"그런데—" },
-                { speaker:"narrator", text:"벤치에 누군가 앉아 있었다." },
-                { speaker:"narrator", text:"검은 머리카락. 작은 체구." },
-                { speaker:"narrator", text:"혼자 무언가를 응시하고 있었다." },
-            ]},
-
-            { id:"4-9b", bg:"bgGarden", chars:[{id:"luna",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"다가가자, 소녀가 고개를 들었다." },
-                { speaker:"luna", text:"...", emotion:"default" },
-                { speaker:"narrator", text:"푸른 눈이 나를 경계하듯 바라봤다." },
-                { speaker:"luna", text:"...누구야.", emotion:"default" },
-                { speaker:"you", text:"산책하다가. 방해했으면 미안." },
-                { speaker:"luna", text:"...", emotion:"default" },
-                { speaker:"narrator", text:"소녀가 다시 고개를 돌렸다." },
-                { speaker:"narrator", text:"말을 걸지 말라는 분위기가 역력했다." },
-            ], choices:[
-                { text:"혼자 있어도 괜찮아?", next:"4-9c", affection:{luna:+15} },
-                { text:"(조용히 옆에 앉는다)", next:"4-9d", affection:{luna:+10} },
-                { text:"(그냥 지나간다)", next:"4-9e", affection:{luna:+0} }
-            ]},
-
-            { id:"4-9c", bg:"bgGarden", chars:[{id:"luna",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"혼자 있어도 괜찮아?" },
-                { speaker:"luna", text:"...무슨 상관이야.", emotion:"default" },
-                { speaker:"you", text:"그냥 물어본 거야." },
-                { speaker:"luna", text:"...", emotion:"default" },
-                { speaker:"narrator", text:"소녀가 나를 힐끗 쳐다봤다." },
-                { speaker:"luna", text:"...넌 누군데 이런 데까지 와.", emotion:"default" },
-                { speaker:"you", text:"새로 온 황자. 카이른이야." },
-                { speaker:"luna", text:"...황자?", emotion:"sad" },
-                { speaker:"narrator", text:"소녀의 눈이 살짝 커졌다." },
-                { speaker:"luna", text:"...루나.", emotion:"default" },
-                { speaker:"you", text:"응?" },
-                { speaker:"luna", text:"이름. 루나야.", emotion:"default" },
-                { speaker:"narrator", text:"작게 대답하고, 다시 고개를 돌렸다." },
-                { speaker:"narrator", text:"...이름을 알려줬네." },
-            ], next:"4-10"},
-
-            { id:"4-9d", bg:"bgGarden", chars:[{id:"luna",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"말없이 벤치 한쪽에 앉았다." },
-                { speaker:"luna", text:"...뭐야.", emotion:"default" },
-                { speaker:"you", text:"그냥 좀 쉬려고." },
-                { speaker:"luna", text:"...", emotion:"default" },
-                { speaker:"narrator", text:"소녀가 불편한 듯 몸을 움직였다." },
-                { speaker:"narrator", text:"하지만 자리를 뜨진 않았다." },
-                { speaker:"narrator", text:"한참을 그렇게 있다가—" },
-                { speaker:"luna", text:"...루나.", emotion:"default" },
-                { speaker:"you", text:"뭐?" },
-                { speaker:"luna", text:"이름이야. 물어보려고 했잖아.", emotion:"default" },
-                { speaker:"you", text:"안 물어봤는데." },
-                { speaker:"luna", text:"...", emotion:"sad" },
-                { speaker:"narrator", text:"소녀가 살짝 당황한 것 같았다." },
-                { speaker:"narrator", text:"...귀엽네." },
-            ], next:"4-10"},
-
-            { id:"4-9e", bg:"bgGarden", chars:[], dialogs:[
-                { speaker:"narrator", text:"말을 걸지 않고 지나갔다." },
-                { speaker:"narrator", text:"뒤에서 시선이 느껴졌지만, 돌아보진 않았다." },
-            ], next:"4-10"},
-
-        // 루나 추가 정보
-            { id:"4-10", bg:"bgGarden", chars:[{id:"elia",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"나중에 엘리아에게 물어봤다." },
-                { speaker:"you", text:"루나라는 애 알아?" },
-                { speaker:"elia", text:"루나? 아, 알지.", emotion:"default" },
-                { speaker:"elia", text:"우리 집 기사의 동생이야.", emotion:"default" },
-                { speaker:"you", text:"기사의 동생?" },
-                { speaker:"elia", text:"응. 부모님이 돌아가셔서 오빠 따라 황궁에 있어.", emotion:"default" },
-                { speaker:"elia", text:"좀 어두운 애야. 말도 잘 안 하고.", emotion:"default" },
-                { speaker:"narrator", text:"그렇구나. 힘든 사정이 있었구나." },
-            ]},
-
-            { id:"4-10b", bg:"bgGarden", chars:[{id:"luna",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"그 뒤로도 몇 번 루나를 마주쳤다." },
-                { speaker:"narrator", text:"항상 같은 벤치에 앉아있었다." },
-                { speaker:"narrator", text:"말은 거의 하지 않았지만—" },
-                { speaker:"narrator", text:"점점 경계가 풀리는 것 같았다." },
-                { speaker:"luna", text:"...또 왔어.", emotion:"default" },
-                { speaker:"you", text:"응. 여기 좋더라고." },
-                { speaker:"luna", text:"...", emotion:"default" },
-                { speaker:"narrator", text:"루나가 고개를 돌렸지만," },
-                { speaker:"narrator", text:"벤치 한쪽을 비워두는 걸 보면 싫지는 않은 것 같았다." },
-            ], choices:[
-                { text:"나중에 같이 산책할래?", next:"4-10c", affection:{luna:+15} },
-                { text:"(말없이 옆에 앉는다)", next:"4-10d", affection:{luna:+10} }
-            ]},
-
-            { id:"4-10c", bg:"bgGarden", chars:[{id:"luna",pos:"center",emotion:"sad"}], dialogs:[
-                { speaker:"you", text:"나중에 같이 산책할래?" },
-                { speaker:"luna", text:"...왜?", emotion:"sad" },
-                { speaker:"you", text:"혼자보다 둘이 낫잖아." },
-                { speaker:"luna", text:"............", emotion:"sad" },
-                { speaker:"narrator", text:"루나가 오랫동안 침묵했다." },
-                { speaker:"luna", text:"...생각해볼게.", emotion:"default" },
-                { speaker:"narrator", text:"거절이 아니었다." },
-                { speaker:"narrator", text:"작은 진전이지만, 기분이 좋았다." },
-            ], next:"4-11"},
-
-            { id:"4-10d", bg:"bgGarden", chars:[{id:"luna",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"말없이 옆에 앉았다." },
-                { speaker:"narrator", text:"루나도 아무 말 하지 않았다." },
-                { speaker:"narrator", text:"하지만 불편하지 않은 침묵이었다." },
-                { speaker:"narrator", text:"가끔은 이런 것도 괜찮았다." },
-            ], next:"4-11"},
-
-        // ═══════════════════════════════════════
-        // 파트 G: 시험 전날 밤
-        // ═══════════════════════════════════════
-            { id:"4-11", bgm:"romantic", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"시험 전날 밤." },
-                { speaker:"narrator", text:"리제트가 찾아왔다." },
-                { speaker:"lizette", text:"도련님, 내일이에요.", emotion:"default" },
-                { speaker:"you", text:"응. 떨리네." },
-                { speaker:"lizette", text:"...저도 떨려요.", emotion:"sad" },
-                { speaker:"you", text:"넌 왜 떨려?" },
-                { speaker:"lizette", text:"도련님이 걱정되니까요.", emotion:"sad" },
-                { speaker:"narrator", text:"리제트가 작게 웃었다." },
-                { speaker:"lizette", text:"도련님이 실패하면... 다시 별채로 돌아가는 거잖아요.", emotion:"sad" },
-                { speaker:"lizette", text:"그건 싫어요. 여기서 도련님이 인정받는 모습 보고 싶어요.", emotion:"default" },
-            ]},
-
-            { id:"4-11b", bg:"bgRoom", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
-                { speaker:"you", text:"걱정 마. 해볼게." },
-                { speaker:"lizette", text:"네! 도련님이라면 분명 잘하실 거예요!", emotion:"happy" },
-                { speaker:"narrator", text:"리제트가 환하게 웃었다." },
-                { speaker:"lizette", text:"전 늘 도련님 편이에요. 응원할게요.", emotion:"happy" },
-                { speaker:"you", text:"...고마워, 리제트." },
-                { speaker:"narrator", text:"리제트가 고개를 숙이고 방을 나갔다." },
-                { speaker:"narrator", text:"내일." },
-                { speaker:"narrator", text:"모든 게 결정된다." },
-            ]},
-
-        // ═══════════════════════════════════════
-        // 파트 H: 첫 번째 시험 (미니게임)
-        // ═══════════════════════════════════════
-            { id:"4-12", bgm:"tense", bg:"bgThrone", chars:[], dialogs:[
-                { speaker:"narrator", text:"시험 당일." },
-                { speaker:"narrator", text:"알현실에 모두가 모였다." },
-            ]},
-
-            { id:"4-12b", bg:"bgThrone", chars:[{id:"selene",pos:"left",emotion:"default"},{id:"adeline",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"셀레네와 아델린이 이미 와 있었다." },
-                { speaker:"selene", text:"오빠, 긴장됐어요?", emotion:"default" },
-                { speaker:"adeline", text:"...흥.", emotion:"default" },
-                { speaker:"narrator", text:"셀레네는 미소를, 아델린은 무표정을 유지했다." },
-                { speaker:"narrator", text:"둘 다 긴장한 기색이 없었다." },
-                { speaker:"narrator", text:"이 시험을 이미 여러 번 해본 것처럼." },
-            ]},
-
-            { id:"4-12c", bg:"bgThrone", chars:[], dialogs:[
-                { speaker:"시험관", text:"첫 번째 시험을 시작하겠습니다.", effect:"grow" },
-                { speaker:"시험관", text:"이 시험은 '지략'을 평가합니다." },
-                { speaker:"시험관", text:"빛이 나타나는 순서를 기억하고, 정확히 따라하십시오." },
-                { speaker:"시험관", text:"한 번이라도 틀리면 탈락입니다." },
-                { speaker:"narrator", text:"심장이 쿵쾅거렸다." },
-                { speaker:"시험관", text:"준비되셨습니까? 시작합니다." },
-            ], next:"minigame-memory"},
-
-        // ═══════════════════════════════════════
-        // 파트 I: 시험 결과
-        // ═══════════════════════════════════════
-            { id:"4-pass", bgm:"peaceful", bg:"bgThrone", chars:[{id:"selene",pos:"left",emotion:"happy"},{id:"adeline",pos:"right",emotion:"default"}], dialogs:[
-                { speaker:"시험관", text:"카이른 전하, 통과입니다.", effect:"grow" },
-                { speaker:"narrator", text:"...해냈다." },
-                { speaker:"narrator", text:"긴장이 풀리며 숨을 내쉬었다." },
-                { speaker:"selene", text:"역시 오빠예요! 축하해요!", emotion:"happy" },
-                { speaker:"adeline", text:"...운이 좋았네.", emotion:"default" },
-                { speaker:"narrator", text:"아델린이 퉁명스럽게 말했지만," },
-                { speaker:"narrator", text:"눈빛은 조금 다른 것 같았다." },
-            ]},
-
-            { id:"4-pass2", bg:"bgThrone", chars:[{id:"karen",pos:"left",emotion:"default"},{id:"elia",pos:"right",emotion:"happy"}], dialogs:[
-                { speaker:"karen", text:"축하드립니다, 전하.", emotion:"default" },
-                { speaker:"elia", text:"봐봐, 내가 힌트 줘서 붙은 거잖아!", emotion:"happy" },
-                { speaker:"you", text:"다들 도와줘서 붙은 거야. 고마워." },
-                { speaker:"narrator", text:"첫 번째 관문을 넘었다." },
-                { speaker:"narrator", text:"하지만 이건 시작일 뿐이다." },
-                { speaker:"시험관", text:"두 번째 시험은 2주 뒤입니다. 준비하십시오." },
-                { speaker:"narrator", text:"2주 뒤." },
-                { speaker:"narrator", text:"다음 시험은 무력이라고 했다." },
-                { speaker:"narrator", text:"...더 열심히 해야겠다." },
-            ], next:"chapter5"},
-
-        // 배드엔딩 1
-            { id:"4-fail", bgm:"tense", bg:"bgThrone", chars:[], dialogs:[
-                { speaker:"시험관", text:"카이른 전하, 탈락입니다.", effect:"shake" },
-                { speaker:"narrator", text:"...뭐?" },
-                { speaker:"narrator", text:"머릿속이 새하얘졌다." },
-                { speaker:"시험관", text:"아쉽지만, 규칙은 규칙입니다." },
-                { speaker:"시험관", text:"전하께서는 황궁에서 퇴거하셔야 합니다." },
-            ]},
-
-            { id:"4-fail2", bg:"bgRoom", chars:[], dialogs:[
-                { speaker:"narrator", text:"그렇게." },
-                { speaker:"narrator", text:"나는 다시 외곽으로 쫓겨났다." },
-                { speaker:"narrator", text:"황자라는 이름은 허울뿐이었다." },
-                { speaker:"narrator", text:"아무것도 증명하지 못한 채," },
-                { speaker:"narrator", text:"다시 아무도 찾지 않는 별채로 돌아갔다." },
-                { speaker:"narrator", text:"...모든 게 끝났다.", effect:"fadeOut" },
-            ], next:"badend1"},
-
-        // 배드엔딩 화면
+            { id:"4-12", bg:"bgThrone", chars:[], dialogs:[
+                { speaker:"narrator", text:"드디어 첫 번째 시험이다." },
+                { speaker:"narrator", text:"시험관: 이제부터 빛이 나오는 순서를 외워야 한다. 준비됐나?" }
+            ], next: "minigame-memory"},
+            { id:"4-pass", bg:"bgThrone", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
+                { speaker:"selene", text:"축하해요 오빠! 통과하셨네요!" }
+            ], next: "chapter1"}, // 성공시 챕터1로 복귀 (데모)
+            { id:"4-fail", bg:"bgBlack", chars:[], dialogs:[
+                { speaker:"narrator", text:"결국 시험에서 떨어지고 말았다..." }
+            ], next: "badend1"},
             { id:"badend1", bg:"bgBlack", chars:[], dialogs:[
-                { speaker:"narrator", text:"[ BAD END 1 - 실패한 황자 ]", effect:"grow" },
-            ], ending:"badend1"},
-        ],
-    },
-    // ═══════════════════════════════════════════════════════════════
-    // 챕터 5
-    // ═══════════════════════════════════════════════════════════════
-    chapter5: {
-        title: "Chapter 5", subtitle: "루나와의 만남", bgm: "peaceful",
-        scenes: [
-            { id:"5-1", bg:"bgGarden", chars:[], dialogs:[
-                { speaker:"narrator", text:"황궁 정원." },
-                { speaker:"narrator", text:"TODO: 챕터 5 상세 스토리 작성 필요" },
-            ], next:"chapter6"},
-        ],
-    },
-
-    // ═══════════════════════════════════════════════════════════════
-    // 챕터 6
-    // ═══════════════════════════════════════════════════════════════
-    chapter6: {
-        title: "Chapter 6", subtitle: "루나의 운명", bgm: "tense",
-        scenes: [
-            { id:"6-1", bg:"bgDungeon", chars:[], dialogs:[
-                { speaker:"narrator", text:"지하 감옥." },
-                { speaker:"narrator", text:"TODO: 챕터 6 상세 스토리 작성 필요" },
-            ], next:"chapter7"},
-        ],
-    },
-
-    // ═══════════════════════════════════════════════════════════════
-    // 챕터 7
-    // ═══════════════════════════════════════════════════════════════
-    chapter7: {
-        title: "Chapter 7", subtitle: "셀레네의 유혹", bgm: "romantic",
-        scenes: [
-            { id:"7-1", bg:"bgNight", chars:[], dialogs:[
-                { speaker:"narrator", text:"밤의 정원." },
-                { speaker:"narrator", text:"TODO: 챕터 7 상세 스토리 작성 필요" },
-            ], next:"chapter8"},
-        ],
-    },
-
-    // ═══════════════════════════════════════════════════════════════
-    // 챕터 8
-    // ═══════════════════════════════════════════════════════════════
-    chapter8: {
-        title: "Chapter 8", subtitle: "분기점", bgm: "tense",
-        scenes: [
-            { id:"8-1", bg:"bgRoom", chars:[], dialogs:[
-                { speaker:"narrator", text:"결심의 시간." },
-                { speaker:"narrator", text:"TODO: 대분기 선택지 구현 필요" },
-            ], choices:[
-                { text:"황제가 되겠다 (루트 A)", next:"chapter9a" },
-                { text:"2인자로 살겠다 (루트 B)", next:"chapter9b" }
-            ]},
-        ],
-    },
-
-    // ═══════════════════════════════════════════════════════════════
-    // 루트 A
-    // ═══════════════════════════════════════════════════════════════
-    chapter9a: {
-        title: "Chapter 9", subtitle: "계승 시험", bgm: "tense",
-        scenes: [
-            { id:"9a-1", bg:"bgThrone", chars:[], dialogs:[
-                { speaker:"narrator", text:"황위 계승 시험." },
-                { speaker:"narrator", text:"TODO: 루트 A 스토리 작성 필요" },
-            ], next:"ending_check_a"},
-        ],
-    },
-
-    // ═══════════════════════════════════════════════════════════════
-    // 루트 B
-    // ═══════════════════════════════════════════════════════════════
-    chapter9b: {
-        title: "Chapter 9", subtitle: "설득", bgm: "default",
-        scenes: [
-            { id:"9b-1", bg:"bgHall", chars:[], dialogs:[
-                { speaker:"narrator", text:"동료들을 설득하러." },
-                { speaker:"narrator", text:"TODO: 루트 B 스토리 작성 필요" },
-            ], next:"chapter10b"},
-        ],
-    },
-
-    chapter10b: {
-        title: "Chapter 10", subtitle: "일상", bgm: "peaceful",
-        scenes: [
-            { id:"10b-1", bg:"bgGarden", chars:[], dialogs:[
-                { speaker:"narrator", text:"평화로운 일상." },
-                { speaker:"narrator", text:"TODO: 일상 파트 스토리 작성 필요" },
-            ], next:"chapter11b"},
-        ],
-    },
-
-    chapter11b: {
-        title: "Chapter 11", subtitle: "대사건", bgm: "tense",
-        scenes: [
-            { id:"11b-1", bg:"bgThrone", chars:[], dialogs:[
-                { speaker:"narrator", text:"대사건 발생." },
-                { speaker:"narrator", text:"TODO: 대사건 스토리 작성 필요" },
-            ], next:"ending_check_b"},
-        ],
-    },
-
-    // ═══════════════════════════════════════════════════════════════
-    // 엔딩들
-    // ═══════════════════════════════════════════════════════════════
-    ending_lizette: {
-        title: "Ending", subtitle: "리제트 엔딩 - 영원한 곁", bgm: "romantic",
-        scenes: [{ id:"end", bg:"bgEnding", chars:[{id:"lizette",pos:"center",emotion:"happy"}], dialogs:[
-            { speaker:"narrator", text: "당신은 리제트와 함께하는 삶을 선택했다." },
-            { speaker:"lizette", text: "도련님... 아니, 폐하. 저는 정말 행복해요.", emotion:"happy" },
-            { speaker:"narrator", text: "「리제트 엔딩 - 영원한 곁」 달성!" },
-        ], next:"glitch" }],
-    },
-    ending_selene: {
-        title: "Ending", subtitle: "셀레네 엔딩 - 제국의 그림자", bgm: "romantic",
-        scenes: [{ id:"end", bg:"bgEnding", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
-            { speaker:"narrator", text: "셀레네가 황제가 되고, 당신은 그녀의 곁에 남았다." },
-            { speaker:"selene", text: "후후, 처음부터 이렇게 될 줄 알았어요.", emotion:"happy" },
-            { speaker:"narrator", text: "「셀레네 엔딩 - 제국의 그림자」 달성!" },
-        ], next:"glitch" }],
-    },
-    ending_adeline: {
-        title: "Ending", subtitle: "아델린 엔딩 - 인정받은 사랑", bgm: "romantic",
-        scenes: [{ id:"end", bg:"bgEnding", chars:[{id:"adeline",pos:"center",emotion:"happy"}], dialogs:[
-            { speaker:"narrator", text: "아델린이 마침내 마음을 열었다." },
-            { speaker:"adeline", text: "...사랑해요. 이제 인정할게요.", emotion:"happy" },
-            { speaker:"narrator", text: "「아델린 엔딩 - 인정받은 사랑」 달성!" },
-        ], next:"glitch" }],
-    },
-    ending_karen: {
-        title: "Ending", subtitle: "카렌 엔딩 - 검과 맹세", bgm: "romantic",
-        scenes: [{ id:"end", bg:"bgEnding", chars:[{id:"karen",pos:"center",emotion:"happy"}], dialogs:[
-            { speaker:"narrator", text: "카렌이 검을 내려놓고 당신 곁에 섰다." },
-            { speaker:"karen", text: "...폐하를 지키는 것이 아니라, 사랑하는 것으로.", emotion:"happy" },
-            { speaker:"narrator", text: "「카렌 엔딩 - 검과 맹세」 달성!" },
-        ], next:"glitch" }],
-    },
-    ending_elia: {
-        title: "Ending", subtitle: "엘리아 엔딩 - 야망의 파트너", bgm: "romantic",
-        scenes: [{ id:"end", bg:"bgEnding", chars:[{id:"elia",pos:"center",emotion:"happy"}], dialogs:[
-            { speaker:"narrator", text: "엘리아가 드디어 솔직해졌다." },
-            { speaker:"elia", text: "...좋아해. 처음부터 계속.", emotion:"happy" },
-            { speaker:"narrator", text: "「엘리아 엔딩 - 야망의 파트너」 달성!" },
-        ], next:"glitch" }],
-    },
-    ending_luna: {
-        title: "Ending", subtitle: "루나 엔딩 - 속박과 자유", bgm: "romantic",
-        scenes: [{ id:"end", bg:"bgEnding", chars:[{id:"luna",pos:"center",emotion:"happy"}], dialogs:[
-            { speaker:"narrator", text: "루나가 당신 곁에 남았다." },
-            { speaker:"luna", text: "...오라버니만 있으면 돼.", emotion:"happy" },
-            { speaker:"narrator", text: "「루나 엔딩 - 속박과 자유」 달성!" },
-        ], next:"glitch" }],
-    },
-    ending_harem: {
-        title: "Ending", subtitle: "하렘 엔딩 - 제국 최강의 남자", bgm: "romantic",
-        scenes: [{ id:"end", bg:"bgThrone", chars:[
-            {id:"lizette",pos:"left",emotion:"happy"},
-            {id:"adeline",pos:"left",emotion:"happy"},
-            {id:"karen",pos:"left",emotion:"happy"},
-            {id:"elia",pos:"right",emotion:"happy"},
-            {id:"selene",pos:"right",emotion:"happy"},
-            {id:"luna",pos:"right",emotion:"happy"}
-        ], dialogs:[
-            { speaker:"narrator", text: "당신은 여섯 명의 여인 모두와 함께했다." },
-            { speaker:"narrator", text: "진정한 제국 최강의 남자로서." },
-            { speaker:"narrator", text: "「하렘 엔딩 - 제국 최강의 남자」 달성!" },
-        ], next:"glitch" }],
-    },
-    ending_emperor_alone: {
-        title: "Ending", subtitle: "고독한 황제", bgm: "default",
-        scenes: [{ id:"end", bg:"bgThrone", chars:[], dialogs:[
-            { speaker:"narrator", text: "황제가 되었지만, 곁에는 아무도 없었다." },
-            { speaker:"narrator", text: "권력은 손에 넣었으나, 마음은 채우지 못했다." },
-            { speaker:"narrator", text: "「고독한 황제」 달성" },
-        ], next:"glitch" }],
-    },
-    ending_bad_execution: {
-        title: "Bad Ending", subtitle: "처형", bgm: "tense",
-        scenes: [{ id:"end", bg:"bgDungeon", chars:[], dialogs:[
-            { speaker:"narrator", text: "황위 계승 시험에 실패했다." },
-            { speaker:"narrator", text: "사생아가 황위를 노렸다는 죄목으로..." },
-            { speaker:"narrator", text: "「배드엔딩 - 처형」" },
-        ], next:"glitch" }],
-    },
-    ending_bad_betrayal: {
-        title: "Bad Ending", subtitle: "토사구팽", bgm: "tense",
-        scenes: [{ id:"end", bg:"bgDungeon", chars:[], dialogs:[
-            { speaker:"narrator", text: "셀레네가 황제가 된 후, 당신은 버려졌다." },
-            { speaker:"narrator", text: "이용 가치가 없어진 도구의 말로." },
-            { speaker:"narrator", text: "「배드엔딩 - 토사구팽」" },
-        ], next:"glitch" }],
-    },
+                { speaker:"narrator", text:"당신은 제국에서 추방되었습니다." }
+            ], ending:"badend1"}
+        ]
+    }
 };
 
 // ════════════════════════════════════════════════════════════════════════════
-// 시스템 코드
+// 미니게임 컴포넌트
 // ════════════════════════════════════════════════════════════════════════════
-
-const HEROINES = ['lizette','selene','adeline','karen','elia','luna'];
-const DEFAULT_AFFECTION = { lizette:20, selene:10, adeline:15, karen:10, elia:10, luna:0 };
-
-function Particles() {
-    const particles = useMemo(() => Array.from({length:20},(_,i)=>({id:i,left:Math.random()*100,top:20+Math.random()*70,size:2+Math.random()*3,duration:8+Math.random()*6,delay:Math.random()*8,opacity:0.3+Math.random()*0.4})),[]);
-    return (<div style={{position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:5}}>{particles.map(p=>(<div key={p.id} style={{position:'absolute',left:`${p.left}%`,top:`${p.top}%`,width:`${p.size}px`,height:`${p.size}px`,background:`rgba(255,255,255,${p.opacity})`,borderRadius:'50%',animation:`particleDrift ${p.duration}s ease-in-out ${p.delay}s infinite`}}/>))}</div>);
-}
-
-function StartPopup({ onClose }) {
-    return (
-        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.9)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:10000,animation:'fadeIn 0.5s'}}>
-            <div style={{background:'#14121a',border:'1px solid #3d3850',borderRadius:'16px',padding:'32px',maxWidth:'500px',width:'90%',textAlign:'center'}}>
-                <h2 style={{color:'#9d8ec2',fontSize:'1.4rem',marginBottom:'20px',fontFamily:"'Noto Serif KR',serif"}}>플레이 전 안내</h2>
-                <div style={{textAlign:'left',color:'#c8c4d4',fontSize:'0.9rem',lineHeight:1.8,marginBottom:'24px'}}>
-                    <p style={{marginBottom:'12px'}}>• 본 게임의 <span style={{color:'#d4a0a8'}}>모든 일러스트는 AI로 생성</span>되었습니다.</p>
-                    <p style={{marginBottom:'12px'}}>• <span style={{color:'#8aadc0'}}>선택에 따라 호감도</span>가 변동됩니다.</p>
-                    <p style={{marginBottom:'12px'}}>• 호감도에 따라 <span style={{color:'#a890b8'}}>다양한 엔딩</span>으로 분기됩니다.</p>
-                    <p style={{marginBottom:'12px',color:'#9d8ec2'}}>• 💾 세이브/로드 기능이 지원됩니다.</p>
-                    <p style={{color:'#6b6480',fontSize:'0.8rem'}}>※ 화면 클릭으로 대사를 넘길 수 있습니다.</p>
-                </div>
-                <button onClick={onClose} style={{padding:'12px 40px',background:'rgba(157,142,194,0.9)',border:'none',borderRadius:'8px',color:'#0a0810',fontSize:'1rem',fontWeight:600,cursor:'pointer'}}>
-                    게임 시작
-                </button>
-            </div>
-        </div>
-    );
-}
-
-function AffectionPanel({ affection, onClose, isMobile }) {
-    return (
-        <div onClick={onClose} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000,animation:'fadeIn 0.3s'}}>
-            <div onClick={e=>e.stopPropagation()} style={{background:'#14121a',border:'1px solid #3d3850',borderRadius:'16px',padding:isMobile?'20px':'32px',maxWidth:'500px',width:'90%'}}>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
-                    <h3 style={{color:'#9d8ec2',fontSize:'1.2rem'}}>💕 호감도</h3>
-                    <button onClick={onClose} style={{background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',borderRadius:'50%',cursor:'pointer'}}>✕</button>
-                </div>
-                <div style={{display:'flex',flexDirection:'column',gap:'12px'}}>
-                    {HEROINES.map(id => {
-                        const char = characters[id];
-                        const value = affection[id] || 0;
-                        return (
-                            <div key={id} style={{display:'flex',alignItems:'center',gap:'12px'}}>
-                                <div style={{width:'70px',color:char.color,fontSize:'0.85rem',fontWeight:500}}>{char.name}</div>
-                                <div style={{flex:1,height:'20px',background:'#1a1820',borderRadius:'10px',overflow:'hidden',position:'relative'}}>
-                                    <div style={{height:'100%',width:`${value}%`,background:`linear-gradient(90deg,${char.color}88,${char.color})`,borderRadius:'10px',transition:'width 0.5s'}}/>
-                                    <span style={{position:'absolute',right:'8px',top:'50%',transform:'translateY(-50%)',fontSize:'0.7rem',color:'#e8e6ed'}}>{value}</span>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-                <div style={{marginTop:'16px',padding:'12px',background:'#0a0810',borderRadius:'8px',fontSize:'0.75rem',color:'#6b6480'}}>
-                    <p>• 호감도 100 달성 시 해당 히로인 엔딩</p>
-                    <p>• 루트 B에서 전원 100 달성 시 하렘 엔딩</p>
-                    <p>• 100 달성 히로인 없으면 배드엔딩</p>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function SaveLoadPanel({ mode, onClose, onSave, onLoad, currentState, isMobile }) {
-    const [saves, setSaves] = useState([]);
-    const [confirmDelete, setConfirmDelete] = useState(null);
-
-    useEffect(() => {
-        const saveInfos = [];
-        for (let i = 1; i <= SAVE_SLOTS; i++) { saveInfos.push({ slot: i, ...getSaveInfo(i) }); }
-        setSaves(saveInfos);
-    }, []);
-
-    const handleSave = (slot) => {
-        if (onSave) {
-            onSave(slot);
-            setSaves(prev => prev.map(s => s.slot === slot ? { slot, ...getSaveInfo(slot) } : s));
-        }
-    };
-
-    const handleLoad = (slot) => {
-        const data = loadGame(slot);
-        if (data && onLoad) { onLoad(data); onClose(); }
-    };
-
-    const handleDelete = (slot) => {
-        deleteSave(slot);
-        setSaves(prev => prev.map(s => s.slot === slot ? { slot, exists: false } : s));
-        setConfirmDelete(null);
-    };
-
-    const formatDate = (isoString) => {
-        if (!isoString) return '';
-        const date = new Date(isoString);
-        return `${date.getFullYear()}.${String(date.getMonth()+1).padStart(2,'0')}.${String(date.getDate()).padStart(2,'0')} ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`;
-    };
-
-    const getChapterTitle = (chapterId) => {
-        if (!chapterId) return '???';
-        const chapter = STORY[chapterId];
-        return chapter ? chapter.subtitle : chapterId;
-    };
-
-    return (
-        <div onClick={onClose} style={{position:'fixed',inset:0,background:'rgba(5,4,10,0.95)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000,animation:'fadeIn 0.3s'}}>
-            <div onClick={e => e.stopPropagation()} style={{width:'90%',maxWidth:'450px',background:'#14121a',border:'1px solid #3d3850',borderRadius:'12px',padding:isMobile?'16px':'24px',position:'relative'}}>
-                <div style={{textAlign:'center',marginBottom:'20px'}}>
-                    <div style={{fontSize:'0.65rem',color:'#6b6480',letterSpacing:'0.15em',marginBottom:'4px'}}>{mode === 'save' ? 'SAVE GAME' : 'LOAD GAME'}</div>
-                    <h2 style={{fontSize:isMobile?'1.1rem':'1.3rem',color:'#e8e6ed',fontFamily:"'Noto Serif KR',serif"}}>{mode === 'save' ? '게임 저장' : '게임 불러오기'}</h2>
-                </div>
-                <button onClick={onClose} style={{position:'absolute',top:'12px',right:'12px',background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',cursor:'pointer',fontSize:'0.9rem',borderRadius:'50%'}}>✕</button>
-                <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
-                    {saves.map(save => (
-                        <div key={save.slot} style={{background:'#0a0810',border:'1px solid #2a2836',borderRadius:'8px',padding:'14px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                            <div style={{flex:1}}>
-                                <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'4px'}}>
-                                    <span style={{color:'#9d8ec2',fontSize:'0.75rem',fontWeight:600}}>SLOT {save.slot}</span>
-                                    {save.exists && <span style={{color:'#6b6480',fontSize:'0.65rem'}}>{formatDate(save.timestamp)}</span>}
-                                </div>
-                                {save.exists ? <div style={{color:'#c8c4d4',fontSize:isMobile?'0.8rem':'0.9rem'}}>📖 {getChapterTitle(save.chapter)}</div>
-                                : <div style={{color:'#4a4658',fontSize:isMobile?'0.8rem':'0.9rem',fontStyle:'italic'}}>빈 슬롯</div>}
-                            </div>
-                            <div style={{display:'flex',gap:'6px'}}>
-                                {confirmDelete === save.slot ? (
-                                    <>
-                                        <button onClick={() => handleDelete(save.slot)} style={{padding:'6px 10px',fontSize:'0.7rem',background:'#8b3a3a',border:'none',color:'#fff',borderRadius:'4px',cursor:'pointer'}}>삭제</button>
-                                        <button onClick={() => setConfirmDelete(null)} style={{padding:'6px 10px',fontSize:'0.7rem',background:'#3d3850',border:'none',color:'#c8c4d4',borderRadius:'4px',cursor:'pointer'}}>취소</button>
-                                    </>
-                                ) : (
-                                    <>
-                                        {mode === 'save' ? (
-                                            <button onClick={() => handleSave(save.slot)} style={{padding:'6px 12px',fontSize:'0.75rem',background:save.exists?'#4a4658':'#9d8ec2',border:'none',color:save.exists?'#c8c4d4':'#0a0810',borderRadius:'4px',cursor:'pointer',fontWeight:500}}>{save.exists ? '덮어쓰기' : '저장'}</button>
-                                        ) : (
-                                            <button onClick={() => save.exists && handleLoad(save.slot)} disabled={!save.exists} style={{padding:'6px 12px',fontSize:'0.75rem',background:save.exists?'#9d8ec2':'#2a2836',border:'none',color:save.exists?'#0a0810':'#4a4658',borderRadius:'4px',cursor:save.exists?'pointer':'not-allowed',fontWeight:500}}>불러오기</button>
-                                        )}
-                                        {save.exists && <button onClick={() => setConfirmDelete(save.slot)} style={{padding:'6px 8px',fontSize:'0.7rem',background:'transparent',border:'1px solid #5a3a3a',color:'#a06060',borderRadius:'4px',cursor:'pointer'}}>🗑</button>}
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                <div style={{marginTop:'16px',padding:'10px',background:'#0a0810',borderRadius:'6px',fontSize:'0.7rem',color:'#6b6480',textAlign:'center'}}>
-                    {mode === 'save' ? '💡 같은 슬롯에 저장하면 기존 데이터가 덮어씌워집니다.' : '💡 저장된 시점부터 다시 플레이합니다.'}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function TitleScreen({ onStart, onLoad, onCharacter }) {
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-    const [showLoad, setShowLoad] = useState(false);
-    useEffect(() => { const h=()=>setIsMobile(window.innerWidth<=768); window.addEventListener('resize',h); return()=>window.removeEventListener('resize',h); }, []);
-
-    const TitleLogo = () => IMAGES.titleLogo ? <img src={IMAGES.titleLogo} alt="Title" style={{maxWidth:isMobile?'160px':'320px',height:'auto'}}/> : <div style={{padding:isMobile?'12px 18px':'18px 25px',border:'1px dashed #3d3850',borderRadius:'6px'}}><div style={{fontSize:'0.55rem',color:'#6b6480',marginBottom:'4px'}}>[ 타이틀 로고 ]</div><div style={{fontSize:isMobile?'1rem':'1.7rem',fontFamily:"'Noto Serif KR',serif",fontWeight:700,color:'#d8d4e2'}}>제국 최강이 되기까지</div></div>;
-    const MenuBtn = ({text,onClick,main}) => (<button onClick={onClick} style={{padding:isMobile?'7px 14px':'12px 28px',fontSize:isMobile?'0.7rem':'0.88rem',fontWeight:main?600:400,background:main?'rgba(157,142,194,0.9)':'rgba(30,28,38,0.6)',border:main?'none':'1px solid rgba(100,90,120,0.3)',color:main?'#0a0810':'rgba(180,170,200,0.9)',borderRadius:'4px',cursor:'pointer',width:'100%',maxWidth:isMobile?'120px':'180px'}}>{main&&<span style={{marginRight:'4px'}}>▶</span>}{text}</button>);
-    const CharArea = () => IMAGES.titleCharacter ? <img src={IMAGES.titleCharacter} style={{maxWidth:'62%',maxHeight:'62%',objectFit:'contain'}}/> : <div style={{color:'#2a2836',fontSize:'0.6rem',padding:'25px',border:'1px dashed #2a2836',borderRadius:'6px'}}>[ 캐릭터 이미지 ]</div>;
-
-    if (showLoad) return <SaveLoadPanel mode="load" onClose={() => setShowLoad(false)} onLoad={onLoad} isMobile={isMobile}/>;
-
-    return (
-        <div style={{height:'100vh',position:'relative',overflow:'hidden',background:IMAGES.titleBackground?`url(${IMAGES.titleBackground}) center/cover no-repeat`:'#0a0810'}}>
-            <Particles />
-            {isMobile ? (
-                <>
-                    <div style={{position:'absolute',left:0,top:'50%',transform:'translateY(-50%)',width:'50%',display:'flex',justifyContent:'center',alignItems:'center'}}><CharArea/></div>
-                    <div style={{position:'absolute',right:0,top:0,bottom:0,width:'50%',background:'linear-gradient(90deg,transparent,rgba(10,8,16,0.85) 15%)',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',zIndex:10}}>
-                        <div style={{marginBottom:'14px'}}><TitleLogo/></div>
-                        <div style={{display:'flex',flexDirection:'column',gap:'5px',alignItems:'center'}}>
-                            <MenuBtn text="GAME START" onClick={()=>{playSfx('click');onStart();}} main/>
-                            <MenuBtn text="LOAD" onClick={()=>{playSfx('click');setShowLoad(true);}}/>
-                            <MenuBtn text="CHARACTER" onClick={()=>{playSfx('click');onCharacter();}}/>
-                        </div>
-                    </div>
-                </>
-            ) : (
-                <>
-                    <div style={{position:'absolute',left:'-3%',top:'50%',transform:'translateY(-45%)'}}><CharArea/></div>
-                    <div style={{position:'absolute',right:0,top:0,bottom:0,width:'45%',background:'linear-gradient(90deg,transparent,rgba(10,8,16,0.85) 20%)',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',zIndex:10}}>
-                        <div style={{marginBottom:'35px'}}><TitleLogo/></div>
-                        <div style={{display:'flex',flexDirection:'column',gap:'8px',alignItems:'center'}}>
-                            <MenuBtn text="GAME START" onClick={()=>{playSfx('click');onStart();}} main/>
-                            <MenuBtn text="LOAD GAME" onClick={()=>{playSfx('click');setShowLoad(true);}}/>
-                            <MenuBtn text="CHARACTER" onClick={()=>{playSfx('click');onCharacter();}}/>
-                        </div>
-                        <div style={{position:'absolute',bottom:'16px',fontSize:'0.6rem',color:'#3d3850'}}>made by CowardMole</div>
-                    </div>
-                </>
-            )}
-        </div>
-    );
-}
-
-// ═══════════════════════════════════════
-// 미니게임: 기억력 테스트
-// ═══════════════════════════════════════
-function MemoryGame({ onPass, onFail }) {
+const MemoryGame = ({ onPass, onFail }) => {
     const [sequence, setSequence] = useState([]);
-    const [playerSequence, setPlayerSequence] = useState([]);
-    const [isShowingSequence, setIsShowingSequence] = useState(false);
-    const [activeButton, setActiveButton] = useState(null);
+    const [playerSeq, setPlayerSeq] = useState([]);
+    const [isShowing, setIsShowing] = useState(false);
+    const [activeBtn, setActiveBtn] = useState(null);
     const [round, setRound] = useState(1);
-    const [message, setMessage] = useState('준비하세요...');
-    const [gameStarted, setGameStarted] = useState(false);
-    const [canClick, setCanClick] = useState(false);
+    const [started, setStarted] = useState(false);
+    const maxRound = 3; // 테스트를 위해 3라운드
 
-    const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f'];
-    const maxRound = 5;
-
-    const generateSequence = (length) => {
-        const seq = [];
-        for (let i = 0; i < length; i++) {
-            seq.push(Math.floor(Math.random() * 4));
-        }
-        return seq;
-    };
-
-    const startGame = () => {
-        setGameStarted(true);
-        setRound(1);
-        startRound(1);
-    };
+    const colors = ['#ff6b6b', '#48dbfb', '#1dd1a1', '#feca57'];
 
     const startRound = (r) => {
-        setMessage(`라운드 ${r} / ${maxRound}`);
-        setPlayerSequence([]);
-        setCanClick(false);
-        
-        const newSeq = generateSequence(r + 1);
+        setPlayerSeq([]);
+        const newSeq = Array.from({length: r + 1}, () => Math.floor(Math.random() * 4));
         setSequence(newSeq);
-        
-        setTimeout(() => {
-            showSequence(newSeq);
-        }, 1000);
+        showSeq(newSeq);
     };
 
-    const showSequence = async (seq) => {
-        setIsShowingSequence(true);
-        setMessage('순서를 기억하세요!');
-        
-        for (let i = 0; i < seq.length; i++) {
-            await new Promise(resolve => setTimeout(resolve, 600));
-            setActiveButton(seq[i]);
-            await new Promise(resolve => setTimeout(resolve, 400));
-            setActiveButton(null);
+    const showSeq = async (seq) => {
+        setIsShowing(true);
+        for (let val of seq) {
+            await new Promise(res => setTimeout(res, 600));
+            setActiveBtn(val);
+            await new Promise(res => setTimeout(res, 400));
+            setActiveBtn(null);
         }
-        
-        setIsShowingSequence(false);
-        setCanClick(true);
-        setMessage('순서대로 클릭하세요!');
+        setIsShowing(false);
     };
 
-    const handleClick = (index) => {
-        if (!canClick || isShowingSequence) return;
+    const handleBtnClick = (idx) => {
+        if (isShowing || !started) return;
+        const newPlayerSeq = [...playerSeq, idx];
+        setPlayerSeq(newPlayerSeq);
         
-        const newPlayerSeq = [...playerSequence, index];
-        setPlayerSequence(newPlayerSeq);
-        
-        setActiveButton(index);
-        setTimeout(() => setActiveButton(null), 200);
-        
-        // 틀렸을 때
-        if (sequence[newPlayerSeq.length - 1] !== index) {
-            setCanClick(false);
-            setMessage('틀렸습니다!');
-            setTimeout(() => onFail(), 1500);
+        setActiveBtn(idx);
+        setTimeout(() => setActiveBtn(null), 200);
+
+        if (sequence[newPlayerSeq.length - 1] !== idx) {
+            onFail();
             return;
         }
-        
-        // 현재 라운드 완료
+
         if (newPlayerSeq.length === sequence.length) {
-            setCanClick(false);
-            
             if (round >= maxRound) {
-                setMessage('축하합니다! 통과!');
-                setTimeout(() => onPass(), 1500);
+                onPass();
             } else {
-                setMessage('정답! 다음 라운드...');
-                setTimeout(() => {
-                    setRound(r => r + 1);
-                    startRound(round + 1);
-                }, 1000);
+                setRound(round + 1);
+                setTimeout(() => startRound(round + 1), 800);
             }
         }
     };
 
     return (
-        <div style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'rgba(10,8,16,0.95)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 200
-        }}>
-            <h2 style={{ color: '#9d8ec2', marginBottom: '10px', fontSize: '1.5rem' }}>
-                첫 번째 시험: 지략
-            </h2>
-            <p style={{ color: '#b8aed0', marginBottom: '30px', fontSize: '1rem' }}>
-                {message}
-            </p>
-            
-            {!gameStarted ? (
-                <button
-                    onClick={startGame}
-                    style={{
-                        padding: '15px 40px',
-                        fontSize: '1.2rem',
-                        background: 'linear-gradient(135deg, #9d8ec2, #6b5a8e)',
-                        border: 'none',
-                        borderRadius: '10px',
-                        color: '#fff',
-                        cursor: 'pointer'
-                    }}
-                >
-                    시작하기
-                </button>
+        <div onClick={e => e.stopPropagation()} style={{position:'absolute', inset:0, background:'rgba(0,0,0,0.95)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', zIndex:1000}}>
+            <h2 style={{color:'#9d8ec2', marginBottom:'20px'}}>빛의 순서를 기억하세요 ({round}/{maxRound})</h2>
+            {!started ? (
+                <button onClick={() => {setStarted(true); startRound(1);}} style={{padding:'15px 40px', background:'#9d8ec2', border:'none', borderRadius:'8px', cursor:'pointer', fontWeight:'bold'}}>시험 시작</button>
             ) : (
-                <>
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(2, 1fr)',
-                        gap: '15px',
-                        marginBottom: '30px'
-                    }}>
-                        {colors.map((color, i) => (
-                            <button
-                                key={i}
-                                onClick={() => handleClick(i)}
-                                disabled={!canClick}
-                                style={{
-                                    width: '100px',
-                                    height: '100px',
-                                    background: activeButton === i ? '#fff' : color,
-                                    border: 'none',
-                                    borderRadius: '15px',
-                                    cursor: canClick ? 'pointer' : 'default',
-                                    opacity: activeButton === i ? 1 : 0.7,
-                                    transform: activeButton === i ? 'scale(1.1)' : 'scale(1)',
-                                    transition: 'all 0.15s ease',
-                                    boxShadow: activeButton === i 
-                                        ? `0 0 30px ${color}` 
-                                        : '0 4px 8px rgba(0,0,0,0.3)'
-                                }}
-                            />
-                        ))}
-                    </div>
-                    
-                    <div style={{ color: '#6b6480', fontSize: '0.9rem' }}>
-                        진행: {playerSequence.length} / {sequence.length}
-                    </div>
-                </>
+                <div style={{display:'grid', gridTemplateColumns:'100px 100px', gap:'20px'}}>
+                    {colors.map((c, i) => (
+                        <div key={i} onClick={() => handleBtnClick(i)} style={{width:'100px', height:'100px', background: activeBtn===i ? '#fff' : c, borderRadius:'15px', cursor:'pointer', border:'3px solid #333'}} />
+                    ))}
+                </div>
             )}
+            <p style={{marginTop:'20px', color:'#666'}}>{isShowing ? "기억하는 중..." : "따라 클릭하세요!"}</p>
         </div>
     );
-}
+};
 
-function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, onGlitch, onTitle, affection, setAffection }) {
-    const [currentChapter, setCurrentChapter] = useState(startChapter || 'chapter1');
-    const [sceneIndex, setSceneIndex] = useState(startSceneIndex);
-    const [dialogIndex, setDialogIndex] = useState(startDialogIndex);
-    const [displayedText, setDisplayedText] = useState('');
+// ════════════════════════════════════════════════════════════════════════════
+// 메인 게임 화면
+// ════════════════════════════════════════════════════════════════════════════
+const GameScreen = ({ onTitle }) => {
+    const [curChap, setCurChap] = useState('chapter1');
+    const [sceneIdx, setSceneIdx] = useState(0);
+    const [dialIdx, setDialIdx] = useState(0);
+    const [displayText, setDisplayText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [showChoices, setShowChoices] = useState(false);
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-    const [isAuto, setIsAuto] = useState(false);
-    const [canProceed, setCanProceed] = useState(false);
-    const [showChapterTitle, setShowChapterTitle] = useState(true);
-    const [showAffection, setShowAffection] = useState(false);
-    const [affectionPopup, setAffectionPopup] = useState(null);
-    const [showSaveLoad, setShowSaveLoad] = useState(null);
-    const [history, setHistory] = useState([]);
-    const [dialogLog, setDialogLog] = useState([]);
-    const [showLog, setShowLog] = useState(false);
     const [showMinigame, setShowMinigame] = useState(null);
-    
-    useEffect(() => { const h=()=>setIsMobile(window.innerWidth<=768); window.addEventListener('resize',h); return()=>window.removeEventListener('resize',h); }, []);
+    const [affection, setAffection] = useState({ lizette: 20 });
 
-    const chapter = STORY[currentChapter];
-    const scene = chapter?.scenes[sceneIndex];
-    const dialog = scene?.dialogs[dialogIndex];
+    const chapter = STORY[curChap];
+    const scene = chapter.scenes[sceneIdx];
+    const dialog = scene.dialogs[dialIdx];
 
-    useEffect(() => { 
-        if(chapter){
-            setShowChapterTitle(true);
-            playBgm(chapter.bgm||'default');
-            const t=setTimeout(()=>setShowChapterTitle(false),2500);
-            return()=>clearTimeout(t);
-        } 
-    }, [currentChapter]);
-
-    // 씬별 BGM 변경
+    // 텍스트 타이핑 효과
     useEffect(() => {
-        if(scene?.bgm) { playBgm(scene.bgm); }
-    }, [sceneIndex, currentChapter]);
-
-    useEffect(() => {
-        if(!dialog||showChapterTitle)return;
-        if(dialog.sfx)playSfx(dialog.sfx);
-        setDialogLog(prev => [...prev, { 
-            speaker: dialog.speaker, 
-            text: dialog.text 
-        }]);
-        setIsTyping(true);setDisplayedText('');setCanProceed(false);
-        let i=0;
-        const iv=setInterval(()=>{
-            if(i<dialog.text.length){setDisplayedText(dialog.text.slice(0,i+1));i++;}
-            else{clearInterval(iv);setIsTyping(false);setCanProceed(true);}
-        },30);
-        return()=>clearInterval(iv);
-    }, [dialog, dialogIndex, sceneIndex, currentChapter, showChapterTitle]);
-
-    useEffect(() => { 
-        if(!isAuto||isTyping||!canProceed||showChoices)return; 
-        const t=setTimeout(proceed,1500); 
-        return()=>clearTimeout(t); 
-    }, [isAuto, isTyping, canProceed, showChoices]);
-
-    useEffect(() => {
-        const handleKeyDown = (e) => {
-            if (showLog || showSaveLoad || showChoices || !dialog) return;
-    
-            if (e.key === 'ArrowRight') {
-                e.preventDefault();
-                if (isTyping) {
-                    setDisplayedText(dialog.text);
-                    setIsTyping(false);
-                    setCanProceed(true);
-                } else if (canProceed) {
-                    proceed();
-                }
+        if (!dialog) return;
+        setIsTyping(true);
+        setDisplayText('');
+        let i = 0;
+        const timer = setInterval(() => {
+            if (i < dialog.text.length) {
+                setDisplayText(prev => prev + dialog.text.charAt(i));
+                i++;
+            } else {
+                clearInterval(timer);
+                setIsTyping(false);
             }
-    
-            if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                goBack();
-            }
-        };
+        }, 30);
+        return () => clearInterval(timer);
+    }, [curChap, sceneIdx, dialIdx]);
 
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [isTyping, canProceed, showLog, showSaveLoad, showChoices, dialog]);
+    // 장면 이동 로직
+    const goToScene = useCallback((target) => {
+        if (target === "minigame-memory") {
+            setShowMinigame('memory');
+            return;
+        }
+        if (STORY[target]) {
+            setCurChap(target); setSceneIdx(0); setDialIdx(0); setShowChoices(false);
+            return;
+        }
+        const nextIdx = chapter.scenes.findIndex(s => s.id === target);
+        if (nextIdx !== -1) {
+            setSceneIdx(nextIdx); setDialIdx(0); setShowChoices(false);
+        }
+    }, [curChap, chapter]);
 
-    const determineEnding = useCallback((route) => {
-        const values = HEROINES.map(h => affection[h] || 0);
-        const allMax = values.every(v => v >= 100);
-        const hasMax = values.some(v => v >= 100);
-        
-        if (route === 'a') {
-            // 루트 A: 황제 도전
-            if (hasMax) {
-                const maxVal = Math.max(...values);
-                const maxIdx = values.indexOf(maxVal);
-                return `ending_${HEROINES[maxIdx]}`;
-            }
-            return 'ending_emperor_alone';
-        } else {
-            // 루트 B: 2인자
-            if (allMax) return 'ending_harem';
-            if (hasMax) {
-                const maxVal = Math.max(...values);
-                const maxIdx = values.indexOf(maxVal);
-                return `ending_${HEROINES[maxIdx]}`;
-            }
-            return 'ending_bad_betrayal';
-        }
-    }, [affection]);
-
-    const proceed = useCallback(() => {
-        if(!canProceed||showChoices)return;
-        
-        // 히스토리에 현재 상태 저장
-        setHistory(prev => [...prev, { chapter: currentChapter, scene: sceneIndex, dialog: dialogIndex }]);
-        
-        if(dialogIndex<scene.dialogs.length-1){setDialogIndex(d=>d+1);}
-        else if(scene.choices){setShowChoices(true);}
-        else if(scene.next === 'minigame-memory') {
-        setShowMinigame('memory');
-        return;
-    }
-        else if(scene.next){goToScene(scene.next);}
-        else if(sceneIndex<chapter.scenes.length-1){setSceneIndex(s=>s+1);setDialogIndex(0);}
-    }, [canProceed, showChoices, dialogIndex, scene, sceneIndex, chapter, currentChapter]);
-
-    // BACK 버튼
-    const goBack = useCallback(() => {
-        if (history.length === 0) return;
-        const prev = history[history.length - 1];
-        setHistory(h => h.slice(0, -1));
-        if (prev.chapter !== currentChapter) {
-            setCurrentChapter(prev.chapter);
-        }
-        setSceneIndex(prev.scene);
-        setDialogIndex(prev.dialog);
-        setShowChoices(false);
-    }, [history, currentChapter]);
-
-    const goToScene = (nextId) => {
-        if(nextId==='glitch'){onGlitch();return;}
-        if(nextId==='ending_check_a'){
-            const ending = determineEnding('a');
-            setCurrentChapter(ending);setSceneIndex(0);setDialogIndex(0);return;
-        }
-        if(scene?.ending === 'badend1') {
-    // 배드엔딩 화면 표시 (재도전 버튼 포함)
-        }
-        if(nextId==='ending_check_b'){
-            const ending = determineEnding('b');
-            setCurrentChapter(ending);setSceneIndex(0);setDialogIndex(0);return;
-        }
-        if(nextId.startsWith('chapter')||nextId.startsWith('ending')){
-            setCurrentChapter(nextId);setSceneIndex(0);setDialogIndex(0);return;
-        }
-        const idx=chapter.scenes.findIndex(s=>s.id===nextId);
-        if(idx!==-1){setSceneIndex(idx);setDialogIndex(0);}
-    };
-
-    const handleChoice = (choice) => {
-        playSfx('decision');
-        setShowChoices(false);
-        if(choice.affection){
-            const newAff = {...affection};
-            let changes = [];
-            Object.entries(choice.affection).forEach(([char,delta])=>{
-                newAff[char] = Math.max(0, Math.min(100, (newAff[char]||0)+delta));
-                if(delta !== 0) changes.push({char,delta});
-            });
-            setAffection(newAff);
-            if(changes.length>0){
-                setAffectionPopup(changes);
-                setTimeout(()=>setAffectionPopup(null),1500);
-            }
-        }
-        goToScene(choice.next);
-    };
-
-    const handleClick = (e) => {
-        if(showChoices||e.target.closest('button')||showChapterTitle||showAffection||showSaveLoad||showLog)return;
-        
-        // 타이핑 중이면 즉시 완료 (스킵)
-        if(isTyping){
-            setDisplayedText(dialog.text);
+    const handleNext = () => {
+        if (isTyping) {
+            setDisplayText(dialog.text);
             setIsTyping(false);
-            setCanProceed(true);
-        } else {
-            proceed();
+            return;
+        }
+        if (dialIdx < scene.dialogs.length - 1) {
+            setDialIdx(dialIdx + 1);
+        } else if (scene.choices) {
+            setShowChoices(true);
+        } else if (scene.next) {
+            goToScene(scene.next);
         }
     };
 
-    const handleSave = (slot) => {
-        const gameState = { currentChapter, sceneIndex, dialogIndex, affection };
-        saveGame(slot, gameState);
-        playSfx('decision');
+    const handleChoice = (c) => {
+        if (c.affection) {
+            // 호감도 로직 (필요시)
+        }
+        goToScene(c.next);
     };
-
-    const handleLoadInGame = (saveData) => {
-        setCurrentChapter(saveData.currentChapter);
-        setSceneIndex(saveData.sceneIndex);
-        setDialogIndex(saveData.dialogIndex);
-        setAffection(saveData.affection);
-        setShowSaveLoad(null);
-        setShowChapterTitle(true);
-        setHistory([]);
-    };
-
-    if(!chapter||!scene)return null;
-
-    if(showChapterTitle)return(
-        <div style={{height:'100vh',background:'#0a0810',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',animation:'fadeIn 0.5s'}}>
-            <div style={{fontSize:isMobile?'0.8rem':'1rem',color:'#6b6480',letterSpacing:'0.3em',marginBottom:'12px'}}>{chapter.title}</div>
-            <div style={{fontSize:isMobile?'1.5rem':'2.2rem',color:'#e8e6ed',fontFamily:"'Noto Serif KR',serif",fontWeight:700}}>{chapter.subtitle}</div>
-        </div>
-    );
-
-    const getCharPosition = (chars,idx) => {
-        const count=chars.length;
-        if(count===1)return{left:'30%',transform:'translateX(-50%)'};
-        if(count===2)return idx===0?{left:'15%'}:{right:'15%'};
-        const positions=[{left:'5%'},{left:'18%'},{left:'31%'},{right:'31%'},{right:'18%'},{right:'5%'}];
-        return positions[idx]||positions[0];
-    };
-
-    const currentSpeaker = dialog?.speaker==='narrator'||dialog?.speaker==='you'?null:dialog?.speaker;
-    const speakerData = dialog?.speaker==='you'
-    ? {name:'당신',color:'#9d8ec2'}
-    : dialog?.speaker==='narrator'
-        ? {name:'',color:'#7a7888'}
-        : characters[dialog?.speaker]
-            ? {name:characters[dialog.speaker].name, color:characters[dialog.speaker].color}
-            : {name:dialog?.speaker||'', color:'#c8c4d4'};
-    const getEmotionAnimation = (emotion) => ({happy:'happyBounce 1.5s ease-in-out infinite',angry:'angryTremble 1s ease-in-out infinite',sad:'sadDroop 4s ease-in-out infinite',default:'speaking 3s ease-in-out infinite'}[emotion]||'speaking 3s ease-in-out infinite');
-    const bgUrl = IMAGES[scene.bg];
 
     return (
-        <div onClick={handleClick} style={{height:'100vh',position:'relative',background:'#0a0810',overflow:'hidden',cursor:showChoices?'default':'pointer'}}>
-            <div style={{position:'absolute',inset:0,background:bgUrl?`url(${bgUrl}) center/cover`:'#100e16',transition:'background 0.5s'}}>{!bgUrl&&<div style={{position:'absolute',top:'40%',left:'50%',transform:'translate(-50%,-50%)',color:'#1a1820',fontSize:'0.7rem'}}>[ {scene.bg} ]</div>}</div>
+        <div onClick={handleNext} style={{height:'100vh', position:'relative', overflow:'hidden', background:'#000'}}>
+            {/* 배경 이미지 (없을 경우 색상 처리) */}
+            <div style={{
+                position:'absolute', inset:0, 
+                background: IMAGES[scene.bg] ? `url(${IMAGES[scene.bg]}) center/cover` : '#1a1a2e',
+                transition: '0.5s'
+            }} />
 
-            {/* 상단 UI */}
-            <div style={{position:'absolute',top:0,left:0,right:0,height:'42px',background:'linear-gradient(#0a0810,transparent)',display:'flex',alignItems:'center',padding:'0 16px',gap:'6px',zIndex:60}}>
-                <button onClick={e=>{e.stopPropagation();playSfx('click');setShowAffection(true);}} style={{padding:'4px 12px',fontSize:'0.68rem',background:'rgba(157,142,194,0.2)',border:'1px solid #9d8ec2',color:'#b8aed0',borderRadius:'10px',cursor:'pointer'}}>💕 호감도</button>
-                <button onClick={e=>{e.stopPropagation();playSfx('click');setShowSaveLoad('save');}} style={{padding:'4px 10px',fontSize:'0.65rem',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'10px',cursor:'pointer'}}>💾 SAVE</button>
-                <button onClick={e=>{e.stopPropagation();playSfx('click');setShowSaveLoad('load');}} style={{padding:'4px 10px',fontSize:'0.65rem',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'10px',cursor:'pointer'}}>📂 LOAD</button>
-                {!isMobile && <button onClick={e=>{e.stopPropagation();playSfx('click');if(onTitle)onTitle();}} style={{padding:'4px 12px',fontSize:'0.68rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'10px',cursor:'pointer'}}>TITLE</button>}
-            </div>
-
-            {/* 호감도 변동 팝업 */}
-            {affectionPopup && (
-                <div style={{position:'absolute',top:'80px',right:'20px',zIndex:100,animation:'slideDown 0.3s'}}>
-                    {affectionPopup.map((item,i)=>(
-                        <div key={i} style={{background:item.delta>0?'rgba(157,142,194,0.2)':'rgba(180,80,80,0.2)',border:`1px solid ${item.delta>0?'#9d8ec2':'#b05050'}`,borderRadius:'8px',padding:'8px 16px',marginBottom:'4px',display:'flex',alignItems:'center',gap:'8px',animation:'heartPop 0.5s'}}>
-                            <span style={{color:characters[item.char]?.color}}>{characters[item.char]?.name}</span>
-                            <span style={{color:item.delta>0?'#d4a0a8':'#e07070'}}>{item.delta>0?'+':''}{item.delta} {item.delta>0?'💕':'💔'}</span>
-                        </div>
-                    ))}
-                </div>
+            {/* 미니게임 */}
+            {showMinigame === 'memory' && (
+                <MemoryGame 
+                    onPass={() => {setShowMinigame(null); goToScene('4-pass');}} 
+                    onFail={() => {setShowMinigame(null); goToScene('4-fail');}} 
+                />
             )}
 
-            {scene?.ending === 'badend1' && (
-                <div style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'rgba(0,0,0,0.9)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 300
+            {/* 캐릭터 */}
+            {scene.chars.map((char, i) => (
+                <div key={i} style={{
+                    position:'absolute', bottom:0, left: char.pos==='center'?'50%':(char.pos==='left'?'25%':'75%'),
+                    transform:'translateX(-50%)', height:'80%', width:'auto'
                 }}>
-                    <h1 style={{ color: '#e07070', fontSize: '2rem', marginBottom: '20px' }}>
-                        BAD END 1
-                    </h1>
-                    <p style={{ color: '#b8aed0', marginBottom: '40px' }}>
-                        실패한 황자
-                    </p>
-                    <div style={{ display: 'flex', gap: '20px' }}>
-                        <button
-                            onClick={() => goToScene('4-12c')}
-                            style={{
-                                padding: '12px 30px',
-                                background: 'linear-gradient(135deg, #9d8ec2, #6b5a8e)',
-                                border: 'none',
-                                borderRadius: '8px',
-                                color: '#fff',
-                                cursor: 'pointer',
-                                fontSize: '1rem'
-                            }}
-                        >
-                            🔄 재도전
-                        </button>
-                        <button
-                            onClick={onTitle}
-                            style={{
-                                padding: '12px 30px',
-                                background: 'transparent',
-                                border: '1px solid #6b6480',
-                                borderRadius: '8px',
-                                color: '#6b6480',
-                                cursor: 'pointer',
-                                fontSize: '1rem'
-                            }}
-                        >
-                            타이틀로
-                        </button>
-                    </div>
+                    <img 
+                        src={IMAGES[char.id]?.[char.emotion || 'default']} 
+                        style={{height:'100%', opacity: IMAGES[char.id] ? 1 : 0}} 
+                        onError={(e) => e.target.style.display = 'none'}
+                    />
+                    {!IMAGES[char.id] && <div style={{color:'#fff'}}>[{char.id}]</div>}
                 </div>
-            )}
-
-            {showLog && (
-    <div onClick={()=>setShowLog(false)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.9)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000}}>
-        <div onClick={e=>e.stopPropagation()} style={{width:'90%',maxWidth:'600px',height:'70vh',background:'#14121a',border:'1px solid #3d3850',borderRadius:'12px',display:'flex',flexDirection:'column'}}>
-            {/* 헤더 */}
-            <div style={{padding:'16px',borderBottom:'1px solid #252230',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                <h3 style={{color:'#9d8ec2',fontSize:'1rem'}}>📜 대화 기록</h3>
-                <button onClick={()=>setShowLog(false)} style={{background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',borderRadius:'50%',cursor:'pointer'}}>✕</button>
-            </div>
-            {/* 로그 내용 */}
-            <div style={{flex:1,overflow:'auto',padding:'16px',display:'flex',flexDirection:'column',gap:'12px'}}>
-                {dialogLog.map((log,i) => {
-                    const isNarrator = log.speaker === 'narrator';
-                    const isYou = log.speaker === 'you';
-                    const charData = characters[log.speaker];
-                    const name = isYou ? '당신' : isNarrator ? '' : (charData?.name || log.speaker);
-                    const color = isYou ? '#9d8ec2' : isNarrator ? '#6b6480' : (charData?.color || '#c8c4d4');
-                    return (
-                        <div key={i} style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',borderRadius:'6px',borderLeft:`3px solid ${color}`}}>
-                                    {name && <div style={{color:color,fontSize:'0.75rem',fontWeight:600,marginBottom:'4px'}}>{name}</div>}
-                                    <div style={{color:isNarrator?'#7a7888':'#e8e6ed',fontSize:'0.85rem',fontStyle:isNarrator?'italic':'normal',lineHeight:1.6}}>{log.text}</div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            </div>
-        )}
-
-            {/* 캐릭터들  */}
-            {scene.chars.map((char,idx)=>{
-                const isSpeaking=currentSpeaker===char.id;
-                const emotion=isSpeaking&&dialog?.emotion?dialog.emotion:char.emotion;
-                const charImg=IMAGES[char.id]?.[emotion]||IMAGES[char.id]?.default;
-                const pos=getCharPosition(scene.chars,idx);
-                return(
-                    <div key={`${char.id}-${idx}`} style={{
-                        position:'absolute',...pos,
-                        bottom:isMobile?'50px':'80px',  // 더 아래로
-                        width:isMobile?'240px':'550px',   // 크기 증가
-                        height:isMobile?'340px':'760px',  // 크기 증가
-                        display:'flex',justifyContent:'center',alignItems:'flex-end',
-                        transition:'filter 0.5s ease,transform 0.5s cubic-bezier(0.34,1.56,0.64,1)',
-                        filter:isSpeaking?'brightness(1) drop-shadow(0 0 12px rgba(255,255,255,0.12))':'brightness(0.5)',
-                        transform:isSpeaking?'scale(1.08)':'scale(0.92)',
-                        animation:isSpeaking?getEmotionAnimation(emotion):'idleBreathing 5s ease-in-out infinite',
-                        zIndex:isSpeaking?50:1
-                    }}>
-                        {charImg?<img src={charImg} style={{maxHeight:'100%',maxWidth:'100%',objectFit:'contain',objectPosition:'bottom'}}/>
-                        :<div style={{color:'#2a2836',fontSize:'0.55rem',padding:'15px',border:'1px dashed #2a2836',borderRadius:'4px'}}>[{characters[char.id]?.name}-{emotion}]</div>}
-                    </div>
-                );
-            })}
+            ))}
 
             {/* 대화창 */}
-            {!showChoices&&(
-                <div style={{position:'absolute',bottom:0,left:0,right:0,padding:isMobile?'10px':'16px',zIndex:60}}>
-                    <div style={{maxWidth:'880px',margin:'0 auto',background:'rgba(10,8,16,0.96)',border:'1px solid #252230',borderRadius:isMobile?'8px':'10px',padding:isMobile?'12px 14px':'18px 24px',position:'relative'}}>
-                        {speakerData.name&&(<div style={{position:'absolute',top:isMobile?'-11px':'-13px',left:isMobile?'12px':'20px',background:speakerData.color,padding:isMobile?'2px 12px':'3px 16px',borderRadius:'12px',color:'#0a0810',fontSize:isMobile?'0.72rem':'0.78rem',fontWeight:600}}>{speakerData.name}</div>)}
-                        <div style={{fontSize:isMobile?'0.88rem':'0.98rem',lineHeight:1.8,color:dialog?.speaker==='narrator'?'#7a7888':'#e8e6ed',fontStyle:dialog?.speaker==='narrator'?'italic':'normal',minHeight:isMobile?'42px':'52px',paddingTop:speakerData.name?'6px':0,display:'flex',alignItems:'center'}}>
-                            <span className={dialog?.effect ? `text-${dialog.effect}` : ''}>{displayedText}</span>
-                            {isTyping&&<span style={{borderRight:'2px solid #9d8ec2',marginLeft:'1px',animation:'blink 0.5s infinite'}}>&nbsp;</span>}
-                            {!isTyping&&canProceed&&<span style={{marginLeft:'8px',color:'#9d8ec2',fontSize:'0.75rem',animation:'arrowBounce 0.7s infinite'}}>▼</span>}
-                        </div>
-                        <div style={{position:'absolute',bottom:isMobile?'7px':'10px',right:isMobile?'8px':'14px',display:'flex',gap:isMobile?'4px':'6px'}}>
-                            <button onClick={e=>{e.stopPropagation();playSfx('click');goBack();}} disabled={history.length===0} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:history.length>0?'rgba(100,80,120,0.3)':'transparent',border:`1px solid ${history.length>0?'#6b5a80':'#252230'}`,color:history.length>0?'#a090b0':'#3d3850',borderRadius:'8px',cursor:history.length>0?'pointer':'not-allowed'}}>◀ BACK</button>
-                            <button onClick={e=>{e.stopPropagation();playSfx('click');if(isTyping){setDisplayedText(dialog.text);setIsTyping(false);setCanProceed(true);}else{proceed();}}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'8px',cursor:'pointer'}}>NEXT</button>
-                            <button onClick={e=>{e.stopPropagation();setIsAuto(!isAuto);playSfx('click');}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:isAuto?'rgba(157,142,194,0.2)':'transparent',border:`1px solid ${isAuto?'#9d8ec2':'#252230'}`,color:isAuto?'#b8aed0':'#6b6480',borderRadius:'8px',cursor:'pointer'}}>AUTO</button>
-                            <button onClick={e=>{e.stopPropagation();playSfx('click');setShowLog(true);}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'8px',cursor:'pointer'}}>LOG</button>
-                        </div>
-                    </div>
+            <div style={{position:'absolute', bottom:20, left:'50%', transform:'translateX(-50%)', width:'90%', maxWidth:'800px', background:'rgba(0,0,0,0.85)', padding:'20px', borderRadius:'15px', border:'1px solid #3d3850', zIndex:100}}>
+                <div style={{color: characters[dialog.speaker].color, fontWeight:'bold', marginBottom:'10px'}}>
+                    {characters[dialog.speaker].name}
                 </div>
-            )}
+                <div style={{fontSize:'1.1rem', lineHeight:'1.6', minHeight:'3em'}}>
+                    {displayText}
+                </div>
+            </div>
 
             {/* 선택지 */}
-            {showChoices&&scene.choices&&(
-                <div style={{position:'absolute',top:isMobile?'35%':'40%',left:'50%',transform:'translate(-50%,-50%)',display:'flex',flexDirection:'column',gap:isMobile?'8px':'12px',animation:'fadeIn 0.4s',zIndex:200,width:isMobile?'85%':'auto',maxWidth:'450px'}}>
-                    {scene.choices.map((choice,i)=>(
-                        <button key={i} onClick={()=>handleChoice(choice)} style={{padding:isMobile?'12px 16px':'18px 28px',fontSize:isMobile?'0.8rem':'0.95rem',background:'rgba(10,8,16,0.96)',border:'1px solid #3d3850',color:'#e8e6ed',cursor:'pointer',borderRadius:'8px',textAlign:'left',width:'100%'}}>
-                            <span style={{color:'#9d8ec2',marginRight:'8px'}}>▸</span>{choice.text}
-                            {choice.affection&&<span style={{float:'right',color:'#d4a0a8',fontSize:'0.75rem'}}>💕</span>}
+            {showChoices && (
+                <div style={{position:'absolute', top:'40%', left:'50%', transform:'translate(-50%,-50%)', display:'flex', flexDirection:'column', gap:'10px', zIndex:200}}>
+                    {scene.choices.map((c, i) => (
+                        <button key={i} onClick={(e) => {e.stopPropagation(); handleChoice(c);}} style={{padding:'15px 30px', background:'rgba(15,15,25,0.95)', border:'1px solid #9d8ec2', color:'#fff', borderRadius:'8px', cursor:'pointer', minWidth:'250px'}}>
+                            {c.text}
                         </button>
                     ))}
                 </div>
             )}
 
-            {showAffection && <AffectionPanel affection={affection} onClose={()=>setShowAffection(false)} isMobile={isMobile}/>}
-            {showSaveLoad && <SaveLoadPanel mode={showSaveLoad} onClose={() => setShowSaveLoad(null)} onSave={handleSave} onLoad={handleLoadInGame} currentState={{ currentChapter, sceneIndex, dialogIndex, affection }} isMobile={isMobile}/>}
-        </div>
-    );
-}
-
-function GlitchScreen({ onComplete }) {
-    const [phase, setPhase] = useState(0);
-    const msgs = ["ERROR: UNEXPECTED_ENTITY_DETECTED","WARNING: NARRATIVE_BREACH","FATAL: OBSERVER_OVERFLOW","SYSTEM FAILURE..."];
-    useEffect(() => { playSfx('glitch');stopBgm();const timers=[setTimeout(()=>setPhase(1),200),setTimeout(()=>setPhase(2),700),setTimeout(()=>setPhase(3),1200),setTimeout(()=>setPhase(4),1700),setTimeout(onComplete,3000)];return()=>timers.forEach(clearTimeout); }, [onComplete]);
-    return (<div style={{height:'100vh',background:'#050508',display:'flex',justifyContent:'center',alignItems:'center',position:'relative',overflow:'hidden'}}><div style={{position:'absolute',inset:0,background:'repeating-linear-gradient(0deg,rgba(0,0,0,0.08),rgba(0,0,0,0.08) 1px,transparent 1px,transparent 2px)'}}/>{phase>=1&&[...Array(12)].map((_,i)=>(<div key={i} style={{position:'absolute',top:`${Math.random()*100}%`,left:0,right:0,height:`${Math.random()*3+1}px`,background:`rgba(160,100,130,${Math.random()*0.3+0.1})`,transform:`translateX(${Math.random()*10-5}px)`}}/>))}<div style={{fontFamily:'monospace',fontSize:'0.9rem',color:'#a06880',textShadow:'0 0 8px rgba(160,100,130,0.6)',animation:'glitchText 0.12s infinite',textAlign:'center',zIndex:10}}>{phase>0&&msgs[phase-1]}</div></div>);
-}
-
-function CharacterSite({ onBack }) {
-    const [selected, setSelected] = useState(null);
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-    useEffect(() => { const h=()=>setIsMobile(window.innerWidth<=768); window.addEventListener('resize',h); return()=>window.removeEventListener('resize',h); }, []);
-
-    const list = Object.entries(characters);
-
-    return (
-        <div style={{minHeight:'100vh',background:'#0a0810',padding:isMobile?'20px 12px':'32px 18px'}}>
-            <header style={{textAlign:'center',marginBottom:isMobile?'22px':'36px'}}>
-                <button onClick={onBack} style={{position:'absolute',top:'20px',left:'20px',padding:'8px 16px',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'8px',cursor:'pointer',fontSize:'0.8rem'}}>← 돌아가기</button>
-                <div style={{fontSize:'0.65rem',color:'#6b6480',letterSpacing:'0.2em',marginBottom:'6px'}}>CHARACTER</div>
-                <h1 style={{fontFamily:"'Noto Serif KR',serif",fontSize:isMobile?'1.3rem':'1.7rem',color:'#e8e6ed'}}>등장인물</h1>
-                <div style={{width:'50px',height:'1px',background:'#3d3850',margin:'10px auto 0'}}/>
-            </header>
-
-            <div style={{display:'grid',gridTemplateColumns:isMobile?'repeat(2,1fr)':'repeat(auto-fit,minmax(170px,1fr))',gap:isMobile?'8px':'14px',maxWidth:'980px',margin:'0 auto'}}>
-                {list.map(([k,c],i)=>(
-                    <div key={k} onClick={()=>{playSfx('click');setSelected(k);}} style={{background:'#14121a',border:'1px solid #1a1820',borderRadius:'10px',overflow:'hidden',cursor:'pointer',animation:`slideUp 0.5s cubic-bezier(0.16,1,0.3,1) ${i*0.05}s both`}}>
-                        <div style={{width:'100%',height:isMobile?'140px':'195px',background:'#100e16',display:'flex',justifyContent:'center',alignItems:'center',borderBottom:'1px solid #1a1820'}}>
-                            {IMAGES[`full${k.charAt(0).toUpperCase()+k.slice(1)}`]?<img src={IMAGES[`full${k.charAt(0).toUpperCase()+k.slice(1)}`]} style={{maxHeight:'100%',maxWidth:'100%',objectFit:'cover'}}/>:<span style={{color:'#2a2836',fontSize:'0.55rem'}}>[ {c.name} ]</span>}
-                        </div>
-                        <div style={{padding:isMobile?'9px':'12px'}}>
-                            <div style={{color:c.color,fontSize:isMobile?'0.52rem':'0.6rem',marginBottom:'2px'}}>{c.description}</div>
-                            <h3 style={{color:'#e8e6ed',fontSize:isMobile?'0.85rem':'0.95rem',marginBottom:'4px',fontWeight:500}}>{c.fullName}</h3>
-                            {c.personality&&<div style={{color:'#6b6480',fontSize:isMobile?'0.62rem':'0.7rem'}}>{c.personality}</div>}
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {selected&&(
-                <div onClick={()=>setSelected(null)} style={{position:'fixed',inset:0,background:'rgba(5,4,10,0.95)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000,padding:'12px',animation:'fadeIn 0.35s'}}>
-                    <div onClick={e=>e.stopPropagation()} style={{width:'100%',maxWidth:isMobile?'100%':'800px',height:isMobile?'86vh':'76vh',maxHeight:isMobile?'none':'540px',background:'#100e16',border:`1px solid ${characters[selected].color}40`,borderRadius:'14px',display:'flex',flexDirection:isMobile?'column':'row',position:'relative',overflow:'hidden'}}>
-                        <div style={{flex:isMobile?'0 0 40%':1,background:'#0a0810',display:'flex',justifyContent:'center',alignItems:'center',borderRight:isMobile?'none':'1px solid #1a1820',borderBottom:isMobile?'1px solid #1a1820':'none'}}>
-                            {IMAGES[`full${selected.charAt(0).toUpperCase()+selected.slice(1)}`]?<img src={IMAGES[`full${selected.charAt(0).toUpperCase()+selected.slice(1)}`]} style={{maxHeight:'100%',maxWidth:'100%',objectFit:'contain'}}/>:<div style={{color:'#2a2836',fontSize:'0.7rem'}}>[ 전신 이미지 ]</div>}
-                        </div>
-                        <div style={{flex:1,padding:isMobile?'16px':'24px',display:'flex',flexDirection:'column',overflow:'auto'}}>
-                            <button onClick={()=>setSelected(null)} style={{position:'absolute',top:'10px',right:'10px',background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',cursor:'pointer',fontSize:'0.9rem',borderRadius:'50%'}}>✕</button>
-                            <div style={{marginBottom:'14px'}}>
-                                <div style={{color:characters[selected].color,fontSize:'0.65rem',marginBottom:'4px'}}>{characters[selected].description}</div>
-                                <h2 style={{color:'#e8e6ed',fontSize:isMobile?'1.3rem':'1.5rem',fontFamily:"'Noto Serif KR',serif"}}>{characters[selected].fullName}</h2>
-                            </div>
-                            <div style={{display:'flex',flexWrap:'wrap',gap:'5px',marginBottom:'14px'}}>
-                                {characters[selected].tags.map((t,i)=><span key={i} style={{padding:'3px 9px',background:`${characters[selected].color}18`,border:`1px solid ${characters[selected].color}30`,borderRadius:'10px',fontSize:'0.65rem',color:characters[selected].color}}>{t}</span>)}
-                            </div>
-                            <div style={{width:'100%',height:'1px',background:'#1a1820',marginBottom:'14px'}}/>
-                            <div style={{padding:'10px 14px',background:'#0a0810',borderRadius:'8px',borderLeft:`2px solid ${characters[selected].color}`,marginBottom:'14px'}}>
-                                <div style={{color:'#6b6480',fontSize:'0.6rem',marginBottom:'3px'}}>QUOTE</div>
-                                <div style={{color:'#c8c4d4',fontSize:isMobile?'0.82rem':'0.9rem',fontStyle:'italic',lineHeight:1.5}}>"{characters[selected].quote}"</div>
-                            </div>
-                        </div>
+            {/* 배드엔딩 UI */}
+            {scene.ending === 'badend1' && (
+                <div style={{position:'absolute', inset:0, background:'rgba(0,0,0,0.95)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', zIndex:500}}>
+                    <h1 style={{color:'#ff4d4d', fontSize:'3rem', marginBottom:'20px'}}>GAME OVER</h1>
+                    <p style={{marginBottom:'40px'}}>첫 번째 시험에서 탈락하여 추방당했습니다.</p>
+                    <div style={{display:'flex', gap:'20px'}}>
+                        <button onClick={(e)=>{e.stopPropagation(); goToScene('4-12');}} style={{padding:'12px 40px', background:'#9d8ec2', border:'none', borderRadius:'8px', fontWeight:'bold', cursor:'pointer'}}>🔄 시험 재도전</button>
+                        <button onClick={onTitle} style={{padding:'12px 40px', background:'transparent', border:'1px solid #3d3850', color:'#6b6480', borderRadius:'8px', cursor:'pointer'}}>타이틀로</button>
                     </div>
                 </div>
             )}
-
-            <footer style={{textAlign:'center',marginTop:isMobile?'30px':'45px',padding:'18px',borderTop:'1px solid #1a1820'}}><p style={{color:'#3d3850',fontSize:'0.6rem'}}>made by CowardMole</p></footer>
         </div>
     );
-}
+};
 
-function App() {
-    const [screen, setScreen] = useState('popup');
-    const [startChapter, setStartChapter] = useState('chapter1');
-    const [startSceneIndex, setStartSceneIndex] = useState(0);
-    const [startDialogIndex, setStartDialogIndex] = useState(0);
-    const [affection, setAffection] = useState({...DEFAULT_AFFECTION});
-
-    const handleStart = () => { 
-        setAffection({...DEFAULT_AFFECTION}); 
-        setStartChapter('chapter1'); 
-        setStartSceneIndex(0);
-        setStartDialogIndex(0);
-        setScreen('game'); 
-    };
-    
-    const handleLoadFromTitle = (saveData) => {
-        setStartChapter(saveData.currentChapter);
-        setStartSceneIndex(saveData.sceneIndex);
-        setStartDialogIndex(saveData.dialogIndex);
-        setAffection(saveData.affection);
-        setScreen('game');
-    };
-
-    const handleTitle = () => { setScreen('title'); };
-    const handleCharacter = () => { setScreen('character'); };
-
-    return (
-        <div id="game-container" style={{minHeight:'100vh'}}>
-            {screen === 'popup' && <StartPopup onClose={()=>setScreen('title')}/>}
-            {screen === 'title' && <TitleScreen onStart={handleStart} onLoad={handleLoadFromTitle} onCharacter={handleCharacter}/>}
-            {screen === 'character' && <CharacterSite onBack={()=>setScreen('title')}/>}
-            {screen === 'game' && <GameScreen 
-                startChapter={startChapter} 
-                startSceneIndex={startSceneIndex}
-                startDialogIndex={startDialogIndex}
-                onGlitch={()=>setScreen('glitch')} 
-                onTitle={handleTitle}
-                affection={affection} 
-                setAffection={setAffection}
-            />}
-            {screen === 'glitch' && <GlitchScreen onComplete={()=>setScreen('character')}/>}
+// ════════════════════════════════════════════════════════════════════════════
+// 앱 시작점
+// ════════════════════════════════════════════════════════════════════════════
+const App = () => {
+    const [view, setView] = useState('title');
+    if (view === 'title') return (
+        <div style={{height:'100vh', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', background:'#0a0810'}}>
+            <h1 style={{fontSize:'3rem', marginBottom:'40px'}}>제국 최강이 되기까지</h1>
+            <button onClick={() => setView('game')} style={{padding:'15px 50px', background:'#9d8ec2', border:'none', borderRadius:'5px', cursor:'pointer', fontSize:'1.2rem'}}>게임 시작</button>
         </div>
     );
-}
+    return <GameScreen onTitle={() => setView('title')} />;
+};
 
-ReactDOM.render(<App/>, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
 </html>
