@@ -2331,57 +2331,41 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         else if(sceneIndex<chapter.scenes.length-1){setSceneIndex(s=>s+1);setDialogIndex(0);}
     }, [canProceed, showChoices, dialogIndex, scene, sceneIndex, chapter, currentChapter, affection]);
 
-    // SKIP 버튼 - 선택지까지 바로 이동
-    const skipToChoice = useCallback(() => {
-        if (!scene) return;
-        
-        // 현재 씬에 선택지가 있으면 선택지로 이동
-        if (scene.choices) {
-            // 히스토리에 현재 상태 저장
-            setHistory(prev => [...prev, { 
-                chapter: currentChapter, 
-                scene: sceneIndex, 
-                dialog: dialogIndex,
-                affection: {...affection}
-            }]);
-            setDialogIndex(scene.dialogs.length - 1);
-            setDisplayedText(scene.dialogs[scene.dialogs.length - 1].text);
-            setIsTyping(false);
-            setCanProceed(true);
-            setShowChoices(true);
-            return;
-        }
-        
-        // 선택지가 없으면 다음 씬 찾기
-        let nextSceneIdx = sceneIndex;
-        let foundChoice = false;
-        
-        for (let i = sceneIndex; i < chapter.scenes.length; i++) {
-            if (chapter.scenes[i].choices) {
-                nextSceneIdx = i;
-                foundChoice = true;
-                break;
+    // SKIP 모드 상태
+    const [isSkipping, setIsSkipping] = useState(false);
+    const skipIntervalRef = useRef(null);
+
+    // SKIP 모드 - 꾹 누르면 대화 빠르게 넘기기
+    useEffect(() => {
+        if (isSkipping && !showChoices && !showMinigame) {
+            skipIntervalRef.current = setInterval(() => {
+                if (isTyping) {
+                    // 타이핑 중이면 즉시 완료
+                    setDisplayedText(dialog?.text || '');
+                    setIsTyping(false);
+                    setCanProceed(true);
+                } else if (canProceed && !showChoices) {
+                    // 다음으로 진행
+                    proceed();
+                }
+            }, 80); // 80ms 간격으로 빠르게 진행
+        } else {
+            if (skipIntervalRef.current) {
+                clearInterval(skipIntervalRef.current);
+                skipIntervalRef.current = null;
             }
         }
         
-        if (foundChoice) {
-            const targetScene = chapter.scenes[nextSceneIdx];
-            setHistory(prev => [...prev, { 
-                chapter: currentChapter, 
-                scene: sceneIndex, 
-                dialog: dialogIndex,
-                affection: {...affection}
-            }]);
-            setSceneIndex(nextSceneIdx);
-            setDialogIndex(targetScene.dialogs.length - 1);
-            setTimeout(() => {
-                setDisplayedText(targetScene.dialogs[targetScene.dialogs.length - 1].text);
-                setIsTyping(false);
-                setCanProceed(true);
-                setShowChoices(true);
-            }, 100);
-        }
-    }, [scene, chapter, sceneIndex, dialogIndex, currentChapter, affection]);
+        return () => {
+            if (skipIntervalRef.current) {
+                clearInterval(skipIntervalRef.current);
+            }
+        };
+    }, [isSkipping, isTyping, canProceed, showChoices, showMinigame, dialog, proceed]);
+
+    // 스킵 시작/종료 핸들러
+    const startSkip = () => setIsSkipping(true);
+    const stopSkip = () => setIsSkipping(false);
 
     // BACK 버튼 - 호감도도 복원
     const goBack = useCallback(() => {
@@ -2661,7 +2645,14 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                         </div>
                         <div style={{position:'absolute',bottom:isMobile?'7px':'10px',right:isMobile?'8px':'14px',display:'flex',gap:isMobile?'4px':'6px'}}>
                             <button onClick={e=>{e.stopPropagation();playSfx('click');goBack();}} disabled={history.length===0} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:history.length>0?'rgba(100,80,120,0.3)':'transparent',border:`1px solid ${history.length>0?'#6b5a80':'#252230'}`,color:history.length>0?'#a090b0':'#3d3850',borderRadius:'8px',cursor:history.length>0?'pointer':'not-allowed'}}>◀ BACK</button>
-                            <button onClick={e=>{e.stopPropagation();playSfx('click');skipToChoice();}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:'rgba(180,100,100,0.2)',border:'1px solid #a06060',color:'#d09090',borderRadius:'8px',cursor:'pointer'}}>SKIP ▶▶</button>
+                            <button 
+                                onMouseDown={e=>{e.stopPropagation();startSkip();}} 
+                                onMouseUp={stopSkip} 
+                                onMouseLeave={stopSkip}
+                                onTouchStart={e=>{e.stopPropagation();startSkip();}} 
+                                onTouchEnd={stopSkip}
+                                style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:isSkipping?'rgba(180,100,100,0.4)':'rgba(180,100,100,0.15)',border:`1px solid ${isSkipping?'#c07070':'#a06060'}`,color:isSkipping?'#ffb0b0':'#d09090',borderRadius:'8px',cursor:'pointer',transition:'all 0.1s'}}
+                            >▶▶ SKIP</button>
                             <button onClick={e=>{e.stopPropagation();setIsAuto(!isAuto);playSfx('click');}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:isAuto?'rgba(157,142,194,0.2)':'transparent',border:`1px solid ${isAuto?'#9d8ec2':'#252230'}`,color:isAuto?'#b8aed0':'#6b6480',borderRadius:'8px',cursor:'pointer'}}>AUTO</button>
                             <button onClick={e=>{e.stopPropagation();playSfx('click');setShowLog(true);}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'8px',cursor:'pointer'}}>LOG</button>
                         </div>
@@ -2812,3 +2803,4 @@ ReactDOM.render(<App/>, document.getElementById('root'));
     </script>
 </body>
 </html>
+
