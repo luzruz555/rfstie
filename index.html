@@ -2366,7 +2366,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
     };
 
     const handleClick = (e) => {
-        if(showChoices||e.target.closest('button')||showChapterTitle||showAffection||showSaveLoad||showLog)return;
+        if(showChoices||e.target.closest('button')||showChapterTitle||showAffection||showSaveLoad||showLog||showMinigame)return;
         
         // 타이핑 중이면 즉시 완료 (스킵)
         if(isTyping){
@@ -2393,6 +2393,29 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         setShowChapterTitle(true);
         setHistory([]);
     };
+
+    // ═══════════════════════════════════════
+    // 미니게임 핸들러
+    // ═══════════════════════════════════════
+    const handleMinigamePass = useCallback(() => {
+        setShowMinigame(null);
+        // 4-pass 씬으로 이동
+        const idx = chapter?.scenes?.findIndex(s => s.id === '4-pass');
+        if (idx !== -1) {
+            setSceneIndex(idx);
+            setDialogIndex(0);
+        }
+    }, [chapter]);
+
+    const handleMinigameFail = useCallback(() => {
+        setShowMinigame(null);
+        // 4-fail 씬으로 이동
+        const idx = chapter?.scenes?.findIndex(s => s.id === '4-fail');
+        if (idx !== -1) {
+            setSceneIndex(idx);
+            setDialogIndex(0);
+        }
+    }, [chapter]);
 
     if(!chapter||!scene)return null;
 
@@ -2581,6 +2604,14 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
 
             {showAffection && <AffectionPanel affection={affection} onClose={()=>setShowAffection(false)} isMobile={isMobile}/>}
             {showSaveLoad && <SaveLoadPanel mode={showSaveLoad} onClose={() => setShowSaveLoad(null)} onSave={handleSave} onLoad={handleLoadInGame} currentState={{ currentChapter, sceneIndex, dialogIndex, affection }} isMobile={isMobile}/>}
+            
+            {/* 미니게임 렌더링 */}
+            {showMinigame === 'memory' && (
+                <MemoryGame 
+                    onPass={handleMinigamePass} 
+                    onFail={handleMinigameFail} 
+                />
+            )}
         </div>
     );
 }
