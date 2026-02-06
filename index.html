@@ -2215,7 +2215,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         if(chapter){
             setShowChapterTitle(true);
             playBgm(chapter.bgm||'default');
-            const t=setTimeout(()=>setShowChapterTitle(false),2500);
+            const t=setTimeout(()=>setShowChapterTitle(false),1300);
             return()=>clearTimeout(t);
         } 
     }, [currentChapter]);
