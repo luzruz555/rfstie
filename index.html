@@ -1169,11 +1169,9 @@ const STORY = {
                 { speaker:"selene", text:"아침은 드셨어요? 저랑 같이 하실래요?", emotion:"happy" },
                 { speaker:"you", text:"...같이?" },
                 { speaker:"selene", text:"네! 오빠랑 더 친해지고 싶거든요.", emotion:"happy" },
-                { speaker:"selene", text:"그리고... 시험에 대해서도 알려드릴 게 있어요.", emotion:"default" },
             ], choices:[
-                { text:"좋아. 같이 먹자.", next:"4-4a", affection:{selene:+10} },
-                { text:"시험 정보? 그거 먼저 들을게.", next:"4-4b", affection:{selene:+5} },
-                { text:"혼자 먹을게. 고마워.", next:"4-4c", affection:{selene:+0} }
+                { text:"좋아. 같이 먹자.", next:"4-4a", affection:{selene:+10} }
+                { text:"제안은 고맙지만 혼자 먹을게.", next:"4-4c", affection:{selene:+0} }
             ]},
 
             { id:"4-4a", bg:"bgHall", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
@@ -1185,14 +1183,7 @@ const STORY = {
             ], next:"4-5"},
 
             { id:"4-4b", bg:"bgHall", chars:[{id:"selene",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"시험 정보? 그거 먼저 들을게." },
-                { speaker:"selene", text:"후후, 급하시네요.", emotion:"default" },
-                { speaker:"selene", text:"좋아요. 밥 먹으면서 얘기해요.", emotion:"happy" },
-                { speaker:"narrator", text:"셀레네가 앞장서서 걸었다." },
-            ], next:"4-5"},
-
-            { id:"4-4c", bg:"bgHall", chars:[{id:"selene",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"you", text:"혼자 먹을게. 고마워." },
+                { speaker:"you", text:"제안은 고맙지만 혼자 먹을게. " },
                 { speaker:"selene", text:"...", emotion:"default" },
                 { speaker:"narrator", text:"셀레네의 미소가 잠깐 굳었다." },
                 { speaker:"selene", text:"...그래요. 그럼 나중에 봐요.", emotion:"default" },
@@ -1230,9 +1221,8 @@ const STORY = {
 
             { id:"4-5c", bg:"bgGarden", chars:[{id:"selene",pos:"center",emotion:"happy"}], dialogs:[
                 { speaker:"you", text:"고마워. 네 도움이 필요할 것 같아." },
-                { speaker:"selene", text:"정말요?!", emotion:"happy" },
+                { speaker:"selene", text:"후후 역시..!", emotion:"happy" },
                 { speaker:"narrator", text:"셀레네의 눈이 반짝였다." },
-                { speaker:"selene", text:"기뻐요! 열심히 도와드릴게요!", emotion:"happy" },
                 { speaker:"selene", text:"매일 이 시간에 여기서 만나요. 제가 특훈시켜 드릴게요.", emotion:"happy" },
                 { speaker:"narrator", text:"...왠지 의욕이 넘쳐 보인다." },
             ], next:"4-6"},
@@ -1262,8 +1252,8 @@ const STORY = {
                 { speaker:"adeline", text:"거기 서.", emotion:"angry" },
                 { speaker:"narrator", text:"아델린이 앞을 막아섰다." },
                 { speaker:"narrator", text:"차가운 눈빛이 나를 꿰뚫었다." },
-                { speaker:"adeline", text:"셀레네랑 밥 먹었다며?", emotion:"angry" },
-                { speaker:"you", text:"...그게?" },
+                { speaker:"adeline", text:"셀레네랑 대화하던데.", emotion:"angry" },
+                { speaker:"you", text:"...그래서?" },
                 { speaker:"adeline", text:"경고하는데, 저 여자 믿지 마.", emotion:"default" },
                 { speaker:"you", text:"뭐?" },
                 { speaker:"adeline", text:"셀레네가 친절한 건 다 이유가 있어. 순수한 호의 같은 거 없어.", emotion:"default" },
@@ -1281,7 +1271,7 @@ const STORY = {
                 { speaker:"narrator", text:"그리고 빠르게 지나갔다." },
             ], choices:[
                 { text:"잠깐, 고마워.", next:"4-6c", affection:{adeline:+15} },
-                { text:"(뒤에 대고) 넌 생각보다 착하네.", next:"4-6d", affection:{adeline:+10} },
+                { text:"생각보다 친절하네..", next:"4-6d", affection:{adeline:+10} },
                 { text:"(그냥 보내준다)", next:"4-6e", affection:{adeline:+5} }
             ]},
 
@@ -1289,26 +1279,25 @@ const STORY = {
                 { speaker:"you", text:"잠깐, 고마워." },
                 { speaker:"narrator", text:"아델린이 멈칫했다." },
                 { speaker:"adeline", text:"...뭐?", emotion:"sad" },
-                { speaker:"you", text:"힌트 줘서. 고맙다고." },
+                { speaker:"you", text:"도움줘서. 고맙다고." },
                 { speaker:"adeline", text:"......", emotion:"sad" },
                 { speaker:"narrator", text:"귀가 살짝 붉어진 것 같았다." },
                 { speaker:"adeline", text:"...닥쳐. 고마워할 거 없어.", emotion:"angry" },
                 { speaker:"narrator", text:"그리고 빠르게 사라졌다." },
-                { speaker:"narrator", text:"...츤데레인가." },
             ], next:"4-7"},
 
             { id:"4-6d", bg:"bgHall", chars:[], dialogs:[
                 { speaker:"narrator", text:"아델린의 뒷모습에 대고 말했다." },
-                { speaker:"you", text:"넌 생각보다 착하네." },
+                { speaker:"you", text:"생각보다 친절하네." },
                 { speaker:"narrator", text:"멀리서 아델린이 걸음을 멈추는 게 보였다." },
                 { speaker:"adeline", text:"...뭐라고?!", emotion:"angry" },
-                { speaker:"narrator", text:"하지만 돌아오진 않았다." },
-                { speaker:"narrator", text:"씩씩거리며 가는 뒷모습이 보였다." },
+                { speaker:"narrator", text:"아델린의 붉어져가는 귓불이 눈에 들어왔다." },
+                { speaker:"narrator", text:"약간은 어색하게 씩씩거리며 가는 뒷모습이 보였다." },
             ], next:"4-7"},
 
             { id:"4-6e", bg:"bgHall", chars:[], dialogs:[
                 { speaker:"narrator", text:"아델린을 그냥 보내줬다." },
-                { speaker:"narrator", text:"...경고와 힌트. 둘 다 신경 쓰였다." },
+                { speaker:"narrator", text:"...경고와 정보. 둘 다 신경 쓰였다." },
                 { speaker:"narrator", text:"셀레네를 조심하라는 건 무슨 의미일까." },
             ], next:"4-7"},
 
@@ -1388,11 +1377,10 @@ const STORY = {
             { id:"4-8b", bg:"bgRoom", chars:[{id:"elia",pos:"center",emotion:"default"}], dialogs:[
                 { speaker:"elia", text:"난 더 구체적인 거 알려줄게.", emotion:"default" },
                 { speaker:"you", text:"뭔데?" },
-                { speaker:"elia", text:"시험은 '빛의 순서'를 맞추는 거야.", emotion:"default" },
-                { speaker:"elia", text:"화면에 빛이 순서대로 나타나면 그걸 기억해서 따라하는 거지.", emotion:"default" },
-                { speaker:"you", text:"기억력 테스트네." },
-                { speaker:"elia", text:"맞아. 한 번이라도 틀리면 탈락.", emotion:"default" },
-                { speaker:"elia", text:"...바보처럼 굴지 마. 집중해.", emotion:"default" },
+                { speaker:"elia", text:"시험은 기억력 테스트.", emotion:"default" },
+                { speaker:"elia", text:"빠르게 순서를 맞추는 시험이라고 들었어.", emotion:"default" },
+                { speaker:"elia", text:"한 번이라도 틀리면 탈락이고.", emotion:"default" },
+                { speaker:"elia", text:"그러니까... 바보처럼 굴지 마.", emotion:"default" },
             ], choices:[
                 { text:"왜 이런 정보까지 알려주는 거야?", next:"4-8c", affection:{elia:+10} },
                 { text:"고마워, 도움이 됐어.", next:"4-8d", affection:{elia:+5} }
@@ -1435,7 +1423,7 @@ const STORY = {
                 { speaker:"luna", text:"...", emotion:"default" },
                 { speaker:"narrator", text:"푸른 눈이 나를 경계하듯 바라봤다." },
                 { speaker:"luna", text:"...누구야.", emotion:"default" },
-                { speaker:"you", text:"산책하다가. 방해했으면 미안." },
+                { speaker:"you", text:"산책중인데.. 방해했으면 미안." },
                 { speaker:"luna", text:"...", emotion:"default" },
                 { speaker:"narrator", text:"소녀가 다시 고개를 돌렸다." },
                 { speaker:"narrator", text:"말을 걸지 말라는 분위기가 역력했다." },
@@ -1482,7 +1470,7 @@ const STORY = {
             { id:"4-9e", bg:"bgGarden", chars:[], dialogs:[
                 { speaker:"narrator", text:"말을 걸지 않고 지나갔다." },
                 { speaker:"narrator", text:"뒤에서 시선이 느껴졌지만, 돌아보진 않았다." },
-            ], next:"4-10"},
+            ], next:"4-10b"},
 
         // 루나 추가 정보
             { id:"4-10", bg:"bgGarden", chars:[{id:"elia",pos:"center",emotion:"default"}], dialogs:[
@@ -1497,11 +1485,11 @@ const STORY = {
             ]},
 
             { id:"4-10b", bg:"bgGarden", chars:[{id:"luna",pos:"center",emotion:"default"}], dialogs:[
-                { speaker:"narrator", text:"그 뒤로도 몇 번 루나를 마주쳤다." },
+                { speaker:"narrator", text:"그 뒤로도 몇 번 그 아이를 마주쳤다." },
                 { speaker:"narrator", text:"항상 같은 벤치에 앉아있었다." },
                 { speaker:"narrator", text:"말은 거의 하지 않았지만—" },
                 { speaker:"narrator", text:"점점 경계가 풀리는 것 같았다." },
-                { speaker:"luna", text:"...또 왔어.", emotion:"default" },
+                { speaker:"luna", text:"...또 왔어?", emotion:"default" },
                 { speaker:"you", text:"응. 여기 좋더라고." },
                 { speaker:"luna", text:"...", emotion:"default" },
                 { speaker:"narrator", text:"루나가 고개를 돌렸지만," },
