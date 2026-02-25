@@ -335,6 +335,3 @@ const CHAPTER2_DATA = {
         },
     ],
 };
-
-// 파서로 변환
-const CHAPTER2 = parseChapter(CHAPTER2_DATA);
