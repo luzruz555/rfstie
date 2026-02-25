@@ -84,6 +84,7 @@
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!-- 스토리 파일 로드 -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <script src="story/parser.js"></script>
     <script src="story/chapter1.js"></script>
     <script src="story/chapter2.js"></script>
     <script src="story/chapter3.js"></script>
@@ -95,9 +96,9 @@
 const { useState, useEffect, useCallback, useMemo, useRef } = React;
 
 // ════════════════════════════════════════════════════════════════════════════
-// 스토리 데이터 합치기
+// 스토리 데이터 합치기 (파서 사용)
 // ════════════════════════════════════════════════════════════════════════════
-const STORY = {
+const STORY = parseStory({
     chapter1: CHAPTER1,
     chapter2: CHAPTER2,
     chapter3: CHAPTER3,
@@ -121,7 +122,7 @@ const STORY = {
     ending_bad_execution: ENDING_BAD_EXECUTION,
     ending_bad_betrayal: ENDING_BAD_BETRAYAL,
     badend1: BADEND1,
-};
+});
 
 // ════════════════════════════════════════════════════════════════════════════
 // 세이브/로드 시스템
