@@ -11,8 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-    img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { font-family: 'Noto Sans KR', sans-serif; background: #0a0810; color: #e8e6ed; min-height: 100vh; overflow-x: hidden; }
     #root { min-height: 100vh; }
     @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
@@ -30,7 +29,6 @@
     @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
     @keyframes heartPop { 0% { transform: scale(0); opacity: 0; } 50% { transform: scale(1.3); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
     
-    /* 텍스트 효과 애니메이션 */
     @keyframes textShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
     @keyframes textPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
     @keyframes textGrow { 0%{transform:scale(0.8);opacity:0.5} 100%{transform:scale(1);opacity:1} }
@@ -59,31 +57,16 @@
     ::-webkit-scrollbar-thumb { background: #6b6480; border-radius: 2px; }
     
     /* 볼륨 슬라이더 스타일 */
-    input[type="range"] {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 6px;
-        border-radius: 3px;
-        background: #2a2836;
-        outline: none;
-    }
-    input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: #9d8ec2;
-        cursor: pointer;
-    }
+    input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px; background: #2a2836; outline: none; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #9d8ec2; cursor: pointer; }
+    input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #9d8ec2; cursor: pointer; border: none; }
     </style>
 </head>
 <body>
     <div id="root"></div>
     <div class="rotate-notice"><div class="icon">📱</div><div style="font-size: 1.1rem; margin-bottom: 0.5rem;">화면을 가로로 돌려주세요</div><div style="font-size: 0.8rem; color: #6b6480;">Please rotate your device</div></div>
-    
-    <!-- ═══════════════════════════════════════════════════════════════ -->
+
     <!-- 스토리 파일 로드 -->
-    <!-- ═══════════════════════════════════════════════════════════════ -->
     <script src="story/parser.js"></script>
     <script src="story/chapter1.js"></script>
     <script src="story/chapter2.js"></script>
@@ -93,35 +76,35 @@
     <script src="story/endings.js"></script>
     
     <script type="text/babel">
-const { useState, useEffect, useCallback, useMemo, useRef } = React;
+const { useState, useEffect, useCallback, useMemo } = React;
 
 // ════════════════════════════════════════════════════════════════════════════
-// 스토리 데이터 합치기 (새 형식은 여기서 파싱)
+// 스토리 데이터 합치기
 // ════════════════════════════════════════════════════════════════════════════
 const STORY = {
-    chapter1: parseChapter(CHAPTER1_DATA),   // 새 형식 → 파싱
-    chapter2: parseChapter(CHAPTER2_DATA),   // 새 형식 → 파싱
-    chapter3: CHAPTER3,                      // 기존 형식 → 그대로
-    chapter4: CHAPTER4,
-    chapter5: CHAPTER5,
-    chapter6: CHAPTER6,
-    chapter7: CHAPTER7,
-    chapter8: CHAPTER8,
-    chapter9a: CHAPTER9A,
-    chapter9b: CHAPTER9B,
-    chapter10b: CHAPTER10B,
-    chapter11b: CHAPTER11B,
-    ending_lizette: ENDING_LIZETTE,
-    ending_selene: ENDING_SELENE,
-    ending_adeline: ENDING_ADELINE,
-    ending_karen: ENDING_KAREN,
-    ending_elia: ENDING_ELIA,
-    ending_luna: ENDING_LUNA,
-    ending_harem: ENDING_HAREM,
-    ending_emperor_alone: ENDING_EMPEROR_ALONE,
-    ending_bad_execution: ENDING_BAD_EXECUTION,
-    ending_bad_betrayal: ENDING_BAD_BETRAYAL,
-    badend1: BADEND1,
+    chapter1: typeof CHAPTER1_DATA !== 'undefined' ? parseChapter(CHAPTER1_DATA) : (typeof CHAPTER1 !== 'undefined' ? CHAPTER1 : null),
+    chapter2: typeof CHAPTER2_DATA !== 'undefined' ? parseChapter(CHAPTER2_DATA) : (typeof CHAPTER2 !== 'undefined' ? CHAPTER2 : null),
+    chapter3: typeof CHAPTER3 !== 'undefined' ? CHAPTER3 : null,
+    chapter4: typeof CHAPTER4 !== 'undefined' ? CHAPTER4 : null,
+    chapter5: typeof CHAPTER5 !== 'undefined' ? CHAPTER5 : null,
+    chapter6: typeof CHAPTER6 !== 'undefined' ? CHAPTER6 : null,
+    chapter7: typeof CHAPTER7 !== 'undefined' ? CHAPTER7 : null,
+    chapter8: typeof CHAPTER8 !== 'undefined' ? CHAPTER8 : null,
+    chapter9a: typeof CHAPTER9A !== 'undefined' ? CHAPTER9A : null,
+    chapter9b: typeof CHAPTER9B !== 'undefined' ? CHAPTER9B : null,
+    chapter10b: typeof CHAPTER10B !== 'undefined' ? CHAPTER10B : null,
+    chapter11b: typeof CHAPTER11B !== 'undefined' ? CHAPTER11B : null,
+    ending_lizette: typeof ENDING_LIZETTE !== 'undefined' ? ENDING_LIZETTE : null,
+    ending_selene: typeof ENDING_SELENE !== 'undefined' ? ENDING_SELENE : null,
+    ending_adeline: typeof ENDING_ADELINE !== 'undefined' ? ENDING_ADELINE : null,
+    ending_karen: typeof ENDING_KAREN !== 'undefined' ? ENDING_KAREN : null,
+    ending_elia: typeof ENDING_ELIA !== 'undefined' ? ENDING_ELIA : null,
+    ending_luna: typeof ENDING_LUNA !== 'undefined' ? ENDING_LUNA : null,
+    ending_harem: typeof ENDING_HAREM !== 'undefined' ? ENDING_HAREM : null,
+    ending_emperor_alone: typeof ENDING_EMPEROR_ALONE !== 'undefined' ? ENDING_EMPEROR_ALONE : null,
+    ending_bad_execution: typeof ENDING_BAD_EXECUTION !== 'undefined' ? ENDING_BAD_EXECUTION : null,
+    ending_bad_betrayal: typeof ENDING_BAD_BETRAYAL !== 'undefined' ? ENDING_BAD_BETRAYAL : null,
+    badend1: typeof BADEND1 !== 'undefined' ? BADEND1 : null,
 };
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -152,19 +135,27 @@ const getSaveInfo = (slot) => {
 const deleteSave = (slot) => { localStorage.removeItem(`visualnovel_save_${slot}`); };
 
 // ════════════════════════════════════════════════════════════════════════════
-// 볼륨 설정 저장/로드
+// 볼륨 시스템
 // ════════════════════════════════════════════════════════════════════════════
 const getVolume = () => {
     const saved = localStorage.getItem('visualnovel_volume');
     return saved ? JSON.parse(saved) : { bgm: 0.3, sfx: 0.5 };
 };
+const saveVolume = (vol) => { localStorage.setItem('visualnovel_volume', JSON.stringify(vol)); };
+let volumeSettings = getVolume();
 
-const saveVolume = (vol) => {
-    localStorage.setItem('visualnovel_volume', JSON.stringify(vol));
+const updateBgmVolume = (vol) => {
+    volumeSettings.bgm = vol;
+    if(currentBgm) currentBgm.volume = vol;
+    saveVolume(volumeSettings);
+};
+const updateSfxVolume = (vol) => {
+    volumeSettings.sfx = vol;
+    saveVolume(volumeSettings);
 };
 
 // ════════════════════════════════════════════════════════════════════════════
-// 사운드 설정 (볼륨 조절 지원)
+// 사운드 설정
 // ════════════════════════════════════════════════════════════════════════════
 const SOUNDS = {
     bgmDefault: 'audio/default.mp3',
@@ -180,8 +171,6 @@ const SOUNDS = {
 };
 
 let currentBgm = null;
-let volumeSettings = getVolume();
-
 const playBgm = (type) => { 
     if(currentBgm){currentBgm.pause();} 
     const src=SOUNDS[`bgm${type.charAt(0).toUpperCase()+type.slice(1)}`]; 
@@ -202,17 +191,6 @@ const playSfx = (type) => {
     }
 };
 
-const updateBgmVolume = (vol) => {
-    volumeSettings.bgm = vol;
-    if(currentBgm) currentBgm.volume = vol;
-    saveVolume(volumeSettings);
-};
-
-const updateSfxVolume = (vol) => {
-    volumeSettings.sfx = vol;
-    saveVolume(volumeSettings);
-};
-
 // ════════════════════════════════════════════════════════════════════════════
 // 이미지 설정
 // ════════════════════════════════════════════════════════════════════════════
@@ -223,13 +201,14 @@ const IMAGES = {
     bgPalace: 'img/bg_palace.png',
     bgGarden: 'img/bg_garden.png',
     bgHall: 'img/bg_hall.png',
-    bgRoom: 'img/bg_room.png',
+    bgRoom: 'img/gbackground.png',
     bgTraining: 'img/bg_training.png',
     bgThrone: 'img/bg_throne.png',
-    bgNight: 'img/bg_night.png',
+    bgNight: 'img/tbackground.png',
     bgEnding: 'img/bg_ending.png',
     bgCarriage: 'img/bg_carriage.png',
     bgDungeon: 'img/bg_dungeon.png',
+    bgBlack: null,
     lizette: { default:'img/l.png', happy:'img/lizette_happy.png', sad:'img/lizette_sad.png', angry:'img/lizette_angry.png' },
     adeline: { default:'img/a.png', happy:'img/adeline_happy.png', sad:'img/adeline_sad.png', angry:'img/adeline_angry.png' },
     karen: { default:'img/c.png', happy:'img/karen_happy.png', sad:'img/karen_sad.png', angry:'img/karen_angry.png' },
@@ -258,16 +237,33 @@ const characters = {
 // ════════════════════════════════════════════════════════════════════════════
 
 const HEROINES = ['lizette','selene','adeline','karen','elia','luna'];
-const DEFAULT_AFFECTION = { lizette:20, selene:10, adeline:15, karen:10, elia:10, luna:0 };
+const DEFAULT_AFFECTION = { lizette:30, selene:10, adeline:15, karen:10, elia:10, luna:0 };
 
 function Particles() {
     const particles = useMemo(() => Array.from({length:20},(_,i)=>({id:i,left:Math.random()*100,top:20+Math.random()*70,size:2+Math.random()*3,duration:8+Math.random()*6,delay:Math.random()*8,opacity:0.3+Math.random()*0.4})),[]);
     return (<div style={{position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:5}}>{particles.map(p=>(<div key={p.id} style={{position:'absolute',left:`${p.left}%`,top:`${p.top}%`,width:`${p.size}px`,height:`${p.size}px`,background:`rgba(255,255,255,${p.opacity})`,borderRadius:'50%',animation:`particleDrift ${p.duration}s ease-in-out ${p.delay}s infinite`}}/>))}</div>);
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-// 볼륨 조절 패널
-// ════════════════════════════════════════════════════════════════════════════
+function StartPopup({ onClose }) {
+    return (
+        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.9)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:10000,animation:'fadeIn 0.5s'}}>
+            <div style={{background:'#14121a',border:'1px solid #3d3850',borderRadius:'16px',padding:'32px',maxWidth:'500px',width:'90%',textAlign:'center'}}>
+                <h2 style={{color:'#9d8ec2',fontSize:'1.4rem',marginBottom:'20px',fontFamily:"'Noto Serif KR',serif"}}>플레이 전 안내</h2>
+                <div style={{textAlign:'left',color:'#c8c4d4',fontSize:'0.9rem',lineHeight:1.8,marginBottom:'24px'}}>
+                    <p style={{marginBottom:'12px'}}>• 본 게임의 <span style={{color:'#d4a0a8'}}>모든 일러스트는 AI로 생성</span>되었습니다.</p>
+                    <p style={{marginBottom:'12px'}}>• <span style={{color:'#8aadc0'}}>선택에 따라 호감도</span>가 변동됩니다.</p>
+                    <p style={{marginBottom:'12px'}}>• 호감도에 따라 <span style={{color:'#a890b8'}}>다양한 엔딩</span>으로 분기됩니다.</p>
+                    <p style={{marginBottom:'12px',color:'#9d8ec2'}}>• 💾 세이브/로드 기능이 지원됩니다.</p>
+                    <p style={{color:'#6b6480',fontSize:'0.8rem'}}>※ 클릭 / 스페이스바 / →키로 대사를 넘길 수 있습니다.</p>
+                </div>
+                <button onClick={onClose} style={{padding:'12px 40px',background:'rgba(157,142,194,0.9)',border:'none',borderRadius:'8px',color:'#0a0810',fontSize:'1rem',fontWeight:600,cursor:'pointer'}}>
+                    게임 시작
+                </button>
+            </div>
+        </div>
+    );
+}
+
 function VolumePanel({ onClose, isMobile }) {
     const [bgmVol, setBgmVol] = useState(volumeSettings.bgm);
     const [sfxVol, setSfxVol] = useState(volumeSettings.sfx);
@@ -286,68 +282,26 @@ function VolumePanel({ onClose, isMobile }) {
 
     return (
         <div onClick={onClose} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000,animation:'fadeIn 0.3s'}}>
-            <div onClick={e=>e.stopPropagation()} style={{background:'#14121a',border:'1px solid #3d3850',borderRadius:'16px',padding:isMobile?'20px':'32px',width:'90%',maxWidth:'400px'}}>
+            <div onClick={e=>e.stopPropagation()} style={{background:'#14121a',border:'1px solid #3d3850',borderRadius:'16px',padding:isMobile?'20px':'32px',maxWidth:'400px',width:'90%'}}>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'24px'}}>
                     <h3 style={{color:'#9d8ec2',fontSize:'1.2rem'}}>🔊 소리 설정</h3>
                     <button onClick={onClose} style={{background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',borderRadius:'50%',cursor:'pointer'}}>✕</button>
                 </div>
-                
                 <div style={{marginBottom:'20px'}}>
-                    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'8px'}}>
+                    <div style={{display:'flex',justifyContent:'space-between',marginBottom:'8px'}}>
                         <span style={{color:'#c8c4d4',fontSize:'0.9rem'}}>🎵 배경음악</span>
-                        <span style={{color:'#6b6480',fontSize:'0.8rem'}}>{Math.round(bgmVol * 100)}%</span>
+                        <span style={{color:'#9d8ec2',fontSize:'0.85rem'}}>{Math.round(bgmVol*100)}%</span>
                     </div>
-                    <input 
-                        type="range" 
-                        min="0" 
-                        max="1" 
-                        step="0.05" 
-                        value={bgmVol} 
-                        onChange={handleBgmChange}
-                    />
+                    <input type="range" min="0" max="1" step="0.05" value={bgmVol} onChange={handleBgmChange}/>
                 </div>
-                
                 <div style={{marginBottom:'20px'}}>
-                    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'8px'}}>
+                    <div style={{display:'flex',justifyContent:'space-between',marginBottom:'8px'}}>
                         <span style={{color:'#c8c4d4',fontSize:'0.9rem'}}>🔔 효과음</span>
-                        <span style={{color:'#6b6480',fontSize:'0.8rem'}}>{Math.round(sfxVol * 100)}%</span>
+                        <span style={{color:'#9d8ec2',fontSize:'0.85rem'}}>{Math.round(sfxVol*100)}%</span>
                     </div>
-                    <input 
-                        type="range" 
-                        min="0" 
-                        max="1" 
-                        step="0.05" 
-                        value={sfxVol} 
-                        onChange={handleSfxChange}
-                    />
+                    <input type="range" min="0" max="1" step="0.05" value={sfxVol} onChange={handleSfxChange}/>
                 </div>
-                
-                <button 
-                    onClick={() => { playSfx('click'); }}
-                    style={{width:'100%',padding:'10px',background:'rgba(60,50,80,0.5)',border:'1px solid #4a4060',borderRadius:'8px',color:'#b0a0c8',cursor:'pointer',fontSize:'0.85rem'}}
-                >
-                    🔊 효과음 테스트
-                </button>
-            </div>
-        </div>
-    );
-}
-
-function StartPopup({ onClose }) {
-    return (
-        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.9)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:10000,animation:'fadeIn 0.5s'}}>
-            <div style={{background:'#14121a',border:'1px solid #3d3850',borderRadius:'16px',padding:'32px',maxWidth:'500px',width:'90%',textAlign:'center'}}>
-                <h2 style={{color:'#9d8ec2',fontSize:'1.4rem',marginBottom:'20px',fontFamily:"'Noto Serif KR',serif"}}>플레이 전 안내</h2>
-                <div style={{textAlign:'left',color:'#c8c4d4',fontSize:'0.9rem',lineHeight:1.8,marginBottom:'24px'}}>
-                    <p style={{marginBottom:'12px'}}>• 본 게임의 <span style={{color:'#d4a0a8'}}>모든 일러스트는 AI로 생성</span>되었습니다.</p>
-                    <p style={{marginBottom:'12px'}}>• <span style={{color:'#8aadc0'}}>선택에 따라 호감도</span>가 변동됩니다.</p>
-                    <p style={{marginBottom:'12px'}}>• 호감도에 따라 <span style={{color:'#a890b8'}}>다양한 엔딩</span>으로 분기됩니다.</p>
-                    <p style={{marginBottom:'12px',color:'#9d8ec2'}}>• 💾 세이브/로드 기능이 지원됩니다.</p>
-                    <p style={{color:'#6b6480',fontSize:'0.8rem'}}>※ 클릭 / 스페이스바 / →키로 대사를 넘길 수 있습니다.</p>
-                </div>
-                <button onClick={onClose} style={{padding:'12px 40px',background:'rgba(157,142,194,0.9)',border:'none',borderRadius:'8px',color:'#0a0810',fontSize:'1rem',fontWeight:600,cursor:'pointer'}}>
-                    게임 시작
-                </button>
+                <button onClick={()=>{playSfx('click');}} style={{width:'100%',padding:'10px',background:'rgba(60,50,80,0.5)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'8px',cursor:'pointer',fontSize:'0.85rem'}}>🔔 효과음 테스트</button>
             </div>
         </div>
     );
@@ -377,7 +331,9 @@ function AffectionPanel({ affection, onClose, isMobile }) {
                     })}
                 </div>
                 <div style={{marginTop:'16px',padding:'12px',background:'#0a0810',borderRadius:'8px',fontSize:'0.75rem',color:'#6b6480'}}>
-                    호감도 100 이상 달성 시 해당 히로인 엔딩 가능
+                    <p>• 호감도 100 달성 시 해당 히로인 엔딩</p>
+                    <p>• 루트 B에서 전원 100 달성 시 하렘 엔딩</p>
+                    <p>• 100 달성 히로인 없으면 배드엔딩</p>
                 </div>
             </div>
         </div>
@@ -385,262 +341,136 @@ function AffectionPanel({ affection, onClose, isMobile }) {
 }
 
 function SaveLoadPanel({ mode, onClose, onSave, onLoad, currentState, isMobile }) {
-    const [slots, setSlots] = useState([]);
-    useEffect(() => { setSlots([1,2,3].map(i => getSaveInfo(i))); }, []);
+    const [saves, setSaves] = useState([]);
+    const [confirmDelete, setConfirmDelete] = useState(null);
 
-    const handleSlotClick = (slotNum) => {
-        if (mode === 'save') {
-            onSave(slotNum);
-            setSlots([1,2,3].map(i => getSaveInfo(i)));
-        } else {
-            const data = loadGame(slotNum);
-            if (data) onLoad(data);
+    useEffect(() => {
+        const saveInfos = [];
+        for (let i = 1; i <= SAVE_SLOTS; i++) { saveInfos.push({ slot: i, ...getSaveInfo(i) }); }
+        setSaves(saveInfos);
+    }, []);
+
+    const handleSave = (slot) => {
+        if (onSave) {
+            onSave(slot);
+            setSaves(prev => prev.map(s => s.slot === slot ? { slot, ...getSaveInfo(slot) } : s));
         }
     };
 
-    const handleDelete = (e, slotNum) => {
-        e.stopPropagation();
-        deleteSave(slotNum);
-        setSlots([1,2,3].map(i => getSaveInfo(i)));
+    const handleLoad = (slot) => {
+        const data = loadGame(slot);
+        if (data && onLoad) { onLoad(data); onClose(); }
     };
 
-    const formatDate = (iso) => {
-        if (!iso) return '';
-        const d = new Date(iso);
-        return `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+    const handleDelete = (slot) => {
+        deleteSave(slot);
+        setSaves(prev => prev.map(s => s.slot === slot ? { slot, exists: false } : s));
+        setConfirmDelete(null);
+    };
+
+    const formatDate = (isoString) => {
+        if (!isoString) return '';
+        const date = new Date(isoString);
+        return `${date.getFullYear()}.${String(date.getMonth()+1).padStart(2,'0')}.${String(date.getDate()).padStart(2,'0')} ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`;
+    };
+
+    const getChapterTitle = (chapterId) => {
+        if (!chapterId) return '???';
+        const chapter = STORY[chapterId];
+        return chapter ? chapter.subtitle : chapterId;
     };
 
     return (
-        <div onClick={onClose} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000,animation:'fadeIn 0.3s'}}>
-            <div onClick={e=>e.stopPropagation()} style={{background:'#14121a',border:'1px solid #3d3850',borderRadius:'16px',padding:isMobile?'20px':'32px',maxWidth:'500px',width:'90%'}}>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
-                    <h3 style={{color:'#9d8ec2',fontSize:'1.2rem'}}>{mode === 'save' ? '💾 저장하기' : '📂 불러오기'}</h3>
-                    <button onClick={onClose} style={{background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',borderRadius:'50%',cursor:'pointer'}}>✕</button>
+        <div onClick={onClose} style={{position:'fixed',inset:0,background:'rgba(5,4,10,0.95)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000,animation:'fadeIn 0.3s'}}>
+            <div onClick={e => e.stopPropagation()} style={{width:'90%',maxWidth:'450px',background:'#14121a',border:'1px solid #3d3850',borderRadius:'12px',padding:isMobile?'16px':'24px',position:'relative'}}>
+                <div style={{textAlign:'center',marginBottom:'20px'}}>
+                    <div style={{fontSize:'0.65rem',color:'#6b6480',letterSpacing:'0.15em',marginBottom:'4px'}}>{mode === 'save' ? 'SAVE GAME' : 'LOAD GAME'}</div>
+                    <h2 style={{fontSize:isMobile?'1.1rem':'1.3rem',color:'#e8e6ed',fontFamily:"'Noto Serif KR',serif"}}>{mode === 'save' ? '게임 저장' : '게임 불러오기'}</h2>
                 </div>
-                <div style={{display:'flex',flexDirection:'column',gap:'12px'}}>
-                    {slots.map((slot, idx) => (
-                        <div key={idx} onClick={() => (mode === 'save' || slot.exists) && handleSlotClick(idx+1)} style={{padding:'16px',background:slot.exists?'#1a1820':'#14121a',border:'1px solid #2a2836',borderRadius:'12px',cursor:(mode === 'save' || slot.exists)?'pointer':'not-allowed',opacity:(mode === 'load' && !slot.exists)?0.5:1,position:'relative'}}>
-                            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                                <div>
-                                    <div style={{color:'#9d8ec2',fontSize:'0.9rem',fontWeight:500}}>슬롯 {idx+1}</div>
-                                    {slot.exists ? (
-                                        <div style={{color:'#6b6480',fontSize:'0.75rem',marginTop:'4px'}}>{slot.chapter} • {formatDate(slot.timestamp)}</div>
-                                    ) : (
-                                        <div style={{color:'#3d3850',fontSize:'0.75rem',marginTop:'4px'}}>비어있음</div>
-                                    )}
+                <button onClick={onClose} style={{position:'absolute',top:'12px',right:'12px',background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',cursor:'pointer',fontSize:'0.9rem',borderRadius:'50%'}}>✕</button>
+                <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
+                    {saves.map(save => (
+                        <div key={save.slot} style={{background:'#0a0810',border:'1px solid #2a2836',borderRadius:'8px',padding:'14px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                            <div style={{flex:1}}>
+                                <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'4px'}}>
+                                    <span style={{color:'#9d8ec2',fontSize:'0.75rem',fontWeight:600}}>SLOT {save.slot}</span>
+                                    {save.exists && <span style={{color:'#6b6480',fontSize:'0.65rem'}}>{formatDate(save.timestamp)}</span>}
                                 </div>
-                                {slot.exists && (
-                                    <button onClick={(e) => handleDelete(e, idx+1)} style={{background:'transparent',border:'1px solid #4a3040',color:'#8a5060',padding:'4px 8px',borderRadius:'6px',fontSize:'0.7rem',cursor:'pointer'}}>삭제</button>
+                                {save.exists ? <div style={{color:'#c8c4d4',fontSize:isMobile?'0.8rem':'0.9rem'}}>📖 {getChapterTitle(save.chapter)}</div>
+                                : <div style={{color:'#4a4658',fontSize:isMobile?'0.8rem':'0.9rem',fontStyle:'italic'}}>빈 슬롯</div>}
+                            </div>
+                            <div style={{display:'flex',gap:'6px'}}>
+                                {confirmDelete === save.slot ? (
+                                    <>
+                                        <button onClick={() => handleDelete(save.slot)} style={{padding:'6px 10px',fontSize:'0.7rem',background:'#8b3a3a',border:'none',color:'#fff',borderRadius:'4px',cursor:'pointer'}}>삭제</button>
+                                        <button onClick={() => setConfirmDelete(null)} style={{padding:'6px 10px',fontSize:'0.7rem',background:'#3d3850',border:'none',color:'#c8c4d4',borderRadius:'4px',cursor:'pointer'}}>취소</button>
+                                    </>
+                                ) : (
+                                    <>
+                                        {mode === 'save' ? (
+                                            <button onClick={() => handleSave(save.slot)} style={{padding:'6px 12px',fontSize:'0.75rem',background:save.exists?'#4a4658':'#9d8ec2',border:'none',color:save.exists?'#c8c4d4':'#0a0810',borderRadius:'4px',cursor:'pointer',fontWeight:500}}>{save.exists ? '덮어쓰기' : '저장'}</button>
+                                        ) : (
+                                            <button onClick={() => save.exists && handleLoad(save.slot)} disabled={!save.exists} style={{padding:'6px 12px',fontSize:'0.75rem',background:save.exists?'#9d8ec2':'#2a2836',border:'none',color:save.exists?'#0a0810':'#4a4658',borderRadius:'4px',cursor:save.exists?'pointer':'not-allowed',fontWeight:500}}>불러오기</button>
+                                        )}
+                                        {save.exists && <button onClick={() => setConfirmDelete(save.slot)} style={{padding:'6px 8px',fontSize:'0.7rem',background:'transparent',border:'1px solid #5a3a3a',color:'#a06060',borderRadius:'4px',cursor:'pointer'}}>🗑</button>}
+                                    </>
                                 )}
                             </div>
                         </div>
                     ))}
                 </div>
-            </div>
-        </div>
-    );
-}
-
-function DialogLog({ log, onClose, isMobile }) {
-    const logRef = useRef(null);
-    useEffect(() => {
-        if (logRef.current) {
-            logRef.current.scrollTop = logRef.current.scrollHeight;
-        }
-    }, [log]);
-
-    return (
-        <div onClick={onClose} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.9)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000,animation:'fadeIn 0.3s'}}>
-            <div onClick={e=>e.stopPropagation()} style={{background:'#14121a',border:'1px solid #3d3850',borderRadius:'16px',padding:isMobile?'16px':'24px',width:'90%',maxWidth:'600px',maxHeight:'70vh',display:'flex',flexDirection:'column'}}>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'16px'}}>
-                    <h3 style={{color:'#9d8ec2',fontSize:'1.1rem'}}>📜 대사 로그</h3>
-                    <button onClick={onClose} style={{background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',borderRadius:'50%',cursor:'pointer'}}>✕</button>
+                <div style={{marginTop:'16px',padding:'10px',background:'#0a0810',borderRadius:'6px',fontSize:'0.7rem',color:'#6b6480',textAlign:'center'}}>
+                    {mode === 'save' ? '💡 같은 슬롯에 저장하면 기존 데이터가 덮어씌워집니다.' : '💡 저장된 시점부터 다시 플레이합니다.'}
                 </div>
-                <div ref={logRef} style={{flex:1,overflowY:'auto',display:'flex',flexDirection:'column',gap:'8px'}}>
-                    {log.length === 0 ? (
-                        <div style={{color:'#3d3850',textAlign:'center',padding:'20px'}}>아직 대사가 없습니다</div>
-                    ) : (
-                        log.map((item, idx) => {
-                            const isNarrator = item.speaker === 'narrator';
-                            const isYou = item.speaker === 'you';
-                            const char = characters[item.speaker];
-                            return (
-                                <div key={idx} style={{padding:'8px 12px',background:'#1a1820',borderRadius:'8px',borderLeft:isNarrator?'none':`3px solid ${isYou?'#9d8ec2':char?.color||'#6b6480'}`}}>
-                                    {!isNarrator && (
-                                        <div style={{color:isYou?'#9d8ec2':char?.color||'#6b6480',fontSize:'0.75rem',marginBottom:'4px'}}>{isYou?'나':char?.name||item.speaker}</div>
-                                    )}
-                                    <div style={{color:isNarrator?'#7a7888':'#c8c4d4',fontSize:'0.85rem',fontStyle:isNarrator?'italic':'normal'}}>{item.text}</div>
-                                </div>
-                            );
-                        })
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-// ════════════════════════════════════════════════════════════════════════════
-// 미니게임: 메모리 게임
-// ════════════════════════════════════════════════════════════════════════════
-function MemoryGame({ onPass, onFail }) {
-    const [phase, setPhase] = useState('ready'); // ready, showing, input, result
-    const [sequence, setSequence] = useState([]);
-    const [playerInput, setPlayerInput] = useState([]);
-    const [currentRound, setCurrentRound] = useState(1);
-    const [showingIndex, setShowingIndex] = useState(-1);
-    const [message, setMessage] = useState('빛의 순서를 기억하세요');
-    const [canInput, setCanInput] = useState(false);
-    const maxRounds = 5;
-    const colors = ['#e07070', '#70e070', '#7070e0', '#e0e070'];
-
-    const generateSequence = (round) => {
-        const len = round + 2;
-        return Array.from({length: len}, () => Math.floor(Math.random() * 4));
-    };
-
-    const startRound = () => {
-        const newSeq = generateSequence(currentRound);
-        setSequence(newSeq);
-        setPlayerInput([]);
-        setPhase('showing');
-        setMessage(`라운드 ${currentRound}/${maxRounds}`);
-        
-        let i = 0;
-        const showNext = () => {
-            if (i < newSeq.length) {
-                setShowingIndex(newSeq[i]);
-                setTimeout(() => {
-                    setShowingIndex(-1);
-                    i++;
-                    setTimeout(showNext, 300);
-                }, 600);
-            } else {
-                setPhase('input');
-                setCanInput(true);
-                setMessage('순서대로 클릭하세요');
-            }
-        };
-        setTimeout(showNext, 500);
-    };
-
-    const handleColorClick = (idx) => {
-        if (!canInput || phase !== 'input') return;
-        
-        playSfx('click');
-        const newInput = [...playerInput, idx];
-        setPlayerInput(newInput);
-
-        if (newInput[newInput.length - 1] !== sequence[newInput.length - 1]) {
-            setCanInput(false);
-            setPhase('result');
-            setMessage('틀렸습니다...');
-            setTimeout(onFail, 1500);
-            return;
-        }
-
-        if (newInput.length === sequence.length) {
-            setCanInput(false);
-            if (currentRound >= maxRounds) {
-                setPhase('result');
-                setMessage('🎉 통과!');
-                setTimeout(onPass, 1500);
-            } else {
-                setMessage('정답! 다음 라운드...');
-                setTimeout(() => {
-                    setCurrentRound(r => r + 1);
-                    setPhase('ready');
-                }, 1000);
-            }
-        }
-    };
-
-    useEffect(() => {
-        if (phase === 'ready' && currentRound <= maxRounds) {
-            const t = setTimeout(startRound, 1000);
-            return () => clearTimeout(t);
-        }
-    }, [phase, currentRound]);
-
-    return (
-        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.95)',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',zIndex:500}}>
-            <div style={{color:'#9d8ec2',fontSize:'1.5rem',marginBottom:'20px',fontFamily:"'Noto Serif KR',serif"}}>지략 시험</div>
-            <div style={{color:'#c8c4d4',fontSize:'1rem',marginBottom:'30px'}}>{message}</div>
-            
-            <div style={{display:'grid',gridTemplateColumns:'repeat(2, 100px)',gap:'15px'}}>
-                {colors.map((color, idx) => (
-                    <div
-                        key={idx}
-                        onClick={() => handleColorClick(idx)}
-                        style={{
-                            width:'100px',
-                            height:'100px',
-                            background: showingIndex === idx ? color : `${color}40`,
-                            borderRadius:'15px',
-                            cursor: canInput ? 'pointer' : 'default',
-                            transition:'all 0.2s',
-                            boxShadow: showingIndex === idx ? `0 0 30px ${color}` : 'none',
-                            transform: showingIndex === idx ? 'scale(1.1)' : 'scale(1)'
-                        }}
-                    />
-                ))}
-            </div>
-
-            <div style={{marginTop:'30px',display:'flex',gap:'8px'}}>
-                {Array.from({length: maxRounds}).map((_, i) => (
-                    <div key={i} style={{
-                        width:'12px',height:'12px',borderRadius:'50%',
-                        background: i < currentRound ? '#9d8ec2' : '#3d3850'
-                    }}/>
-                ))}
             </div>
         </div>
     );
 }
 
 function TitleScreen({ onStart, onLoad, onCharacter }) {
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [showLoad, setShowLoad] = useState(false);
     const [showVolume, setShowVolume] = useState(false);
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     useEffect(() => { const h=()=>setIsMobile(window.innerWidth<=768); window.addEventListener('resize',h); return()=>window.removeEventListener('resize',h); }, []);
 
-    return (
-        <div style={{minHeight:'100vh',background:'#0a0810',position:'relative',overflow:'hidden'}}>
-            <div style={{position:'absolute',inset:0,background:IMAGES.titleBackground?`url(${IMAGES.titleBackground}) center/cover`:'linear-gradient(135deg,#1a1520 0%,#0a0810 50%,#14101c 100%)'}}/>
-            <Particles/>
-            <div style={{position:'absolute',bottom:isMobile?'5%':'0',right:isMobile?'-10%':'5%',height:isMobile?'60%':'90%',opacity:0.9}}>
-                {IMAGES.titleCharacter && <img src={IMAGES.titleCharacter} style={{height:'100%',objectFit:'contain'}}/>}
-            </div>
-            <div style={{position:'relative',zIndex:10,minHeight:'100vh',display:'flex',flexDirection:'column',justifyContent:'center',padding:isMobile?'20px':'60px'}}>
-                <div style={{animation:'slideDown 1s cubic-bezier(0.16,1,0.3,1)'}}>
-                    <div style={{fontSize:isMobile?'0.7rem':'0.9rem',color:'#6b6480',letterSpacing:'0.3em',marginBottom:'12px'}}>VISUAL NOVEL</div>
-                    {IMAGES.titleLogo ? (
-                        <img src={IMAGES.titleLogo} style={{maxWidth:isMobile?'280px':'400px',marginBottom:'20px'}}/>
-                    ) : (
-                        <h1 style={{fontFamily:"'Noto Serif KR',serif",fontSize:isMobile?'2rem':'3.5rem',fontWeight:700,color:'#e8e6ed',marginBottom:'8px',textShadow:'0 0 40px rgba(157,142,194,0.5)'}}>제국 최강이 되기까지</h1>
-                    )}
-                    <p style={{fontSize:isMobile?'0.85rem':'1rem',color:'#9d8ec2',marginBottom:isMobile?'30px':'40px'}}>숨겨진 황자의 운명이 시작된다</p>
-                </div>
-                <div style={{display:'flex',flexDirection:'column',gap:'12px',maxWidth:'220px',animation:'slideUp 1s cubic-bezier(0.16,1,0.3,1) 0.3s both'}}>
-                    <button onClick={()=>{playSfx('decision');onStart();}} style={{padding:'14px 28px',background:'linear-gradient(135deg,rgba(157,142,194,0.9),rgba(107,92,144,0.9))',border:'none',borderRadius:'12px',color:'#fff',fontSize:'1rem',fontWeight:600,cursor:'pointer',textShadow:'0 1px 2px rgba(0,0,0,0.3)'}}>새 게임</button>
-                    <button onClick={()=>{playSfx('click');setShowLoad(true);}} style={{padding:'12px 28px',background:'rgba(60,50,80,0.5)',border:'1px solid #4a4060',borderRadius:'12px',color:'#b0a0c8',fontSize:'0.9rem',cursor:'pointer',backdropFilter:'blur(10px)'}}>이어하기</button>
-                    <button onClick={()=>{playSfx('click');onCharacter();}} style={{padding:'12px 28px',background:'rgba(60,50,80,0.3)',border:'1px solid #3a3050',borderRadius:'12px',color:'#8a7aaa',fontSize:'0.9rem',cursor:'pointer'}}>등장인물</button>
-                    <button onClick={()=>{playSfx('click');setShowVolume(true);}} style={{padding:'12px 28px',background:'rgba(60,50,80,0.3)',border:'1px solid #3a3050',borderRadius:'12px',color:'#8a7aaa',fontSize:'0.9rem',cursor:'pointer'}}>🔊 소리 설정</button>
-                </div>
-            </div>
-            <footer style={{position:'absolute',bottom:'20px',left:'50%',transform:'translateX(-50%)',color:'#3d3850',fontSize:'0.7rem'}}>made by CowardMole</footer>
-            {showLoad && <SaveLoadPanel mode="load" onClose={()=>setShowLoad(false)} onLoad={onLoad} isMobile={isMobile}/>}
-            {showVolume && <VolumePanel onClose={()=>setShowVolume(false)} isMobile={isMobile}/>}
-        </div>
-    );
-}
+    const TitleLogo = () => IMAGES.titleLogo ? <img src={IMAGES.titleLogo} alt="Title" style={{maxWidth:isMobile?'160px':'320px',height:'auto'}}/> : <div style={{padding:isMobile?'12px 18px':'18px 25px',border:'1px dashed #3d3850',borderRadius:'6px'}}><div style={{fontSize:'0.55rem',color:'#6b6480',marginBottom:'4px'}}>[ 타이틀 로고 ]</div><div style={{fontSize:isMobile?'1rem':'1.7rem',fontFamily:"'Noto Serif KR',serif",fontWeight:700,color:'#d8d4e2'}}>제국 최강이 되기까지</div></div>;
+    const MenuBtn = ({text,onClick,main}) => (<button onClick={onClick} style={{padding:isMobile?'7px 14px':'12px 28px',fontSize:isMobile?'0.7rem':'0.88rem',fontWeight:main?600:400,background:main?'rgba(157,142,194,0.9)':'rgba(30,28,38,0.6)',border:main?'none':'1px solid rgba(100,90,120,0.3)',color:main?'#0a0810':'rgba(180,170,200,0.9)',borderRadius:'4px',cursor:'pointer',width:'100%',maxWidth:isMobile?'120px':'180px'}}>{main&&<span style={{marginRight:'4px'}}>▶</span>}{text}</button>);
+    const CharArea = () => IMAGES.titleCharacter ? <img src={IMAGES.titleCharacter} style={{maxWidth:'62%',maxHeight:'62%',objectFit:'contain'}}/> : <div style={{color:'#2a2836',fontSize:'0.6rem',padding:'25px',border:'1px dashed #2a2836',borderRadius:'6px'}}>[ 캐릭터 이미지 ]</div>;
 
-function GlitchScreen({ onComplete }) {
-    useEffect(() => { playSfx('glitch'); const t=setTimeout(onComplete,3000); return()=>clearTimeout(t); }, []);
+    if (showLoad) return <SaveLoadPanel mode="load" onClose={() => setShowLoad(false)} onLoad={onLoad} isMobile={isMobile}/>;
+    if (showVolume) return <VolumePanel onClose={() => setShowVolume(false)} isMobile={isMobile}/>;
+
     return (
-        <div style={{height:'100vh',background:'#0a0810',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
-            <div style={{fontSize:'2rem',color:'#9d8ec2',animation:'glitchText 0.3s infinite',fontFamily:'monospace'}}>ERROR</div>
-            <div style={{marginTop:'20px',color:'#6b6480',fontSize:'0.9rem'}}>시스템 오류가 발생했습니다...</div>
+        <div style={{height:'100vh',position:'relative',overflow:'hidden',background:IMAGES.titleBackground?`url(${IMAGES.titleBackground}) center/cover no-repeat`:'#0a0810'}}>
+            <Particles />
+            {isMobile ? (
+                <>
+                    <div style={{position:'absolute',left:0,top:'50%',transform:'translateY(-50%)',width:'50%',display:'flex',justifyContent:'center',alignItems:'center'}}><CharArea/></div>
+                    <div style={{position:'absolute',right:0,top:0,bottom:0,width:'50%',background:'linear-gradient(90deg,transparent,rgba(10,8,16,0.85) 15%)',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',zIndex:10}}>
+                        <div style={{marginBottom:'14px'}}><TitleLogo/></div>
+                        <div style={{display:'flex',flexDirection:'column',gap:'5px',alignItems:'center'}}>
+                            <MenuBtn text="GAME START" onClick={()=>{playSfx('click');onStart();}} main/>
+                            <MenuBtn text="LOAD" onClick={()=>{playSfx('click');setShowLoad(true);}}/>
+                            <MenuBtn text="CHARACTER" onClick={()=>{playSfx('click');onCharacter();}}/>
+                            <MenuBtn text="SOUND" onClick={()=>{playSfx('click');setShowVolume(true);}}/>
+                        </div>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div style={{position:'absolute',left:'-3%',top:'50%',transform:'translateY(-45%)'}}><CharArea/></div>
+                    <div style={{position:'absolute',right:0,top:0,bottom:0,width:'45%',background:'linear-gradient(90deg,transparent,rgba(10,8,16,0.85) 20%)',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',zIndex:10}}>
+                        <div style={{marginBottom:'35px'}}><TitleLogo/></div>
+                        <div style={{display:'flex',flexDirection:'column',gap:'8px',alignItems:'center'}}>
+                            <MenuBtn text="GAME START" onClick={()=>{playSfx('click');onStart();}} main/>
+                            <MenuBtn text="LOAD GAME" onClick={()=>{playSfx('click');setShowLoad(true);}}/>
+                            <MenuBtn text="CHARACTER" onClick={()=>{playSfx('click');onCharacter();}}/>
+                            <MenuBtn text="SOUND" onClick={()=>{playSfx('click');setShowVolume(true);}}/>
+                        </div>
+                        <div style={{position:'absolute',bottom:'16px',fontSize:'0.6rem',color:'#3d3850'}}>made by CowardMole</div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }
@@ -659,12 +489,11 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
     const [showAffection, setShowAffection] = useState(false);
     const [affectionPopup, setAffectionPopup] = useState(null);
     const [showSaveLoad, setShowSaveLoad] = useState(null);
+    const [showVolume, setShowVolume] = useState(false);
     const [history, setHistory] = useState([]);
     const [dialogLog, setDialogLog] = useState([]);
     const [showLog, setShowLog] = useState(false);
-    const [showMinigame, setShowMinigame] = useState(null);
-    const [showVolume, setShowVolume] = useState(false);
-    
+
     useEffect(() => { const h=()=>setIsMobile(window.innerWidth<=768); window.addEventListener('resize',h); return()=>window.removeEventListener('resize',h); }, []);
 
     const chapter = STORY[currentChapter];
@@ -675,7 +504,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         if(chapter){
             setShowChapterTitle(true);
             playBgm(chapter.bgm||'default');
-            const t=setTimeout(()=>setShowChapterTitle(false),1300);
+            const t=setTimeout(()=>setShowChapterTitle(false),2500);
             return()=>clearTimeout(t);
         } 
     }, [currentChapter]);
@@ -684,23 +513,10 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         if(scene?.bgm) { playBgm(scene.bgm); }
     }, [sceneIndex, currentChapter]);
 
-    const isGoingBack = useRef(false);
-
     useEffect(() => {
         if(!dialog||showChapterTitle)return;
         if(dialog.sfx)playSfx(dialog.sfx);
-        
-        if (!isGoingBack.current) {
-            setDialogLog(prev => {
-                const lastLog = prev[prev.length - 1];
-                if (lastLog && lastLog.speaker === dialog.speaker && lastLog.text === dialog.text) {
-                    return prev;
-                }
-                return [...prev, { speaker: dialog.speaker, text: dialog.text }];
-            });
-        }
-        isGoingBack.current = false;
-        
+        setDialogLog(prev => [...prev, { speaker: dialog.speaker, text: dialog.text }]);
         setIsTyping(true);setDisplayedText('');setCanProceed(false);
         let i=0;
         const iv=setInterval(()=>{
@@ -716,14 +532,11 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         return()=>clearTimeout(t); 
     }, [isAuto, isTyping, canProceed, showChoices]);
 
-    // ═══════════════════════════════════════
-    // 키보드 이벤트 (스페이스바 + 화살표)
-    // ═══════════════════════════════════════
+    // 스페이스바 / 화살표 키 처리
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if (showLog || showSaveLoad || showChoices || showVolume || !dialog) return;
+            if (showLog || showSaveLoad || showChoices || showVolume || showAffection || !dialog || showChapterTitle) return;
 
-            // 스페이스바 또는 오른쪽 화살표
             if (e.key === ' ' || e.key === 'ArrowRight') {
                 e.preventDefault();
                 if (isTyping) {
@@ -735,7 +548,6 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                 }
             }
 
-            // 왼쪽 화살표 - 뒤로가기
             if (e.key === 'ArrowLeft') {
                 e.preventDefault();
                 goBack();
@@ -744,7 +556,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [isTyping, canProceed, showLog, showSaveLoad, showChoices, showVolume, dialog]);
+    }, [isTyping, canProceed, showLog, showSaveLoad, showChoices, showVolume, showAffection, dialog, showChapterTitle]);
 
     const determineEnding = useCallback((route) => {
         const values = HEROINES.map(h => affection[h] || 0);
@@ -772,65 +584,18 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
     const proceed = useCallback(() => {
         if(!canProceed||showChoices)return;
         
-        setHistory(prev => [...prev, { 
-            chapter: currentChapter, 
-            scene: sceneIndex, 
-            dialog: dialogIndex,
-            affection: {...affection}
-        }]);
+        setHistory(prev => [...prev, { chapter: currentChapter, scene: sceneIndex, dialog: dialogIndex }]);
         
         if(dialogIndex<scene.dialogs.length-1){setDialogIndex(d=>d+1);}
         else if(scene.choices){setShowChoices(true);}
-        else if(scene.next === 'minigame-memory') {
-            setShowMinigame('memory');
-            return;
-        }
         else if(scene.next){goToScene(scene.next);}
         else if(sceneIndex<chapter.scenes.length-1){setSceneIndex(s=>s+1);setDialogIndex(0);}
-    }, [canProceed, showChoices, dialogIndex, scene, sceneIndex, chapter, currentChapter, affection]);
-
-    const [isSkipping, setIsSkipping] = useState(false);
-    const skipIntervalRef = useRef(null);
-
-    useEffect(() => {
-        if (isSkipping && !showChoices && !showMinigame) {
-            skipIntervalRef.current = setInterval(() => {
-                if (isTyping) {
-                    setDisplayedText(dialog?.text || '');
-                    setIsTyping(false);
-                    setCanProceed(true);
-                } else if (canProceed && !showChoices) {
-                    proceed();
-                }
-            }, 80);
-        } else {
-            if (skipIntervalRef.current) {
-                clearInterval(skipIntervalRef.current);
-                skipIntervalRef.current = null;
-            }
-        }
-        
-        return () => {
-            if (skipIntervalRef.current) {
-                clearInterval(skipIntervalRef.current);
-            }
-        };
-    }, [isSkipping, isTyping, canProceed, showChoices, showMinigame, dialog, proceed]);
-
-    const startSkip = () => setIsSkipping(true);
-    const stopSkip = () => setIsSkipping(false);
+    }, [canProceed, showChoices, dialogIndex, scene, sceneIndex, chapter, currentChapter]);
 
     const goBack = useCallback(() => {
         if (history.length === 0) return;
         const prev = history[history.length - 1];
         setHistory(h => h.slice(0, -1));
-        
-        isGoingBack.current = true;
-        
-        if (prev.affection) {
-            setAffection(prev.affection);
-        }
-        
         if (prev.chapter !== currentChapter) {
             setCurrentChapter(prev.chapter);
         }
@@ -864,7 +629,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
             let changes = [];
             Object.entries(choice.affection).forEach(([char,delta])=>{
                 newAff[char] = Math.max(0, Math.min(100, (newAff[char]||0)+delta));
-                if(delta !== 0) changes.push({char,delta});
+                if(delta>0) changes.push({char,delta});
             });
             setAffection(newAff);
             if(changes.length>0){
@@ -876,7 +641,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
     };
 
     const handleClick = (e) => {
-        if(showChoices||e.target.closest('button')||showChapterTitle||showAffection||showSaveLoad||showLog||showMinigame||showVolume)return;
+        if(showChoices||e.target.closest('button')||showChapterTitle||showAffection||showSaveLoad||showLog||showVolume)return;
         
         if(isTyping){
             setDisplayedText(dialog.text);
@@ -900,29 +665,10 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         setAffection(saveData.affection);
         setShowSaveLoad(null);
         setShowChapterTitle(true);
-        setTimeout(() => setShowChapterTitle(false), 2500);
         setHistory([]);
     };
 
-    const handleMinigamePass = useCallback(() => {
-        setShowMinigame(null);
-        const idx = chapter?.scenes?.findIndex(s => s.id === '4-pass');
-        if (idx !== -1) {
-            setSceneIndex(idx);
-            setDialogIndex(0);
-        }
-    }, [chapter]);
-
-    const handleMinigameFail = useCallback(() => {
-        setShowMinigame(null);
-        const idx = chapter?.scenes?.findIndex(s => s.id === '4-fail');
-        if (idx !== -1) {
-            setSceneIndex(idx);
-            setDialogIndex(0);
-        }
-    }, [chapter]);
-
-    if(!chapter||!scene)return null;
+    if(!chapter||!scene)return <div style={{height:'100vh',background:'#0a0810',display:'flex',justifyContent:'center',alignItems:'center',color:'#6b6480'}}>챕터를 불러오는 중...</div>;
 
     if(showChapterTitle)return(
         <div style={{height:'100vh',background:'#0a0810',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',animation:'fadeIn 0.5s'}}>
@@ -934,119 +680,142 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
     const getCharPosition = (chars,idx) => {
         const count=chars.length;
         if(count===1)return{left:'30%',transform:'translateX(-50%)'};
-        if(count===2)return idx===0?{left:'15%'}:{right:'15%'};
+        if(count===2)return idx===0?{left:'25%'}:{right:'25%'};
         const positions=[{left:'5%'},{left:'18%'},{left:'31%'},{right:'31%'},{right:'18%'},{right:'5%'}];
         return positions[idx]||positions[0];
     };
 
     const currentSpeaker = dialog?.speaker==='narrator'||dialog?.speaker==='you'?null:dialog?.speaker;
     const speakerData = dialog?.speaker==='you'
-        ? {name:'당신',color:'#9d8ec2'}
-        : dialog?.speaker==='narrator'
-            ? {name:'',color:'#7a7888'}
-            : characters[dialog?.speaker]
-                ? {name:characters[dialog.speaker].name, color:characters[dialog.speaker].color}
-                : {name:dialog?.speaker||'', color:'#c8c4d4'};
+    ? {name:'당신',color:'#9d8ec2'}
+    : dialog?.speaker==='narrator'
+        ? {name:'',color:'#7a7888'}
+        : characters[dialog?.speaker]
+            ? {name:characters[dialog.speaker].name, color:characters[dialog.speaker].color}
+            : {name:dialog?.speaker||'', color:'#c8c4d4'};
     const getEmotionAnimation = (emotion) => ({happy:'happyBounce 1.5s ease-in-out infinite',angry:'angryTremble 1s ease-in-out infinite',sad:'sadDroop 4s ease-in-out infinite',default:'speaking 3s ease-in-out infinite'}[emotion]||'speaking 3s ease-in-out infinite');
     const bgUrl = IMAGES[scene.bg];
 
     return (
         <div onClick={handleClick} style={{height:'100vh',position:'relative',background:'#0a0810',overflow:'hidden',cursor:showChoices?'default':'pointer'}}>
             <div style={{position:'absolute',inset:0,background:bgUrl?`url(${bgUrl}) center/cover`:'#100e16',transition:'background 0.5s'}}>{!bgUrl&&<div style={{position:'absolute',top:'40%',left:'50%',transform:'translate(-50%,-50%)',color:'#1a1820',fontSize:'0.7rem'}}>[ {scene.bg} ]</div>}</div>
-            
-            {scene?.ending === 'badend1' && (
-                <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,0.9)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',zIndex:300}}>
-                    <h1 style={{color:'#e07070',fontSize:'2rem',marginBottom:'20px'}}>BAD END 1</h1>
-                    <p style={{color:'#b8aed0',marginBottom:'40px'}}>실패한 황자</p>
-                    <div style={{display:'flex',gap:'20px'}}>
-                        <button onClick={()=>goToScene('4-12c')} style={{padding:'12px 30px',background:'linear-gradient(135deg,#9d8ec2,#6b5a8e)',border:'none',borderRadius:'8px',color:'#fff',cursor:'pointer',fontSize:'1rem'}}>🔄 재도전</button>
-                        <button onClick={onTitle} style={{padding:'12px 30px',background:'transparent',border:'1px solid #6b6480',borderRadius:'8px',color:'#6b6480',cursor:'pointer',fontSize:'1rem'}}>타이틀로</button>
+
+            {/* 상단 UI */}
+            <div style={{position:'absolute',top:0,left:0,right:0,height:'42px',background:'linear-gradient(#0a0810,transparent)',display:'flex',alignItems:'center',padding:'0 16px',gap:'6px',zIndex:60}}>
+                <button onClick={e=>{e.stopPropagation();playSfx('click');setShowAffection(true);}} style={{padding:'4px 12px',fontSize:'0.68rem',background:'rgba(157,142,194,0.2)',border:'1px solid #9d8ec2',color:'#b8aed0',borderRadius:'10px',cursor:'pointer'}}>💕 호감도</button>
+                <button onClick={e=>{e.stopPropagation();playSfx('click');setShowSaveLoad('save');}} style={{padding:'4px 10px',fontSize:'0.65rem',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'10px',cursor:'pointer'}}>💾 SAVE</button>
+                <button onClick={e=>{e.stopPropagation();playSfx('click');setShowSaveLoad('load');}} style={{padding:'4px 10px',fontSize:'0.65rem',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'10px',cursor:'pointer'}}>📂 LOAD</button>
+                <button onClick={e=>{e.stopPropagation();playSfx('click');setShowVolume(true);}} style={{padding:'4px 10px',fontSize:'0.65rem',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'10px',cursor:'pointer'}}>🔊</button>
+                {!isMobile && <button onClick={e=>{e.stopPropagation();playSfx('click');if(onTitle)onTitle();}} style={{padding:'4px 12px',fontSize:'0.68rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'10px',cursor:'pointer'}}>TITLE</button>}
+            </div>
+
+            {/* 호감도 변동 팝업 */}
+            {affectionPopup && (
+                <div style={{position:'absolute',top:'80px',right:'20px',zIndex:100,animation:'slideDown 0.3s'}}>
+                    {affectionPopup.map((item,i)=>(
+                        <div key={i} style={{background:'rgba(157,142,194,0.2)',border:'1px solid #9d8ec2',borderRadius:'8px',padding:'8px 16px',marginBottom:'4px',display:'flex',alignItems:'center',gap:'8px',animation:'heartPop 0.5s'}}>
+                            <span style={{color:characters[item.char]?.color}}>{characters[item.char]?.name}</span>
+                            <span style={{color:'#d4a0a8'}}>+{item.delta} 💕</span>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {showLog && (
+                <div onClick={()=>setShowLog(false)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.9)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000}}>
+                    <div onClick={e=>e.stopPropagation()} style={{width:'90%',maxWidth:'600px',height:'70vh',background:'#14121a',border:'1px solid #3d3850',borderRadius:'12px',display:'flex',flexDirection:'column'}}>
+                        <div style={{padding:'16px',borderBottom:'1px solid #252230',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                            <h3 style={{color:'#9d8ec2',fontSize:'1rem'}}>📜 대화 기록</h3>
+                            <button onClick={()=>setShowLog(false)} style={{background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',borderRadius:'50%',cursor:'pointer'}}>✕</button>
+                        </div>
+                        <div style={{flex:1,overflow:'auto',padding:'16px',display:'flex',flexDirection:'column',gap:'12px'}}>
+                            {dialogLog.map((log,i) => {
+                                const isNarrator = log.speaker === 'narrator';
+                                const isYou = log.speaker === 'you';
+                                const charData = characters[log.speaker];
+                                const name = isYou ? '당신' : isNarrator ? '' : (charData?.name || log.speaker);
+                                const color = isYou ? '#9d8ec2' : isNarrator ? '#6b6480' : (charData?.color || '#c8c4d4');
+                                return (
+                                    <div key={i} style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',borderRadius:'6px',borderLeft:`3px solid ${color}`}}>
+                                        {name && <div style={{color:color,fontSize:'0.75rem',fontWeight:600,marginBottom:'4px'}}>{name}</div>}
+                                        <div style={{color:isNarrator?'#7a7888':'#e8e6ed',fontSize:'0.85rem',fontStyle:isNarrator?'italic':'normal',lineHeight:1.6}}>{log.text}</div>
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
             )}
 
-            {scene.chars && scene.chars.map((char, idx) => {
-                const charImages = IMAGES[char.id];
-                const emotion = dialog?.speaker === char.id ? (dialog.emotion || char.emotion || 'default') : (char.emotion || 'default');
-                const imgSrc = charImages?.[emotion] || charImages?.default;
-                const isSpeaking = dialog?.speaker === char.id;
-                const pos = getCharPosition(scene.chars, idx);
-                
-                return (
-                    <div key={char.id} style={{position:'absolute',bottom:'15%',zIndex:10+idx,...pos,transition:'all 0.3s ease'}}>
-                        {imgSrc ? (
-                            <img src={imgSrc} style={{maxHeight:isMobile?'45vh':'55vh',filter:isSpeaking?'brightness(1.1)':'brightness(0.85)',transition:'all 0.3s',animation:isSpeaking?getEmotionAnimation(emotion):'idleBreathing 4s ease-in-out infinite'}}/>
-                        ) : (
-                            <div style={{width:'120px',height:'200px',background:'#2a2836',borderRadius:'8px',display:'flex',alignItems:'center',justifyContent:'center',color:'#4a4060',fontSize:'0.7rem'}}>[ {char.id} ]</div>
-                        )}
+            {/* 캐릭터들 */}
+            {scene.chars && scene.chars.map((char,idx)=>{
+                const isSpeaking=currentSpeaker===char.id;
+                const emotion=isSpeaking&&dialog?.emotion?dialog.emotion:char.emotion;
+                const charImg=IMAGES[char.id]?.[emotion]||IMAGES[char.id]?.default;
+                const pos=getCharPosition(scene.chars,idx);
+                return(
+                    <div key={`${char.id}-${idx}`} style={{
+                        position:'absolute',...pos,
+                        bottom:isMobile?'50px':'100px',
+                        width:isMobile?'240px':'450px',
+                        height:isMobile?'340px':'630px',
+                        display:'flex',justifyContent:'center',alignItems:'flex-end',
+                        transition:'filter 0.5s ease,transform 0.5s cubic-bezier(0.34,1.56,0.64,1)',
+                        filter:isSpeaking?'brightness(1) drop-shadow(0 0 12px rgba(255,255,255,0.12))':'brightness(0.5)',
+                        transform:isSpeaking?'scale(1.08)':'scale(0.92)',
+                        animation:isSpeaking?getEmotionAnimation(emotion):'idleBreathing 5s ease-in-out infinite',
+                        zIndex:isSpeaking?50:1
+                    }}>
+                        {charImg?<img src={charImg} style={{maxHeight:'100%',maxWidth:'100%',objectFit:'contain',objectPosition:'bottom'}}/>
+                        :<div style={{color:'#2a2836',fontSize:'0.55rem',padding:'15px',border:'1px dashed #2a2836',borderRadius:'4px'}}>[{characters[char.id]?.name}-{emotion}]</div>}
                     </div>
                 );
             })}
 
-            <div style={{position:'absolute',top:isMobile?'8px':'12px',left:'50%',transform:'translateX(-50%)',display:'flex',gap:'8px',zIndex:100}}>
-                <button onClick={()=>{playSfx('click');setShowSaveLoad('save');}} style={{padding:'6px 14px',background:'rgba(20,18,26,0.9)',border:'1px solid #3d3850',borderRadius:'8px',color:'#9d8ec2',fontSize:'0.75rem',cursor:'pointer'}}>💾 저장</button>
-                <button onClick={()=>{playSfx('click');setShowSaveLoad('load');}} style={{padding:'6px 14px',background:'rgba(20,18,26,0.9)',border:'1px solid #3d3850',borderRadius:'8px',color:'#9d8ec2',fontSize:'0.75rem',cursor:'pointer'}}>📂 로드</button>
-                <button onClick={()=>{playSfx('click');setShowAffection(true);}} style={{padding:'6px 14px',background:'rgba(20,18,26,0.9)',border:'1px solid #3d3850',borderRadius:'8px',color:'#d4a0a8',fontSize:'0.75rem',cursor:'pointer'}}>💕</button>
-                <button onClick={()=>{playSfx('click');setShowLog(true);}} style={{padding:'6px 14px',background:'rgba(20,18,26,0.9)',border:'1px solid #3d3850',borderRadius:'8px',color:'#8aadc0',fontSize:'0.75rem',cursor:'pointer'}}>📜</button>
-                <button onClick={()=>{playSfx('click');setShowVolume(true);}} style={{padding:'6px 14px',background:'rgba(20,18,26,0.9)',border:'1px solid #3d3850',borderRadius:'8px',color:'#a890b8',fontSize:'0.75rem',cursor:'pointer'}}>🔊</button>
-                <button onClick={onTitle} style={{padding:'6px 14px',background:'rgba(20,18,26,0.9)',border:'1px solid #3d3850',borderRadius:'8px',color:'#6b6480',fontSize:'0.75rem',cursor:'pointer'}}>타이틀</button>
-            </div>
-
-            <div style={{position:'absolute',bottom:0,left:0,right:0,background:'linear-gradient(to top,rgba(10,8,16,0.98),rgba(10,8,16,0.9))',padding:isMobile?'16px':'24px 32px',minHeight:isMobile?'25vh':'28vh'}}>
-                {speakerData.name && (
-                    <div style={{marginBottom:'8px'}}>
-                        <span style={{display:'inline-block',padding:'4px 16px',background:`linear-gradient(135deg,${speakerData.color}20,${speakerData.color}10)`,border:`1px solid ${speakerData.color}40`,borderRadius:'20px',color:speakerData.color,fontSize:isMobile?'0.8rem':'0.9rem',fontWeight:500}}>{speakerData.name}</span>
-                    </div>
-                )}
-                <div style={{color:dialog?.speaker==='narrator'?'#9a96a8':'#e8e6ed',fontSize:isMobile?'0.95rem':'1.1rem',lineHeight:1.8,minHeight:'60px',fontStyle:dialog?.speaker==='narrator'?'italic':'normal'}}>
-                    <span className={dialog?.effect?`text-${dialog.effect}`:''}>{displayedText}</span>
-                    {isTyping && <span style={{animation:'blink 0.8s infinite'}}>▍</span>}
-                </div>
-                
-                <div style={{position:'absolute',bottom:'12px',right:'16px',display:'flex',alignItems:'center',gap:'12px'}}>
-                    <button onClick={goBack} disabled={history.length===0} style={{padding:'6px 12px',background:'rgba(60,50,80,0.5)',border:'1px solid #4a4060',borderRadius:'6px',color:history.length===0?'#3d3850':'#9d8ec2',fontSize:'0.75rem',cursor:history.length===0?'not-allowed':'pointer'}}>← BACK</button>
-                    <button onClick={()=>setIsAuto(!isAuto)} style={{padding:'6px 12px',background:isAuto?'rgba(157,142,194,0.3)':'rgba(60,50,80,0.5)',border:`1px solid ${isAuto?'#9d8ec2':'#4a4060'}`,borderRadius:'6px',color:'#9d8ec2',fontSize:'0.75rem',cursor:'pointer'}}>{isAuto?'AUTO ●':'AUTO'}</button>
-                    <button onMouseDown={startSkip} onMouseUp={stopSkip} onMouseLeave={stopSkip} onTouchStart={startSkip} onTouchEnd={stopSkip} style={{padding:'6px 12px',background:isSkipping?'rgba(157,142,194,0.3)':'rgba(60,50,80,0.5)',border:`1px solid ${isSkipping?'#9d8ec2':'#4a4060'}`,borderRadius:'6px',color:'#9d8ec2',fontSize:'0.75rem',cursor:'pointer'}}>SKIP ▶▶</button>
-                    {!isTyping && canProceed && !showChoices && <div style={{color:'#6b6480',fontSize:'0.8rem',animation:'arrowBounce 1s infinite'}}>▼</div>}
-                </div>
-            </div>
-
-            {showChoices && scene.choices && (
-                <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,0.7)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:200}}>
-                    <div style={{display:'flex',flexDirection:'column',gap:'12px',maxWidth:'80%'}}>
-                        {scene.choices.map((choice, idx) => (
-                            <button key={idx} onClick={()=>handleChoice(choice)} style={{padding:'16px 32px',background:'rgba(20,18,26,0.95)',border:'1px solid #4a4060',borderRadius:'12px',color:'#e8e6ed',fontSize:isMobile?'0.9rem':'1rem',cursor:'pointer',textAlign:'left',transition:'all 0.2s'}}>
-                                {choice.text}
-                                {choice.affection&&<span style={{float:'right',color:'#d4a0a8',fontSize:'0.75rem'}}>💕</span>}
-                            </button>
-                        ))}
+            {/* 대화창 */}
+            {!showChoices&&(
+                <div style={{position:'absolute',bottom:0,left:0,right:0,padding:isMobile?'10px':'16px',zIndex:60}}>
+                    <div style={{maxWidth:'880px',margin:'0 auto',background:'rgba(10,8,16,0.96)',border:'1px solid #252230',borderRadius:isMobile?'8px':'10px',padding:isMobile?'12px 14px':'18px 24px',position:'relative'}}>
+                        {speakerData.name&&(<div style={{position:'absolute',top:isMobile?'-11px':'-13px',left:isMobile?'12px':'20px',background:speakerData.color,padding:isMobile?'2px 12px':'3px 16px',borderRadius:'12px',color:'#0a0810',fontSize:isMobile?'0.72rem':'0.78rem',fontWeight:600}}>{speakerData.name}</div>)}
+                        <div style={{fontSize:isMobile?'0.88rem':'0.98rem',lineHeight:1.8,color:dialog?.speaker==='narrator'?'#7a7888':'#e8e6ed',fontStyle:dialog?.speaker==='narrator'?'italic':'normal',minHeight:isMobile?'42px':'52px',paddingTop:speakerData.name?'6px':0,display:'flex',alignItems:'center'}}>
+                            <span className={dialog?.effect ? `text-${dialog.effect}` : ''}>{displayedText}</span>
+                            {isTyping&&<span style={{borderRight:'2px solid #9d8ec2',marginLeft:'1px',animation:'blink 0.5s infinite'}}>&nbsp;</span>}
+                            {!isTyping&&canProceed&&<span style={{marginLeft:'8px',color:'#9d8ec2',fontSize:'0.75rem',animation:'arrowBounce 0.7s infinite'}}>▼</span>}
+                        </div>
+                        <div style={{position:'absolute',bottom:isMobile?'7px':'10px',right:isMobile?'8px':'14px',display:'flex',gap:isMobile?'4px':'6px'}}>
+                            <button onClick={e=>{e.stopPropagation();playSfx('click');goBack();}} disabled={history.length===0} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:history.length>0?'rgba(100,80,120,0.3)':'transparent',border:`1px solid ${history.length>0?'#6b5a80':'#252230'}`,color:history.length>0?'#a090b0':'#3d3850',borderRadius:'8px',cursor:history.length>0?'pointer':'not-allowed'}}>◀ BACK</button>
+                            <button onClick={e=>{e.stopPropagation();playSfx('click');if(isTyping){setDisplayedText(dialog.text);setIsTyping(false);setCanProceed(true);}else{proceed();}}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'8px',cursor:'pointer'}}>NEXT</button>
+                            <button onClick={e=>{e.stopPropagation();setIsAuto(!isAuto);playSfx('click');}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:isAuto?'rgba(157,142,194,0.2)':'transparent',border:`1px solid ${isAuto?'#9d8ec2':'#252230'}`,color:isAuto?'#b8aed0':'#6b6480',borderRadius:'8px',cursor:'pointer'}}>AUTO</button>
+                            <button onClick={e=>{e.stopPropagation();playSfx('click');setShowLog(true);}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'8px',cursor:'pointer'}}>LOG</button>
+                        </div>
                     </div>
                 </div>
             )}
 
-            {affectionPopup && (
-                <div style={{position:'absolute',top:'20%',left:'50%',transform:'translateX(-50%)',zIndex:300,display:'flex',flexDirection:'column',gap:'8px',animation:'slideDown 0.3s ease'}}>
-                    {affectionPopup.map((change, idx) => (
-                        <div key={idx} style={{padding:'8px 20px',background:'rgba(20,18,26,0.95)',border:`1px solid ${characters[change.char]?.color||'#9d8ec2'}`,borderRadius:'20px',color:characters[change.char]?.color||'#9d8ec2',fontSize:'0.9rem',animation:'heartPop 0.5s ease'}}>
-                            {characters[change.char]?.name} {change.delta > 0 ? `+${change.delta}` : change.delta} 💕
-                        </div>
+            {/* 선택지 */}
+            {showChoices&&scene.choices&&(
+                <div style={{position:'absolute',top:isMobile?'35%':'40%',left:'50%',transform:'translate(-50%,-50%)',display:'flex',flexDirection:'column',gap:isMobile?'8px':'12px',animation:'fadeIn 0.4s',zIndex:200,width:isMobile?'85%':'auto',maxWidth:'450px'}}>
+                    {scene.choices.map((choice,i)=>(
+                        <button key={i} onClick={()=>handleChoice(choice)} style={{padding:isMobile?'12px 16px':'18px 28px',fontSize:isMobile?'0.8rem':'0.95rem',background:'rgba(10,8,16,0.96)',border:'1px solid #3d3850',color:'#e8e6ed',cursor:'pointer',borderRadius:'8px',textAlign:'left',width:'100%'}}>
+                            <span style={{color:'#9d8ec2',marginRight:'8px'}}>▸</span>{choice.text}
+                            {choice.affection&&<span style={{float:'right',color:'#d4a0a8',fontSize:'0.75rem'}}>💕</span>}
+                        </button>
                     ))}
                 </div>
             )}
 
             {showAffection && <AffectionPanel affection={affection} onClose={()=>setShowAffection(false)} isMobile={isMobile}/>}
             {showSaveLoad && <SaveLoadPanel mode={showSaveLoad} onClose={() => setShowSaveLoad(null)} onSave={handleSave} onLoad={handleLoadInGame} currentState={{ currentChapter, sceneIndex, dialogIndex, affection }} isMobile={isMobile}/>}
-            {showLog && <DialogLog log={dialogLog} onClose={() => setShowLog(false)} isMobile={isMobile}/>}
             {showVolume && <VolumePanel onClose={() => setShowVolume(false)} isMobile={isMobile}/>}
-            
-            {showMinigame === 'memory' && (
-                <MemoryGame 
-                    onPass={handleMinigamePass} 
-                    onFail={handleMinigameFail} 
-                />
-            )}
         </div>
     );
+}
+
+function GlitchScreen({ onComplete }) {
+    const [phase, setPhase] = useState(0);
+    const msgs = ["ERROR: UNEXPECTED_ENTITY_DETECTED","WARNING: NARRATIVE_BREACH","FATAL: OBSERVER_OVERFLOW","SYSTEM FAILURE..."];
+    useEffect(() => { playSfx('glitch');stopBgm();const timers=[setTimeout(()=>setPhase(1),200),setTimeout(()=>setPhase(2),700),setTimeout(()=>setPhase(3),1200),setTimeout(()=>setPhase(4),1700),setTimeout(onComplete,3000)];return()=>timers.forEach(clearTimeout); }, [onComplete]);
+    return (<div style={{height:'100vh',background:'#050508',display:'flex',justifyContent:'center',alignItems:'center',position:'relative',overflow:'hidden'}}><div style={{position:'absolute',inset:0,background:'repeating-linear-gradient(0deg,rgba(0,0,0,0.08),rgba(0,0,0,0.08) 1px,transparent 1px,transparent 2px)'}}/>{phase>=1&&[...Array(12)].map((_,i)=>(<div key={i} style={{position:'absolute',top:`${Math.random()*100}%`,left:0,right:0,height:`${Math.random()*3+1}px`,background:`rgba(160,100,130,${Math.random()*0.3+0.1})`,transform:`translateX(${Math.random()*10-5}px)`}}/>))}<div style={{fontFamily:'monospace',fontSize:'0.9rem',color:'#a06880',textShadow:'0 0 8px rgba(160,100,130,0.6)',animation:'glitchText 0.12s infinite',textAlign:'center',zIndex:10}}>{phase>0&&msgs[phase-1]}</div></div>);
 }
 
 function CharacterSite({ onBack }) {
