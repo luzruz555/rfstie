@@ -96,12 +96,12 @@
 const { useState, useEffect, useCallback, useMemo, useRef } = React;
 
 // ════════════════════════════════════════════════════════════════════════════
-// 스토리 데이터 합치기 (파서 사용)
+// 스토리 데이터 합치기 (새 형식은 여기서 파싱)
 // ════════════════════════════════════════════════════════════════════════════
-const STORY = parseStory({
-    chapter1: CHAPTER1,
-    chapter2: CHAPTER2,
-    chapter3: CHAPTER3,
+const STORY = {
+    chapter1: parseChapter(CHAPTER1_DATA),   // 새 형식 → 파싱
+    chapter2: parseChapter(CHAPTER2_DATA),   // 새 형식 → 파싱
+    chapter3: CHAPTER3,                      // 기존 형식 → 그대로
     chapter4: CHAPTER4,
     chapter5: CHAPTER5,
     chapter6: CHAPTER6,
@@ -122,7 +122,7 @@ const STORY = parseStory({
     ending_bad_execution: ENDING_BAD_EXECUTION,
     ending_bad_betrayal: ENDING_BAD_BETRAYAL,
     badend1: BADEND1,
-});
+};
 
 // ════════════════════════════════════════════════════════════════════════════
 // 세이브/로드 시스템
