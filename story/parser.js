@@ -1,3 +1,45 @@
+// ═══════════════════════════════════════════════════════════════
+// 간편 대사 파서 v2
+// 더 직관적이고 읽기 쉬운 문법!
+// ═══════════════════════════════════════════════════════════════
+
+/*
+╔════════════════════════════════════════════════════════════════╗
+║                    📝 대사 작성법                               ║
+╠════════════════════════════════════════════════════════════════╣
+║                                                                ║
+║  🎭 기본 대사                                                   ║
+║  ────────────────────────────────────────────────────────────  ║
+║  "아르카디엔 제국."                    ← 나레이션              ║
+║  "리제트: 도련님!"                     ← 캐릭터 대사           ║
+║  "나: 알겠어."                         ← 주인공 대사           ║
+║                                                                ║
+║  😊 감정 추가                                                   ║
+║  ────────────────────────────────────────────────────────────  ║
+║  "리제트(happy): 정말요?!"             ← 기쁜 표정             ║
+║  "리제트(sad): 그런가요..."            ← 슬픈 표정             ║
+║  "리제트(angry): 뭐라고요?!"           ← 화난 표정             ║
+║                                                                ║
+║  ✨ 효과 추가                                                   ║
+║  ────────────────────────────────────────────────────────────  ║
+║  "리제트: 도련님! #shake"              ← 흔들림                ║
+║  "리제트(happy): 네!! #pulse"          ← 두근두근              ║
+║  "#shake 쾅!"                          ← 나레이션 + 효과       ║
+║                                                                ║
+║  🎵 효과음                                                      ║
+║  ────────────────────────────────────────────────────────────  ║
+║  "@surprise 문이 열렸다."              ← 효과음 + 나레이션     ║
+║  "리제트: 앗! @click"                  ← 대사 + 효과음         ║
+║                                                                ║
+║  📋 사용 가능한 값들                                            ║
+║  ────────────────────────────────────────────────────────────  ║
+║  감정: happy, sad, angry, default                              ║
+║  효과: shake, pulse, grow, shrink, small, big, float, whisper  ║
+║  효과음: click, decision, surprise, heartbeat, sword, glitch   ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+*/
+
 // 캐릭터 이름 매핑 (한글 지원)
 const NAME_MAP = {
     // 한글
@@ -118,6 +160,11 @@ function parseScene(scene) {
 }
 
 function parseChapter(chapter) {
+    // 이미 dialogs가 있으면 (기존 형식) 그대로 반환
+    if (chapter.scenes && chapter.scenes[0] && chapter.scenes[0].dialogs) {
+        return chapter;
+    }
+    // lines가 있으면 (새 형식) 파싱
     return {
         title: chapter.title,
         subtitle: chapter.subtitle,
@@ -133,3 +180,23 @@ function buildStory(chapters) {
     }
     return story;
 }
+
+// 스토리 합치기 (index.html에서 사용)
+function parseStory(chapters) {
+    const story = {};
+    for (const [key, chapter] of Object.entries(chapters)) {
+        if (chapter) {
+            story[key] = chapter;
+        }
+    }
+    return story;
+}
+
+// 전역으로 내보내기
+window.parseLine = parseLine;
+window.parseLines = parseLines;
+window.parseChars = parseChars;
+window.parseScene = parseScene;
+window.parseChapter = parseChapter;
+window.buildStory = buildStory;
+window.parseStory = parseStory;
