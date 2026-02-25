@@ -467,7 +467,7 @@ function TitleScreen({ onStart, onLoad, onCharacter }) {
                             <MenuBtn text="CHARACTER" onClick={()=>{playSfx('click');onCharacter();}}/>
                             <MenuBtn text="SOUND" onClick={()=>{playSfx('click');setShowVolume(true);}}/>
                         </div>
-                        <div style={{position:'absolute',bottom:'16px',fontSize:'0.6rem',color:'#3d3850'}}>made by LUZ</div>
+                        <div style={{position:'absolute',bottom:'16px',fontSize:'0.6rem',color:'#3d3850'}}>made by CowardMole</div>
                     </div>
                 </>
             )}
@@ -492,7 +492,10 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
     const [showVolume, setShowVolume] = useState(false);
     const [history, setHistory] = useState([]);
     const [dialogLog, setDialogLog] = useState([]);
+    const [loggedIndexes, setLoggedIndexes] = useState(new Set()); // 로그 중복 방지
     const [showLog, setShowLog] = useState(false);
+    const [isSkipping, setIsSkipping] = useState(false); // SKIP 버튼 상태
+    const [canGoBack, setCanGoBack] = useState(true); // 선택지 후 BACK 불가
 
     useEffect(() => { const h=()=>setIsMobile(window.innerWidth<=768); window.addEventListener('resize',h); return()=>window.removeEventListener('resize',h); }, []);
 
@@ -516,7 +519,14 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
     useEffect(() => {
         if(!dialog||showChapterTitle)return;
         if(dialog.sfx)playSfx(dialog.sfx);
-        setDialogLog(prev => [...prev, { speaker: dialog.speaker, text: dialog.text }]);
+        
+        // 로그 중복 방지
+        const logKey = `${currentChapter}-${sceneIndex}-${dialogIndex}`;
+        if (!loggedIndexes.has(logKey)) {
+            setDialogLog(prev => [...prev, { speaker: dialog.speaker, text: dialog.text }]);
+            setLoggedIndexes(prev => new Set([...prev, logKey]));
+        }
+        
         setIsTyping(true);setDisplayedText('');setCanProceed(false);
         let i=0;
         const iv=setInterval(()=>{
@@ -524,13 +534,30 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
             else{clearInterval(iv);setIsTyping(false);setCanProceed(true);}
         },30);
         return()=>clearInterval(iv);
-    }, [dialog, dialogIndex, sceneIndex, currentChapter, showChapterTitle]);
+    }, [dialog, dialogIndex, sceneIndex, currentChapter, showChapterTitle, loggedIndexes]);
 
     useEffect(() => { 
         if(!isAuto||isTyping||!canProceed||showChoices)return; 
         const t=setTimeout(proceed,1500); 
         return()=>clearTimeout(t); 
     }, [isAuto, isTyping, canProceed, showChoices]);
+
+    // SKIP 버튼 꾹 누르면 빠르게 넘기기
+    useEffect(() => {
+        if (!isSkipping || showChoices || showChapterTitle) return;
+        
+        const skipInterval = setInterval(() => {
+            if (isTyping) {
+                setDisplayedText(dialog?.text || '');
+                setIsTyping(false);
+                setCanProceed(true);
+            } else if (canProceed && !showChoices) {
+                proceed();
+            }
+        }, 100);
+        
+        return () => clearInterval(skipInterval);
+    }, [isSkipping, isTyping, canProceed, showChoices, showChapterTitle, dialog]);
 
     // 스페이스바 / 화살표 키 처리
     useEffect(() => {
@@ -584,16 +611,22 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
     const proceed = useCallback(() => {
         if(!canProceed||showChoices)return;
         
-        setHistory(prev => [...prev, { chapter: currentChapter, scene: sceneIndex, dialog: dialogIndex }]);
+        // 히스토리에 호감도도 저장
+        setHistory(prev => [...prev, { 
+            chapter: currentChapter, 
+            scene: sceneIndex, 
+            dialog: dialogIndex,
+            affection: {...affection}
+        }]);
         
         if(dialogIndex<scene.dialogs.length-1){setDialogIndex(d=>d+1);}
         else if(scene.choices){setShowChoices(true);}
         else if(scene.next){goToScene(scene.next);}
         else if(sceneIndex<chapter.scenes.length-1){setSceneIndex(s=>s+1);setDialogIndex(0);}
-    }, [canProceed, showChoices, dialogIndex, scene, sceneIndex, chapter, currentChapter]);
+    }, [canProceed, showChoices, dialogIndex, scene, sceneIndex, chapter, currentChapter, affection]);
 
     const goBack = useCallback(() => {
-        if (history.length === 0) return;
+        if (history.length === 0 || !canGoBack) return;
         const prev = history[history.length - 1];
         setHistory(h => h.slice(0, -1));
         if (prev.chapter !== currentChapter) {
@@ -601,8 +634,12 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         }
         setSceneIndex(prev.scene);
         setDialogIndex(prev.dialog);
+        // 호감도 롤백
+        if (prev.affection) {
+            setAffection(prev.affection);
+        }
         setShowChoices(false);
-    }, [history, currentChapter]);
+    }, [history, currentChapter, canGoBack]);
 
     const goToScene = (nextId) => {
         if(nextId==='glitch'){onGlitch();return;}
@@ -624,6 +661,11 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
     const handleChoice = (choice) => {
         playSfx('decision');
         setShowChoices(false);
+        
+        // 선택지 고른 후 BACK 불가 - 히스토리 초기화
+        setHistory([]);
+        setCanGoBack(true); // 다음 선택지까지는 다시 가능
+        
         if(choice.affection){
             const newAff = {...affection};
             let changes = [];
@@ -784,7 +826,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                         </div>
                         <div style={{position:'absolute',bottom:isMobile?'7px':'10px',right:isMobile?'8px':'14px',display:'flex',gap:isMobile?'4px':'6px'}}>
                             <button onClick={e=>{e.stopPropagation();playSfx('click');goBack();}} disabled={history.length===0} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:history.length>0?'rgba(100,80,120,0.3)':'transparent',border:`1px solid ${history.length>0?'#6b5a80':'#252230'}`,color:history.length>0?'#a090b0':'#3d3850',borderRadius:'8px',cursor:history.length>0?'pointer':'not-allowed'}}>◀ BACK</button>
-                            <button onClick={e=>{e.stopPropagation();playSfx('click');if(isTyping){setDisplayedText(dialog.text);setIsTyping(false);setCanProceed(true);}else{proceed();}}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'8px',cursor:'pointer'}}>NEXT</button>
+                            <button onMouseDown={e=>{e.stopPropagation();setIsSkipping(true);}} onMouseUp={()=>setIsSkipping(false)} onMouseLeave={()=>setIsSkipping(false)} onTouchStart={e=>{e.stopPropagation();setIsSkipping(true);}} onTouchEnd={()=>setIsSkipping(false)} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:isSkipping?'rgba(157,142,194,0.3)':'transparent',border:`1px solid ${isSkipping?'#9d8ec2':'#252230'}`,color:isSkipping?'#b8aed0':'#6b6480',borderRadius:'8px',cursor:'pointer'}}>SKIP</button>
                             <button onClick={e=>{e.stopPropagation();setIsAuto(!isAuto);playSfx('click');}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:isAuto?'rgba(157,142,194,0.2)':'transparent',border:`1px solid ${isAuto?'#9d8ec2':'#252230'}`,color:isAuto?'#b8aed0':'#6b6480',borderRadius:'8px',cursor:'pointer'}}>AUTO</button>
                             <button onClick={e=>{e.stopPropagation();playSfx('click');setShowLog(true);}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'8px',cursor:'pointer'}}>LOG</button>
                         </div>
@@ -874,7 +916,7 @@ function CharacterSite({ onBack }) {
                 </div>
             )}
 
-            <footer style={{textAlign:'center',marginTop:isMobile?'30px':'45px',padding:'18px',borderTop:'1px solid #1a1820'}}><p style={{color:'#3d3850',fontSize:'0.6rem'}}>made by LUZ</p></footer>
+            <footer style={{textAlign:'center',marginTop:isMobile?'30px':'45px',padding:'18px',borderTop:'1px solid #1a1820'}}><p style={{color:'#3d3850',fontSize:'0.6rem'}}>made by CowardMole</p></footer>
         </div>
     );
 }
