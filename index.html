@@ -721,8 +721,9 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         setDialogIndex(saveData.dialogIndex);
         setAffection(saveData.affection);
         setShowSaveLoad(null);
-        setShowChapterTitle(true);
+        setShowChapterTitle(false); // 인게임 로드시 챕터 타이틀 스킵
         setHistory([]);
+        setDialogLog([]); // 로그도 초기화
     };
 
     if(!chapter||!scene)return <div style={{height:'100vh',background:'#0a0810',display:'flex',justifyContent:'center',alignItems:'center',color:'#6b6480'}}>챕터를 불러오는 중...</div>;
