@@ -522,14 +522,20 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         if(!dialog||showChapterTitle)return;
         if(dialog.sfx)playSfx(dialog.sfx);
         
-        // 로그에 위치 정보 포함하여 저장
-        setDialogLog(prev => [...prev, { 
-            speaker: dialog.speaker, 
-            text: dialog.text,
-            chapter: currentChapter,
-            scene: sceneIndex,
-            dialog: dialogIndex
-        }]);
+        // 로그 중복 방지: 이미 같은 위치의 로그가 있으면 추가 안 함
+        setDialogLog(prev => {
+            const exists = prev.some(
+                log => log.chapter === currentChapter && log.scene === sceneIndex && log.dialog === dialogIndex
+            );
+            if (exists) return prev;
+            return [...prev, { 
+                speaker: dialog.speaker, 
+                text: dialog.text,
+                chapter: currentChapter,
+                scene: sceneIndex,
+                dialog: dialogIndex
+            }];
+        });
         
         setIsTyping(true);setDisplayedText('');setCanProceed(false);
         let i=0;
@@ -616,8 +622,6 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         if (history.length === 0) return;
         const prev = history[history.length - 1];
         setHistory(h => h.slice(0, -1));
-        // dialogLog에서 현재 위치 이후 항목 제거
-        setDialogLog(logs => logs.slice(0, -1));
         if (prev.chapter !== currentChapter) {
             setCurrentChapter(prev.chapter);
         }
@@ -680,15 +684,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         setSceneIndex(logItem.scene);
         setDialogIndex(logItem.dialog);
         
-        // 해당 로그 이후 항목들 제거
-        const logIndex = dialogLog.findIndex(
-            l => l.chapter === logItem.chapter && l.scene === logItem.scene && l.dialog === logItem.dialog
-        );
-        if (logIndex !== -1) {
-            setDialogLog(dialogLog.slice(0, logIndex + 1));
-        }
-        
-        // 히스토리도 해당 위치까지만
+        // 히스토리도 해당 위치까지만 (BACK 가능하게)
         const histIndex = history.findIndex(
             h => h.chapter === logItem.chapter && h.scene === logItem.scene && h.dialog === logItem.dialog
         );
