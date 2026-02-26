@@ -256,6 +256,10 @@ function StartPopup({ onClose }) {
                     <p style={{marginBottom:'12px',color:'#9d8ec2'}}>• 💾 세이브/로드 기능이 지원됩니다.</p>
                     <p style={{color:'#6b6480',fontSize:'0.8rem'}}>※ 클릭 / 스페이스바 / →키로 대사를 넘길 수 있습니다.</p>
                 </div>
+                <div style={{background:'rgba(139,58,58,0.2)',border:'1px solid #8b3a3a',borderRadius:'8px',padding:'12px',marginBottom:'20px'}}>
+                    <p style={{color:'#e07070',fontSize:'0.8rem',fontWeight:600}}>⚠️ 광과민성 발작 주의</p>
+                    <p style={{color:'#c08080',fontSize:'0.75rem',marginTop:'6px'}}>본 게임에는 번쩍이는 효과가 포함되어 있습니다.<br/>광과민성 발작 이력이 있으신 분은 주의해 주세요.</p>
+                </div>
                 <button onClick={onClose} style={{padding:'12px 40px',background:'rgba(157,142,194,0.9)',border:'none',borderRadius:'8px',color:'#0a0810',fontSize:'1rem',fontWeight:600,cursor:'pointer'}}>
                     게임 시작
                 </button>
@@ -467,7 +471,7 @@ function TitleScreen({ onStart, onLoad, onCharacter }) {
                             <MenuBtn text="CHARACTER" onClick={()=>{playSfx('click');onCharacter();}}/>
                             <MenuBtn text="SOUND" onClick={()=>{playSfx('click');setShowVolume(true);}}/>
                         </div>
-                        <div style={{position:'absolute',bottom:'16px',fontSize:'0.6rem',color:'#3d3850'}}>made by CowardMole</div>
+                        <div style={{position:'absolute',bottom:'16px',fontSize:'0.6rem',color:'#3d3850'}}>made by LUZ</div>
                     </div>
                 </>
             )}
@@ -490,12 +494,10 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
     const [affectionPopup, setAffectionPopup] = useState(null);
     const [showSaveLoad, setShowSaveLoad] = useState(null);
     const [showVolume, setShowVolume] = useState(false);
+    const [showConfirmTitle, setShowConfirmTitle] = useState(false);
     const [history, setHistory] = useState([]);
-    const [dialogLog, setDialogLog] = useState([]);
-    const [loggedIndexes, setLoggedIndexes] = useState(new Set()); // 로그 중복 방지
+    const [dialogLog, setDialogLog] = useState([]); // {speaker, text, chapter, scene, dialog}
     const [showLog, setShowLog] = useState(false);
-    const [isSkipping, setIsSkipping] = useState(false); // SKIP 버튼 상태
-    const [canGoBack, setCanGoBack] = useState(true); // 선택지 후 BACK 불가
 
     useEffect(() => { const h=()=>setIsMobile(window.innerWidth<=768); window.addEventListener('resize',h); return()=>window.removeEventListener('resize',h); }, []);
 
@@ -520,12 +522,14 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         if(!dialog||showChapterTitle)return;
         if(dialog.sfx)playSfx(dialog.sfx);
         
-        // 로그 중복 방지
-        const logKey = `${currentChapter}-${sceneIndex}-${dialogIndex}`;
-        if (!loggedIndexes.has(logKey)) {
-            setDialogLog(prev => [...prev, { speaker: dialog.speaker, text: dialog.text }]);
-            setLoggedIndexes(prev => new Set([...prev, logKey]));
-        }
+        // 로그에 위치 정보 포함하여 저장
+        setDialogLog(prev => [...prev, { 
+            speaker: dialog.speaker, 
+            text: dialog.text,
+            chapter: currentChapter,
+            scene: sceneIndex,
+            dialog: dialogIndex
+        }]);
         
         setIsTyping(true);setDisplayedText('');setCanProceed(false);
         let i=0;
@@ -534,7 +538,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
             else{clearInterval(iv);setIsTyping(false);setCanProceed(true);}
         },30);
         return()=>clearInterval(iv);
-    }, [dialog, dialogIndex, sceneIndex, currentChapter, showChapterTitle, loggedIndexes]);
+    }, [dialog, dialogIndex, sceneIndex, currentChapter, showChapterTitle]);
 
     useEffect(() => { 
         if(!isAuto||isTyping||!canProceed||showChoices)return; 
@@ -542,27 +546,10 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         return()=>clearTimeout(t); 
     }, [isAuto, isTyping, canProceed, showChoices]);
 
-    // SKIP 버튼 꾹 누르면 빠르게 넘기기
-    useEffect(() => {
-        if (!isSkipping || showChoices || showChapterTitle) return;
-        
-        const skipInterval = setInterval(() => {
-            if (isTyping) {
-                setDisplayedText(dialog?.text || '');
-                setIsTyping(false);
-                setCanProceed(true);
-            } else if (canProceed && !showChoices) {
-                proceed();
-            }
-        }, 100);
-        
-        return () => clearInterval(skipInterval);
-    }, [isSkipping, isTyping, canProceed, showChoices, showChapterTitle, dialog]);
-
     // 스페이스바 / 화살표 키 처리
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if (showLog || showSaveLoad || showChoices || showVolume || showAffection || !dialog || showChapterTitle) return;
+            if (showLog || showSaveLoad || showChoices || showVolume || showAffection || showConfirmTitle || !dialog || showChapterTitle) return;
 
             if (e.key === ' ' || e.key === 'ArrowRight') {
                 e.preventDefault();
@@ -583,7 +570,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [isTyping, canProceed, showLog, showSaveLoad, showChoices, showVolume, showAffection, dialog, showChapterTitle]);
+    }, [isTyping, canProceed, showLog, showSaveLoad, showChoices, showVolume, showAffection, showConfirmTitle, dialog, showChapterTitle]);
 
     const determineEnding = useCallback((route) => {
         const values = HEROINES.map(h => affection[h] || 0);
@@ -626,9 +613,11 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
     }, [canProceed, showChoices, dialogIndex, scene, sceneIndex, chapter, currentChapter, affection]);
 
     const goBack = useCallback(() => {
-        if (history.length === 0 || !canGoBack) return;
+        if (history.length === 0) return;
         const prev = history[history.length - 1];
         setHistory(h => h.slice(0, -1));
+        // dialogLog에서 현재 위치 이후 항목 제거
+        setDialogLog(logs => logs.slice(0, -1));
         if (prev.chapter !== currentChapter) {
             setCurrentChapter(prev.chapter);
         }
@@ -639,7 +628,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
             setAffection(prev.affection);
         }
         setShowChoices(false);
-    }, [history, currentChapter, canGoBack]);
+    }, [history, currentChapter]);
 
     const goToScene = (nextId) => {
         if(nextId==='glitch'){onGlitch();return;}
@@ -662,9 +651,9 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         playSfx('decision');
         setShowChoices(false);
         
-        // 선택지 고른 후 BACK 불가 - 히스토리 초기화
+        // 선택지 고른 후 히스토리와 로그 초기화
         setHistory([]);
-        setCanGoBack(true); // 다음 선택지까지는 다시 가능
+        setDialogLog([]);
         
         if(choice.affection){
             const newAff = {...affection};
@@ -682,8 +671,38 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
         goToScene(choice.next);
     };
 
+    // 로그에서 클릭하면 해당 위치로 이동
+    const jumpToLog = (logItem) => {
+        // 해당 위치로 이동
+        if (logItem.chapter !== currentChapter) {
+            setCurrentChapter(logItem.chapter);
+        }
+        setSceneIndex(logItem.scene);
+        setDialogIndex(logItem.dialog);
+        
+        // 해당 로그 이후 항목들 제거
+        const logIndex = dialogLog.findIndex(
+            l => l.chapter === logItem.chapter && l.scene === logItem.scene && l.dialog === logItem.dialog
+        );
+        if (logIndex !== -1) {
+            setDialogLog(dialogLog.slice(0, logIndex + 1));
+        }
+        
+        // 히스토리도 해당 위치까지만
+        const histIndex = history.findIndex(
+            h => h.chapter === logItem.chapter && h.scene === logItem.scene && h.dialog === logItem.dialog
+        );
+        if (histIndex !== -1) {
+            setHistory(history.slice(0, histIndex + 1));
+        } else {
+            setHistory([]);
+        }
+        
+        setShowLog(false);
+    };
+
     const handleClick = (e) => {
-        if(showChoices||e.target.closest('button')||showChapterTitle||showAffection||showSaveLoad||showLog||showVolume)return;
+        if(showChoices||e.target.closest('button')||showChapterTitle||showAffection||showSaveLoad||showLog||showVolume||showConfirmTitle)return;
         
         if(isTyping){
             setDisplayedText(dialog.text);
@@ -748,7 +767,7 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                 <button onClick={e=>{e.stopPropagation();playSfx('click');setShowSaveLoad('save');}} style={{padding:'4px 10px',fontSize:'0.65rem',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'10px',cursor:'pointer'}}>💾 SAVE</button>
                 <button onClick={e=>{e.stopPropagation();playSfx('click');setShowSaveLoad('load');}} style={{padding:'4px 10px',fontSize:'0.65rem',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'10px',cursor:'pointer'}}>📂 LOAD</button>
                 <button onClick={e=>{e.stopPropagation();playSfx('click');setShowVolume(true);}} style={{padding:'4px 10px',fontSize:'0.65rem',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'10px',cursor:'pointer'}}>🔊</button>
-                {!isMobile && <button onClick={e=>{e.stopPropagation();playSfx('click');if(onTitle)onTitle();}} style={{padding:'4px 12px',fontSize:'0.68rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'10px',cursor:'pointer'}}>TITLE</button>}
+                {!isMobile && <button onClick={e=>{e.stopPropagation();playSfx('click');setShowConfirmTitle(true);}} style={{padding:'4px 12px',fontSize:'0.68rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'10px',cursor:'pointer'}}>TITLE</button>}
             </div>
 
             {/* 호감도 변동 팝업 */}
@@ -768,17 +787,35 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                     <div onClick={e=>e.stopPropagation()} style={{width:'90%',maxWidth:'600px',height:'70vh',background:'#14121a',border:'1px solid #3d3850',borderRadius:'12px',display:'flex',flexDirection:'column'}}>
                         <div style={{padding:'16px',borderBottom:'1px solid #252230',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
                             <h3 style={{color:'#9d8ec2',fontSize:'1rem'}}>📜 대화 기록</h3>
+                            <span style={{color:'#6b6480',fontSize:'0.7rem'}}>클릭하면 해당 위치로 이동</span>
                             <button onClick={()=>setShowLog(false)} style={{background:'transparent',border:'1px solid #3d3850',color:'#6b6480',width:'28px',height:'28px',borderRadius:'50%',cursor:'pointer'}}>✕</button>
                         </div>
                         <div style={{flex:1,overflow:'auto',padding:'16px',display:'flex',flexDirection:'column',gap:'12px'}}>
-                            {dialogLog.map((log,i) => {
+                            {dialogLog.length === 0 ? (
+                                <div style={{color:'#6b6480',textAlign:'center',padding:'20px'}}>로그가 없습니다</div>
+                            ) : dialogLog.map((log,i) => {
                                 const isNarrator = log.speaker === 'narrator';
                                 const isYou = log.speaker === 'you';
                                 const charData = characters[log.speaker];
                                 const name = isYou ? '당신' : isNarrator ? '' : (charData?.name || log.speaker);
                                 const color = isYou ? '#9d8ec2' : isNarrator ? '#6b6480' : (charData?.color || '#c8c4d4');
+                                const isCurrent = log.chapter === currentChapter && log.scene === sceneIndex && log.dialog === dialogIndex;
                                 return (
-                                    <div key={i} style={{padding:'10px 12px',background:'rgba(0,0,0,0.3)',borderRadius:'6px',borderLeft:`3px solid ${color}`}}>
+                                    <div 
+                                        key={i} 
+                                        onClick={() => jumpToLog(log)}
+                                        style={{
+                                            padding:'10px 12px',
+                                            background: isCurrent ? 'rgba(157,142,194,0.2)' : 'rgba(0,0,0,0.3)',
+                                            borderRadius:'6px',
+                                            borderLeft:`3px solid ${color}`,
+                                            cursor:'pointer',
+                                            transition:'background 0.2s',
+                                            border: isCurrent ? '1px solid #9d8ec2' : '1px solid transparent'
+                                        }}
+                                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(157,142,194,0.15)'}
+                                        onMouseLeave={e => e.currentTarget.style.background = isCurrent ? 'rgba(157,142,194,0.2)' : 'rgba(0,0,0,0.3)'}
+                                    >
                                         {name && <div style={{color:color,fontSize:'0.75rem',fontWeight:600,marginBottom:'4px'}}>{name}</div>}
                                         <div style={{color:isNarrator?'#7a7888':'#e8e6ed',fontSize:'0.85rem',fontStyle:isNarrator?'italic':'normal',lineHeight:1.6}}>{log.text}</div>
                                     </div>
@@ -826,7 +863,6 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
                         </div>
                         <div style={{position:'absolute',bottom:isMobile?'7px':'10px',right:isMobile?'8px':'14px',display:'flex',gap:isMobile?'4px':'6px'}}>
                             <button onClick={e=>{e.stopPropagation();playSfx('click');goBack();}} disabled={history.length===0} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:history.length>0?'rgba(100,80,120,0.3)':'transparent',border:`1px solid ${history.length>0?'#6b5a80':'#252230'}`,color:history.length>0?'#a090b0':'#3d3850',borderRadius:'8px',cursor:history.length>0?'pointer':'not-allowed'}}>◀ BACK</button>
-                            <button onMouseDown={e=>{e.stopPropagation();setIsSkipping(true);}} onMouseUp={()=>setIsSkipping(false)} onMouseLeave={()=>setIsSkipping(false)} onTouchStart={e=>{e.stopPropagation();setIsSkipping(true);}} onTouchEnd={()=>setIsSkipping(false)} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:isSkipping?'rgba(157,142,194,0.3)':'transparent',border:`1px solid ${isSkipping?'#9d8ec2':'#252230'}`,color:isSkipping?'#b8aed0':'#6b6480',borderRadius:'8px',cursor:'pointer'}}>SKIP</button>
                             <button onClick={e=>{e.stopPropagation();setIsAuto(!isAuto);playSfx('click');}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:isAuto?'rgba(157,142,194,0.2)':'transparent',border:`1px solid ${isAuto?'#9d8ec2':'#252230'}`,color:isAuto?'#b8aed0':'#6b6480',borderRadius:'8px',cursor:'pointer'}}>AUTO</button>
                             <button onClick={e=>{e.stopPropagation();playSfx('click');setShowLog(true);}} style={{padding:isMobile?'2px 8px':'4px 10px',fontSize:isMobile?'0.56rem':'0.66rem',background:'transparent',border:'1px solid #252230',color:'#6b6480',borderRadius:'8px',cursor:'pointer'}}>LOG</button>
                         </div>
@@ -849,6 +885,20 @@ function GameScreen({ startChapter, startSceneIndex = 0, startDialogIndex = 0, o
             {showAffection && <AffectionPanel affection={affection} onClose={()=>setShowAffection(false)} isMobile={isMobile}/>}
             {showSaveLoad && <SaveLoadPanel mode={showSaveLoad} onClose={() => setShowSaveLoad(null)} onSave={handleSave} onLoad={handleLoadInGame} currentState={{ currentChapter, sceneIndex, dialogIndex, affection }} isMobile={isMobile}/>}
             {showVolume && <VolumePanel onClose={() => setShowVolume(false)} isMobile={isMobile}/>}
+            
+            {/* 타이틀 이동 확인 팝업 */}
+            {showConfirmTitle && (
+                <div onClick={()=>setShowConfirmTitle(false)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.85)',display:'flex',justifyContent:'center',alignItems:'center',zIndex:1000,animation:'fadeIn 0.3s'}}>
+                    <div onClick={e=>e.stopPropagation()} style={{background:'#14121a',border:'1px solid #3d3850',borderRadius:'16px',padding:'24px',maxWidth:'360px',width:'90%',textAlign:'center'}}>
+                        <h3 style={{color:'#e8e6ed',fontSize:'1.1rem',marginBottom:'12px'}}>⚠️ 타이틀로 돌아가기</h3>
+                        <p style={{color:'#9d8ec2',fontSize:'0.85rem',marginBottom:'20px',lineHeight:1.6}}>저장하지 않은 진행 상황은 사라집니다.<br/>정말 타이틀로 돌아가시겠습니까?</p>
+                        <div style={{display:'flex',gap:'12px',justifyContent:'center'}}>
+                            <button onClick={()=>setShowConfirmTitle(false)} style={{padding:'10px 24px',background:'rgba(60,50,80,0.7)',border:'1px solid #4a4060',color:'#b0a0c8',borderRadius:'8px',cursor:'pointer',fontSize:'0.9rem'}}>취소</button>
+                            <button onClick={()=>{setShowConfirmTitle(false);if(onTitle)onTitle();}} style={{padding:'10px 24px',background:'rgba(139,58,58,0.8)',border:'1px solid #a05050',color:'#e8e6ed',borderRadius:'8px',cursor:'pointer',fontSize:'0.9rem'}}>확인</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
@@ -916,7 +966,7 @@ function CharacterSite({ onBack }) {
                 </div>
             )}
 
-            <footer style={{textAlign:'center',marginTop:isMobile?'30px':'45px',padding:'18px',borderTop:'1px solid #1a1820'}}><p style={{color:'#3d3850',fontSize:'0.6rem'}}>made by CowardMole</p></footer>
+            <footer style={{textAlign:'center',marginTop:isMobile?'30px':'45px',padding:'18px',borderTop:'1px solid #1a1820'}}><p style={{color:'#3d3850',fontSize:'0.6rem'}}>made by LUZ</p></footer>
         </div>
     );
 }
